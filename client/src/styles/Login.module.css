@@ -1,63 +1,70 @@
-.login-container {
+.loginPage {
+  width: 100vw;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background-color: #fff;
+  align-content: center;
 }
 
-.login-box {
+.loginBox {
   background-color: white;
-  padding: 2rem;
+  padding: 40px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
+  width: 600px;
+  max-width: 80vw;
 }
 
-.login-title-row {
+.loginTitleRow {
   display: flex;
   align-items: center;
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
-.login-logo {
-  width: 40px;
-  height: 40px;
+.loginLogo {
+  width: 1.8rem;
+  height: 1.8rem;
 }
 
-.login-title {
+h1 {
   font-size: 1.8rem;
   color: #333;
   margin: 0;
 }
 
 h2 {
+  font-size: 1.4rem;
   color: #444;
   margin-bottom: 1.5rem;
 }
 
-.form-group {
+.formSection {
   margin-bottom: 1rem;
 }
 
-.form-group label {
+.formSection label {
   display: block;
   margin-bottom: 0.5rem;
   color: #555;
 }
 
-.form-group input {
-  width: 100%;
-  padding: 0.75rem;
+.formSection input {
+  width: 598px;
+  max-width: 80vw;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
 }
 
-.login-button {
-  width: 100%;
+.loginButton {
+  width: 600px;
+  max-width: 80vw;
   padding: 0.75rem;
   background-color: #007bff;
   color: white;
@@ -68,21 +75,21 @@ h2 {
   margin-top: 1rem;
 }
 
-.login-button:hover {
+.loginButton:hover {
   background-color: #0056b3;
 }
 
-.create-account {
+.createAccount {
   margin-top: 1.5rem;
   text-align: center;
 }
 
-.create-account p {
+.createAccount p {
   color: #666;
   margin-bottom: 0.5rem;
 }
 
-.create-account-button {
+.createAccountButton {
   background: none;
   border: none;
   color: #007bff;
@@ -90,6 +97,6 @@ h2 {
   font-size: 1rem;
 }
 
-.create-account-button:hover {
+.createAccountButton:hover {
   text-decoration: underline;
-} 
+}
