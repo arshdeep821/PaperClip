@@ -1,18 +1,19 @@
-.loginContainer {
+.loginPage {
+  width: 100vw;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background-color: #fff;
+  align-content: center;
 }
 
 .loginBox {
   background-color: white;
-  padding: 2rem;
+  padding: 40px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
+  width: 600px;
+  max-width: 80vw;
 }
 
 .loginTitleRow {
@@ -23,41 +24,47 @@
 }
 
 .loginLogo {
-  width: 40px;
-  height: 40px;
+  width: 1.8rem;
+  height: 1.8rem;
 }
 
-.loginTitle {
+h1 {
   font-size: 1.8rem;
   color: #333;
   margin: 0;
 }
 
 h2 {
+  font-size: 1.4rem;
   color: #444;
   margin-bottom: 1.5rem;
 }
 
-.formGroup {
+.formSection {
   margin-bottom: 1rem;
 }
 
-.formGroup label {
+.formSection label {
   display: block;
   margin-bottom: 0.5rem;
   color: #555;
 }
 
-.formGroup input {
-  width: 100%;
-  padding: 0.75rem;
+.formSection input {
+  width: 598px;
+  max-width: 80vw;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
 }
 
 .loginButton {
-  width: 100%;
+  width: 600px;
+  max-width: 80vw;
   padding: 0.75rem;
   background-color: #007bff;
   color: white;

@@ -29,7 +29,7 @@ function Login() {
   };
 
   return (
-    <div className={styles.loginContainer}>
+    <div className={styles.loginPage}>
       <div className={styles.loginBox}>
         <div className={styles.loginTitleRow}>
           <img
@@ -37,11 +37,11 @@ function Login() {
             alt="PaperClip Logo"
             className={styles.loginLogo}
           />
-          <h1 className={styles.loginTitle}>PaperClip</h1>
+          <h1>PaperClip</h1>
         </div>
         <h2>Welcome Back</h2>
         <form onSubmit={(e) => handleSubmit(e)}>
-          <div className={styles.formGroup}>
+          <div className={styles.formSection}>
             <label htmlFor="username">Username</label>
             <input
               type="text"
@@ -52,7 +52,7 @@ function Login() {
               required
             />
           </div>
-          <div className={styles.formGroup}>
+          <div className={styles.formSection}>
             <label htmlFor="password">Password</label>
             <input
               type="password"
