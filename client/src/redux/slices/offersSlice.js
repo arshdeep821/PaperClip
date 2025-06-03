@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-	// TODO: add dummy offers
+	// TODO: add test offers
 };
 
 export const offersSlice = createSlice({
