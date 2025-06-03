@@ -13,13 +13,13 @@ cd client
 2. Build the docker image:
 
 ```bash
-docker build -t my-react-app .
+docker build -t client .
 ```
 
 3. Start the development server:
 
 ```bash
-docker run -p 3000:3000 my-react-app
+docker run -p 3000:3000 client 
 ```
 
 The application should now be running on your local development server.
