@@ -10,16 +10,17 @@ To run the client application, follow these steps:
 cd client
 ```
 
-2. Install dependencies:
+2. Build the docker image:
 
 ```bash
-npm install
+docker build -t my-react-app .
 ```
 
 3. Start the development server:
 
 ```bash
-npm run dev
+docker run -p 3000:3000 my-react-app
 ```
 
 The application should now be running on your local development server.
+https://localhost:3000/
