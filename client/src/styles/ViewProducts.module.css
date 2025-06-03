@@ -8,58 +8,9 @@
 	overflow: hidden;
 }
 
-.leftNav {
-	position: absolute;
-	display: flex;
-	flex-direction: column;
-	left: 2rem;
-	top: 2rem;
-	gap: 1.5rem;
-}
-
-.iconButton {
-	transition: transform 0.2s ease;
-}
-
-.iconButton:hover {
-	transform: scale(1.2);
-}
-
 .productItem {
 	margin-top: -3vh;
 	height: 80vh;
 	width: 80vw;
 }
 
-.bottomOptionsButtons {
-	position: fixed;
-	display: flex;
-	bottom: 0;
-	left: 20vw;
-	right: 20vw;
-	height: 80px;
-}
-
-.topOptionButtons {
-	position: fixed;
-	display: flex;
-	top: 0;
-	left: 30vw;
-	right: 30vw;
-	height: 60px;
-}
-
-.optionButton {
-	width: 20vw;
-	height: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	align-content: center;
-	transition: all 0.3s ease;
-	font-size: 1.3rem;
-}
-
-.optionButton:hover {
-	background-color: rgb(230, 230, 230);
-}
