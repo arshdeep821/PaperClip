@@ -23,4 +23,4 @@ docker run -p 3000:3000 client
 ```
 
 The application should now be running on your local development server.
-https://localhost:3000/
+http://localhost:3000/
