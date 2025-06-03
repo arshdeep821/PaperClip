@@ -1,0 +1,49 @@
+.inventoryPage {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+}
+
+.uploadButtonWrapper {
+  position: absolute;
+  top: 40px;
+  right: 60px;
+}
+
+.inventoryListWrapper {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.inventoryGrid {
+  display: grid;
+  gap: 20px;
+}
+
+.inventoryItem {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.itemImage {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.itemCategory {
+  color: #666;
+}
