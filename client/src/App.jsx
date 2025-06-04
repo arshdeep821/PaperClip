@@ -9,6 +9,8 @@ import Inventory from "./pages/Inventory";
 import ViewProducts from "./pages/ViewProducts";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import ViewOffers from "./pages/ViewOffers";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
 	return (
@@ -22,6 +24,9 @@ function App() {
 					<Route path="/login" element={<Login />} />
 					<Route path="/inventory" element={<Inventory />} />
 					<Route path="/products" element={<ViewProducts />} />
+					<Route path="/offers" element={<ViewOffers />} />
+
+					<Route path="/*" element={<NotFoundPage />} />
 				</Routes>
 			</Router>
 		</Provider>
