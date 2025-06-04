@@ -7,7 +7,7 @@ function ViewOffers() {
 	return (
 		<div className="offersPage">
 			<LeftPanel />
-			<MainPanel middlePannel={OfferBox}/>
+			<MainPanel middlePanel={<OfferBox />}/>
 			<RightPanel />
 		</div>
 	);

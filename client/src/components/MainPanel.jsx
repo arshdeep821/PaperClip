@@ -1,11 +1,11 @@
 import BottomOptionButtons from "./BottomOptionButtons";
 import TopOptionButtons from "./TopOptionButtons";
 
-function MainPanel({middlePannel}) {
+function MainPanel({middlePanel}) {
 	return (
 		<div className="main-panel">
 			<TopOptionButtons />
-			{middlePannel}
+			{middlePanel}
 			<BottomOptionButtons />
 		</div>
 	);
