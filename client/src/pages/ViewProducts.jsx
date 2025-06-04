@@ -12,7 +12,9 @@ const ViewProducts = () => {
 	const products = useSelector((state) => state.products.products);
 	return (
 		<div className={styles.productsPage}>
-			<TopOptionButtons />
+			<div style={{ backgroundColor: "rgb(220, 220, 220)" }}>
+				<TopOptionButtons />
+			</div>
 
 			<Sidebar />
 

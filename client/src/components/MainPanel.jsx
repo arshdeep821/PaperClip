@@ -1,11 +1,12 @@
-import OfferBox from "./OfferBox";
+import BottomOptionButtons from "./BottomOptionButtons";
+import TopOptionButtons from "./TopOptionButtons";
 
-function MainPanel() {
+function MainPanel({middlePannel}) {
 	return (
 		<div className="main-panel">
-			<TopOptionBar />
-			<OfferBox />
-			<BottomOptionBar />
+			<TopOptionButtons />
+			{middlePannel}
+			<BottomOptionButtons />
 		</div>
 	);
 }
