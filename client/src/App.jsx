@@ -7,6 +7,7 @@ import {
 import Login from "./pages/Login";
 import Inventory from "./pages/Inventory";
 import ViewProducts from "./pages/ViewProducts";
+import Profile from "./pages/Profile";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 
@@ -22,6 +23,7 @@ function App() {
 					<Route path="/login" element={<Login />} />
 					<Route path="/inventory" element={<Inventory />} />
 					<Route path="/products" element={<ViewProducts />} />
+					<Route path="/profile" element={<Profile />} />
 				</Routes>
 			</Router>
 		</Provider>
