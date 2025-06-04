@@ -2,11 +2,6 @@ import React from "react";
 import styles from "../styles/Profile.module.css";
 import homeIcon from "../assets/home.png";
 import threeLinesIcon from "../assets/threel.png";
-import SettingsIcon from "@mui/icons-material/Settings";
-import ChatIcon from "@mui/icons-material/Chat";
-import AccountBoxRoundedIcon from "@mui/icons-material/AccountBoxRounded";
-import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
-import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 
 function Profile() {
   return (
