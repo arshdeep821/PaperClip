@@ -5,6 +5,7 @@ import {
 	Navigate,
 } from "react-router-dom";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Inventory from "./pages/Inventory";
 import ViewProducts from "./pages/ViewProducts";
 import { Provider } from "react-redux";
@@ -22,6 +23,7 @@ function App() {
 					<Route path="/login" element={<Login />} />
 					<Route path="/inventory" element={<Inventory />} />
 					<Route path="/products" element={<ViewProducts />} />
+					<Route path="/signup" element={<Signup />} />
 				</Routes>
 			</Router>
 		</Provider>
