@@ -22,6 +22,7 @@ function Login() {
 		e.preventDefault();
 		// TODO: Implement login logic here
 		console.log("Login attempt:", formData);
+		navigate("/home");
 	};
 
 	const handleCreateAccount = () => {
