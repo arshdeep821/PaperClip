@@ -1,55 +1,58 @@
 import React from "react";
 import styles from "../styles/Profile.module.css";
-import homeIcon from "../assets/home.png";
-import threeLinesIcon from "../assets/threel.png";
+import Sidebar from "../components/Sidebar";
+import corgiImage from "../assets/corgi.jpg";
 
 function Profile() {
   return (
     <main className={styles.profilePage}>
-      <div className={styles.sideButtons}>
-        <div className={styles.iconButton}>
-          <img src={homeIcon} alt="Home" />
-        </div>
-        <div className={styles.iconButton}>
-          <img src={threeLinesIcon} alt="Dropdown" />
-        </div>
-      </div>
+      <Sidebar />
       <div className={styles.header}>
         <h1 className={styles.headerTitle}>Profile</h1>
       </div>
+      <div className={styles.profilePictureSection}>
+        <img src={corgiImage} alt="Profile Picture" className={styles.profilePicture} />
+      </div>
       <div className={styles.profileContainer}>
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Private Information</h2>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Private Information</h2>
+            <button className={styles.editButton}>Edit Details</button>
+          </div>
           <fieldset className={styles.fieldset}>
             <legend className={styles.legend}>Account Details</legend>
             <div className={styles.inputGroup}>
-              <label className={styles.label} htmlFor="email">Email:</label>
-              <input className={styles.input} type="email" id="email" name="email" defaultValue="test@gmail.com" readOnly />
+              <label className={styles.label} htmlFor="name">Name:</label>
+              <div className={styles.staticText}>test</div>
             </div>
             <div className={styles.inputGroup}>
-              <label className={styles.label} htmlFor="location">Location:</label>
-              <input className={styles.input} type="text" id="location" name="location" defaultValue="Canada" readOnly />
+              <label className={styles.label} htmlFor="email">Email:</label>
+              <div className={styles.staticText}>test@gmail.com</div>
+            </div>
+            <div className={styles.inputGroup}>
+              <label className={styles.label} htmlFor="city">City:</label>
+              <div className={styles.staticText}>Vancouver</div>
+            </div>
+            <div className={styles.inputGroup}>
+              <label className={styles.label} htmlFor="country">Country:</label>
+              <div className={styles.staticText}>Canada</div>
             </div>
             <div className={styles.inputGroup}>
               <label className={styles.label} htmlFor="radius">Radius:</label>
-              <input className={styles.input} type="number" id="radius" name="radius" defaultValue="5" readOnly />
+              <div className={styles.staticText}>5km</div>
             </div>
           </fieldset>
         </section>
 
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Public Information</h2>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Public Information</h2>
+            <button className={styles.editButton}>Edit Details</button>
+          </div>
           <fieldset className={styles.fieldset}>
             <legend className={styles.legend}>Wanted Items</legend>
             <div className={styles.inputGroup}>
-              <textarea
-                className={styles.textarea}
-                id="wantedItems"
-                name="wantedItems"
-                rows="4"
-                defaultValue="Computers, Laptops, Smartphones"
-                readOnly
-              />
+              <div className={styles.staticText}>Computers, Laptops, Smartphones</div>
             </div>
           </fieldset>
 
