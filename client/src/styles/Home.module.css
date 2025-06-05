@@ -1,0 +1,22 @@
+.homePage {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+	overflow: hidden;
+	flex-direction: column;
+}
+
+.title {
+	font-size: 2rem;
+	font-weight: 600;
+	font-stretch: 80%;
+}
+
+.subtitle {
+	font-size: 1.5rem;
+	font-weight: 300;
+	font-stretch: 80%;
+}
