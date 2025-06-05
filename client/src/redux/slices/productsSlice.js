@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import iPhoneImg from "../../assets/iPhone.png";
 import tShirt from "../../assets/tShirt.png";
+import tShirt2 from "../../assets/tShirt2.png";
 
 const initialState = {
 	products: [
@@ -17,6 +18,13 @@ const initialState = {
 			description: "Blue Legendary T shirt",
 			category: "Clothes",
 			image: tShirt,
+		},
+		{
+			id: 3,
+			name: "Travis Scott T shirt",
+			description: "Travis Scott merch",
+			category: "Clothes",
+			image: tShirt2,
 		},
 	],
 };
