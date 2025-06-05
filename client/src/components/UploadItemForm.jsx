@@ -36,7 +36,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 
                 <h2>Upload New Item</h2>
                 <TextField
-                    label="Name"
+                	label="Item Name"
                     name="name"
                     value={formData.name}
                     onChange={(e) => handleChange(e)}
@@ -44,7 +44,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                     required
                 />
                 <TextField
-                    label="Description"
+                    label="Item Description"
                     name="description"
                     value={formData.description}
                     onChange={(e) => handleChange(e)}
@@ -71,7 +71,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 
                 <div className={styles.fileUploadWrapper}>
                     <label htmlFor="image-upload" className={styles.fileUploadLabel}>
-                        Choose Image
+                        Choose an Image
                     </label>
                     <input
                         id="image-upload"

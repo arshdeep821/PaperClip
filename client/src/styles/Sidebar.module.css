@@ -14,3 +14,11 @@
 .iconButton:hover {
 	transform: scale(1.2);
 }
+
+.link {
+	color: black;
+}
+
+.link:hover {
+	color: black;
+}
