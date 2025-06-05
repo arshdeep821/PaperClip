@@ -7,10 +7,16 @@ import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
 import ExploreIcon from "@mui/icons-material/Explore";
 import PageviewIcon from "@mui/icons-material/Pageview";
 import SettingsIcon from "@mui/icons-material/Settings";
+import HomeFilledIcon from "@mui/icons-material/HomeFilled";
 
 function Sidebar() {
 	return (
 		<div className={styles.leftNav}>
+			<div className={styles.iconButton}>
+				<Link to="/home" className={styles.link}>
+					<HomeFilledIcon fontSize="large" />
+				</Link>
+			</div>
 			<div className={styles.iconButton}>
 				<Link to="/profile" className={styles.link}>
 					<AccountBoxRoundedIcon fontSize="large" />
