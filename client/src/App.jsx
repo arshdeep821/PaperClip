@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import Search from "./pages/Search";
 
 function App() {
 	return (
@@ -28,6 +29,7 @@ function App() {
 					<Route path="/profile" element={<Profile />} />
 					<Route path="/signup" element={<Signup />} />
 					<Route path="/home" element={<Home />} />
+					<Route path="/search" element={<Search />} />
 				</Routes>
 			</Router>
 		</Provider>
