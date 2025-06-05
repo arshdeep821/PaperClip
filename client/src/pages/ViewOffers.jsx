@@ -13,7 +13,7 @@ function ViewOffers() {
 	const theirWants = useSelector((state) => state.offers.theirWants[0].want);
 
 	return (
-		<div className="offersPage">
+		<div className={styles.offersPage}>
 			<TopOptionButtons />
 			<Sidebar />
 			<OfferBox offer={offers} theirWants={theirWants} />

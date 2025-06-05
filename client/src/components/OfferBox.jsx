@@ -4,19 +4,27 @@ function OfferBox({offer, theirWants}) {
 	return (
 		<div className={styles.offerBox}>
 			<div className={styles.theirOffer}>
-				{offer.map((item) => (item.image))}
-				<div key={offer.id}>
-					{offer.image &&
-						<img
-							src={offer.image}
-							alt={offer.name}
-						/>
-					}
+				<h4 className={styles.boxHeader}>Their Offer</h4>
+				<div className={styles.itemsContainer}>
+					{offer.map((item) => (
+						<div key={item.id} className={styles.offerItem}>
+							<img src={item.image} alt={item.name} />
+						</div>
+					))}
 				</div>
 			</div>
 
+			<hr />
+
 			<div className={styles.theirWants}>
-				<img src={theirWants.image} />
+				<h4 className={styles.boxHeader}>For your following item(s)</h4>
+				<div className={styles.itemsContainer}>
+					{theirWants.map((item) => (
+						<div key={item.id} className={styles.wantItem}>
+							<img src={item.image} alt={item.name} />
+						</div>
+					))}
+				</div>
 			</div>
 		</div>
 	);

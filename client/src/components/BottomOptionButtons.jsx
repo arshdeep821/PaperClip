@@ -6,13 +6,8 @@ import CheckIcon from "@mui/icons-material/Check";
 
 function BottomOptionButtons({ handleLeftButton, handleRightButton }) {
 	return (
-<<<<<<< HEAD
 		<div className={styles.bottomButtons}>
 			<div className={styles.optionButton}>
-=======
-		<div className={styles.bottomOptionsButtons}>
-			<div className={styles.optionButton} onClick={handleLeftButton}>
->>>>>>> main
 				<ArrowBackIosIcon fontSize="large" />
 			</div>
 			<div className={styles.optionButton}>

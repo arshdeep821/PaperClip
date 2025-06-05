@@ -5,7 +5,6 @@ import samsung from "../../assets/samsung_phone.png";
 import jeans from "../../assets/jeans.png";
 
 const initialState = {
-	// TODO: add test offers
 	offers: [
 		{
 			from: "person1",

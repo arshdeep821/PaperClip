@@ -1,0 +1,11 @@
+.offersPage {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+	flex-direction: column;
+	overflow: hidden;
+	position: relative;
+}

@@ -8,7 +8,7 @@ function Bag() {
 	const items = useSelector((state) => state.inventory.items);
 
 	return (
-		<div className="bag">
+		<div className={styles.bag}>
 			{items.length === 0 ? (
 				<div>empty</div>
 			) : (

@@ -26,14 +26,10 @@ function App() {
 					<Route path="/login" element={<Login />} />
 					<Route path="/inventory" element={<Inventory />} />
 					<Route path="/products" element={<ViewProducts />} />
-<<<<<<< HEAD
 					<Route path="/offers" element={<ViewOffers />} />
-
-					<Route path="/*" element={<NotFoundPage />} />
-=======
 					<Route path="/signup" element={<Signup />} />
 					<Route path="/home" element={<Home />} />
->>>>>>> main
+					<Route path="/*" element={<NotFoundPage />} />
 				</Routes>
 			</Router>
 		</Provider>

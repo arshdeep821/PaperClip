@@ -1,10 +1,91 @@
 .offerBox {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	box-sizing: border-box;
 	width: 100%;
-	height: 100%;
+	height: 80%;
 	position: relative;
+	max-width: 800px;
+	padding: 20px;
+	gap: 20px;
 }
 
+.boxHeader {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	align-items: center;
+	justify-content: center;
+}
 
+.theirOffer {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.theirOffer .itemsContainer {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.offerItem {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 10px;
+}
+
+.offerItem img {
+	width: 200px;
+	height: auto;
+	object-fit: cover;
+}
+
+.theirWants {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.theirWants .itemsContainer {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.wantItem {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 10px;
+}
+
+.wantItem img {
+	width: 150px;
+	height: 150px;
+	object-fit: cover;
+	border-radius: 8px;
+}
+
+.offerBox hr {
+	width: fit-content;
+	min-width: 400px;
+	border: 0.5px solid #ddd;
+	margin: 10px 0;
+}
