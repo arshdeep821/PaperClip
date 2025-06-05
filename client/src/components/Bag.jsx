@@ -9,19 +9,25 @@ function Bag() {
 
 	return (
 		<div className={styles.bag}>
-			{items.length === 0 ? (
+			{open && (items.length === 0 ? (
 				<div>empty</div>
 			) : (
 				<ul className={styles.itemList}>
 					{items.map((item) => (
-						<li key={item.id} className={styles.smallItem}>{item.image}</li>
+						<li
+							key={item.id}
+							className={styles.smallItem}
+						>
+							<img src={item.image} alt={item.name} />
+						</li>
 					))}
 				</ul>
-			)}
+			))}
 
 			<button
 				onClick={() => setOpen(!open)}
 			>
+				Bag
 			</button>
 		</div>
 	);

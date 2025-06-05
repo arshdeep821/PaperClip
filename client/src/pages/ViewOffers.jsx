@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 
 import OfferBox from "../components/OfferBox";
 import Sidebar from "../components/Sidebar";
-import Bag from "../components/Bag";
 import TopOptionButtons from "../components/TopOptionButtons";
 import OffersActions from "../components/OffersActions";
 
@@ -17,7 +16,6 @@ function ViewOffers() {
 			<TopOptionButtons />
 			<Sidebar />
 			<OfferBox offer={offers} theirWants={theirWants} />
-			<Bag />
 			<OffersActions />
 		</div>
 	);

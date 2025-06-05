@@ -1,5 +1,14 @@
 .bag {
 	position: fixed;
-	bottom: 0;
-	right: 0;
+	bottom: 10px;
+	right: 10px;
+}
+
+img {
+	height: 100px;
+	width: auto;
+}
+
+ul {
+	list-style-type: none;
 }
