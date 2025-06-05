@@ -15,9 +15,11 @@
 	align-items: center;
 	align-content: center;
 	transition: all 0.3s ease;
-	font-size: 1.3rem;
+	font-size: 1.5rem;
+	font-weight: 500;
+	font-stretch: 80%;
 }
 
 .optionButton:hover {
-	background-color: rgb(230, 230, 230);
+	background-color: rgb(240, 240, 240);
 }
