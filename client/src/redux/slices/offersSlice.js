@@ -11,6 +11,40 @@ const initialState = {
 			offer: [
 				{
 					id: 1,
+					name: "Samsung Phone",
+					description: "Titanium Silver Samsung Galaxy S25 Edge with 256GB storage",
+					category: "Electronics",
+					image: samsung,
+				},
+				{
+					id: 2,
+					name: "Jeans",
+					description: "Beat up vintage jeans",
+					category: "Clothes",
+					image: jeans,
+				}
+			]
+		},
+		{
+			from: "person2",
+			offer: [
+				{
+					id: 2,
+					name: "Jeans",
+					description: "Beat up vintage jeans",
+					category: "Clothes",
+					image: jeans,
+				}
+			]
+		}
+	],
+
+	theirWants: [
+		{
+			from: "person1",
+			want: [
+				{
+					id: 1,
 					name: "iPhone 15",
 					description: "iPhone 15 with 16 GB RAM, M2 Chip",
 					category: "Electronics",
@@ -27,47 +61,14 @@ const initialState = {
 		},
 		{
 			from: "person2",
-			offer: []
-		}
-	],
-
-	theirWants: [
-		{
-			from: "person1",
 			want: [
 				{
-					id: 1,
-					name: "Samsung Phone",
-					description: "Titanium Silver Samsung Galaxy S25 Edge with 256GB storage",
-					category: "Electronics",
-					image: samsung,
-				},
-				{
 					id: 2,
-					name: "Jeans",
-					description: "Beat up vintage jeans",
+					name: "T shirt",
+					description: "Blue Legendary T shirt",
 					category: "Clothes",
-					image: jeans,
-				}
-			]
-		},
-		{
-			from: "person2",
-			want: [
-				{
-					id: 1,
-					name: "Samsung Phone",
-					description: "Titanium Silver Samsung Galaxy S25 Edge with 256GB storage",
-					category: "Electronics",
-					image: samsung,
+					image: tShirt,
 				},
-				{
-					id: 2,
-					name: "Jeans",
-					description: "Beat up vintage jeans",
-					category: "Clothes",
-					image: jeans,
-				}
 			]
 		}
 	],
