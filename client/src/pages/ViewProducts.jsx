@@ -7,6 +7,7 @@ import Sidebar from "../components/Sidebar";
 
 import TopOptionButtons from "../components/TopOptionButtons";
 import BottomOptionButtons from "../components/BottomOptionButtons";
+import Bag from "../components/Bag";
 
 const ViewProducts = () => {
 	const products = useSelector((state) => state.products.products);
@@ -41,7 +42,9 @@ const ViewProducts = () => {
 
 	return (
 		<div className={styles.productsPage}>
-			<TopOptionButtons />
+			<div style={{ backgroundColor: "rgb(220, 220, 220)" }}>
+				<TopOptionButtons />
+			</div>
 
 			<Sidebar />
 
@@ -53,6 +56,8 @@ const ViewProducts = () => {
 				handleLeftButton={handleLeftButton}
 				handleRightButton={handleRightButton}
 			/>
+
+			<Bag />
 		</div>
 	);
 };

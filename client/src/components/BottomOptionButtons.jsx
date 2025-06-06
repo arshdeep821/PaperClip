@@ -1,4 +1,4 @@
-import styles from "../styles/BottomOptionButtons.module.css";
+import styles from "../styles/BottomButtons.module.css";
 
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -6,8 +6,8 @@ import CheckIcon from "@mui/icons-material/Check";
 
 function BottomOptionButtons({ handleLeftButton, handleRightButton }) {
 	return (
-		<div className={styles.bottomOptionsButtons}>
-			<div className={styles.optionButton} onClick={handleLeftButton}>
+		<div className={styles.bottomButtons}>
+			<div className={styles.optionButton}>
 				<ArrowBackIosIcon fontSize="large" />
 			</div>
 			<div className={styles.optionButton}>
