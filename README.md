@@ -18,7 +18,7 @@ This app will help people trade items with each other in a fast and simple way, 
 ![Home Page](./client/src/assets/HomePage.png)
 
 - Profile Page
-![Profile Page](./client/src/assets/ProductsPage.png)
+![Profile Page](./client/src/assets/ProfilePage.png)
 
 - Products Page
 ![Products Page](./client/src/assets/ProductsPage.png)
