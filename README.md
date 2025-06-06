@@ -18,11 +18,13 @@ This app will help people trade items with each other in a fast and simple way, 
 ![Home Page](./client/src/assets/HomePage.png)
 
 - Profile Page
+![Profile Page](./client/src/assets/ProductsPage.png)
 
 - Products Page
 ![Products Page](./client/src/assets/ProductsPage.png)
 
 - Offers Page
+![Offers Page](./client/src/assets/OffersPage.png)
 
 - Inventory Page
 ![Inventory Page](./client/src/assets/InventoryPage.png)
@@ -33,6 +35,9 @@ This app will help people trade items with each other in a fast and simple way, 
 - Login/Sign-up Page
 ![Login Page](./client/src/assets/LoginPage.png)
 ![Sign Up Page](./client/src/assets/SignUpPage.png)
+
+- Search Product Page
+![Search Page](./client/src/assets/SearchPage.png)
 
 2. How we made progress towards some of our minimal goals
 
