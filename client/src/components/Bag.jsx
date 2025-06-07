@@ -1,4 +1,5 @@
 import styles from "../styles/Bag.module.css";
+import BackpackIcon from '@mui/icons-material/Backpack';
 
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -9,8 +10,15 @@ function Bag() {
 
 	return (
 		<div className={styles.bag}>
+			<div
+				className={styles.bagIcon}
+				onClick={() => setOpen(!open)}
+			>
+				<BackpackIcon />
+			</div>
+
 			{open && (items.length === 0 ? (
-				<div>empty</div>
+				<div className={styles.closing}>empty</div>
 			) : (
 				<ul className={styles.itemList}>
 					{items.map((item) => (
@@ -23,12 +31,6 @@ function Bag() {
 					))}
 				</ul>
 			))}
-
-			<button
-				onClick={() => setOpen(!open)}
-			>
-				Bag
-			</button>
 		</div>
 	);
 }
