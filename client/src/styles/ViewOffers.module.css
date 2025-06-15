@@ -3,9 +3,16 @@
 	height: 100vh;
 	display: flex;
 	justify-content: center;
-	align-items: center;
-	align-content: center;
-	flex-direction: column;
-	overflow: hidden;
 	position: relative;
+	overflow: hidden;
+}
+
+.mainContent {
+	margin-top: 70px;
+	margin-bottom: 90px;
+	width: 100%;
+	height: calc(100vh - 160px);
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

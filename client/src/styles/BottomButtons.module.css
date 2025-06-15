@@ -5,6 +5,7 @@
 	left: 20vw;
 	right: 20vw;
 	height: 80px;
+	z-index: 1000;
 }
 
 .optionButton, .rejectButton, .renegButton, .acceptButton {
@@ -23,20 +24,13 @@
 }
 
 .rejectButton:hover {
-	background-color: #d05050;
-	opacity: 0.8;
+	background-color: rgba(208, 80, 80, 0.8);
 }
 
 .renegButton:hover {
-	background-color: #ffde38;
-	opacity: 0.8;
+	background-color: rgba(255, 222, 56, 0.8);
 }
 
 .acceptButton:hover {
-	background-color: #50d050;
-	opacity: 0.8;
-}
-
-svg {
-	opacity: 1;
+	background-color: rgba(80, 208, 80, 0.8);
 }
