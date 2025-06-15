@@ -13,10 +13,19 @@ function ViewOffers() {
 
 	return (
 		<div className={styles.offersPage}>
-			<TopOptionButtons />
 			<Sidebar />
-			<OfferBox offer={offers} theirWants={theirWants} />
-			<OffersActions />
+
+			<div className={styles.top}>
+				<TopOptionButtons />
+			</div>
+
+			<div className={styles.mainContent}>
+				<OfferBox offer={offers} theirWants={theirWants} />
+			</div>
+
+			<div className={styles.bottom}>
+				<OffersActions />
+			</div>
 		</div>
 	);
 }
