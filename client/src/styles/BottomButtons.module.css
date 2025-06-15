@@ -7,7 +7,7 @@
 	height: 80px;
 }
 
-.optionButton {
+.optionButton, .rejectButton, .renegButton, .acceptButton {
 	width: 20vw;
 	height: 100%;
 	display: flex;
@@ -20,4 +20,23 @@
 
 .optionButton:hover {
 	background-color: rgb(230, 230, 230);
+}
+
+.rejectButton:hover {
+	background-color: #d05050;
+	opacity: 0.8;
+}
+
+.renegButton:hover {
+	background-color: #ffde38;
+	opacity: 0.8;
+}
+
+.acceptButton:hover {
+	background-color: #50d050;
+	opacity: 0.8;
+}
+
+svg {
+	opacity: 1;
 }
