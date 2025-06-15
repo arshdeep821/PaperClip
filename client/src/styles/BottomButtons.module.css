@@ -5,6 +5,7 @@
 	left: 20vw;
 	right: 20vw;
 	height: 80px;
+	z-index: 1000;
 }
 
 .optionButton {
