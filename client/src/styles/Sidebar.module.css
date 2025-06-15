@@ -5,6 +5,7 @@
 	left: 2rem;
 	top: 2rem;
 	gap: 1.5rem;
+	z-index: 1000;
 }
 
 .iconButton {
