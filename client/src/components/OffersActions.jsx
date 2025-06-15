@@ -7,13 +7,13 @@ import CheckIcon from '@mui/icons-material/Check';
 function OffersActions() {
 	return (
 		<div className={styles.bottomButtons}>
-			<div className={styles.optionButton}>
+			<div className={styles.rejectButton}>
 				<CloseIcon fontSize="large" />
 			</div>
-			<div className={styles.optionButton}>
+			<div className={styles.renegButton}>
 				<QuestionMarkIcon fontSize="large" />
 			</div>
-			<div className={styles.optionButton}>
+			<div className={styles.acceptButton}>
 				<CheckIcon fontSize="large" />
 			</div>
 		</div>

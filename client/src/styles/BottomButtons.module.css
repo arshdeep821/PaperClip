@@ -8,7 +8,7 @@
 	z-index: 1000;
 }
 
-.optionButton {
+.optionButton, .rejectButton, .renegButton, .acceptButton {
 	width: 20vw;
 	height: 100%;
 	display: flex;
@@ -21,4 +21,16 @@
 
 .optionButton:hover {
 	background-color: rgb(230, 230, 230);
+}
+
+.rejectButton:hover {
+	background-color: rgba(208, 80, 80, 0.8);
+}
+
+.renegButton:hover {
+	background-color: rgba(255, 222, 56, 0.8);
+}
+
+.acceptButton:hover {
+	background-color: rgba(80, 208, 80, 0.8);
 }
