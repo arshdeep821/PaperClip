@@ -52,17 +52,41 @@ This app will help people trade items with each other in a fast and simple way, 
 
 To run the client application, follow these steps:
 
-1. Build the docker image:
+1. Go to client directory:
+```bash
+cd client
+```
+
+2. Build the docker image:
 
 ```bash
 docker build -t client .
 ```
 
-2. Start the development server:
+3. Start the development server:
 
 ```bash
 docker run -p 4173:4173 client 
 ```
 
-The application should now be running on your local development server.
+4. The application should now be running on your local development server.
 http://localhost:4173/
+
+To run the backend server, follow these steps:
+
+1. Go to server directory:
+```bash
+cd server
+```
+
+2. Build the docker image:
+
+```bash
+docker build -t server .
+```
+
+3. Start the development server:
+
+```bash
+docker run -p 3000:3000 server
+```
