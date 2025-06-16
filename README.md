@@ -72,6 +72,8 @@ docker run -p 4173:4173 client
 4. The application should now be running on your local development server.
 http://localhost:4173/
 
+## Milestone 1
+
 To run the backend server, follow these steps:
 
 1. Go to server directory:
@@ -89,4 +91,11 @@ docker build -t server .
 
 ```bash
 docker run -p 3000:3000 server
+```
+
+OR 
+
+You can run 
+```bash
+npm run dev
 ```
