@@ -103,4 +103,59 @@ const deleteItem = async (req, res) => {
     }
 }
 
-export { createItem, deleteItem };
+const updateItem = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const { name, description, category, condition } = req.body;
+
+        const item = await Item.findById(id);
+        if (!item) {
+            return res.status(StatusCodes.NOT_FOUND).json({ error: "Item not found." });
+        }
+
+        if (category) {
+            const existingCategory = await Category.findById(category);
+            if (!existingCategory) {
+                return res.status(StatusCodes.NOT_FOUND).json({ error: "Category not found." });
+            }
+            item.category = category;
+        }
+
+        if (name) {
+            item.name = name;
+        }
+        if (description) {
+            item.description = description;
+
+        }
+        if (condition) {
+            item.condition = condition;
+        }
+
+        if (req.file) {
+            const newImagePath = `./public/${req.file.filename}`;
+
+            // Delete old image
+            if (item.imagePath && fs.existsSync(item.imagePath)) {
+                fs.unlinkSync(item.imagePath);
+            }
+
+            item.imagePath = newImagePath;
+        }
+
+        await item.save();
+
+        const imageFile = fs.readFileSync(item.imagePath);
+        const base64Image = `data:image/jpeg;base64,${imageFile.toString("base64")}`;
+
+        res.status(StatusCodes.OK).json({ ...item.toObject(), image: base64Image });
+    } catch (err) {
+        console.error("Error updating item:", err);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: "Server error. Could not update item.",
+        });
+    }
+}
+
+export { createItem, deleteItem, updateItem };

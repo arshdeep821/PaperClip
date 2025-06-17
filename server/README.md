@@ -143,6 +143,29 @@ Example of what gets returned
 }
 ```
 
+- PATCH http://localhost:3001/items/:id
+
+Example body - Use formData on postman so you can attach files
+![Body](./assets/updateItem.png)
+
+```bash
+Example of what gets returned 
+
+{
+    "_id": "685115534fa25e0b72d4beab",
+    "name": "iPhone 16",
+    "description": "iphone 16 with 10 gb ram",
+    "category": "6850e039e36623cf51dff70f",
+    "owner": "6850dfc4e36623cf51dff709",
+    "condition": "Used",
+    "imagePath": "./public/1750144767004-243491146.png",
+    "createdAt": "2025-06-17T07:12:19.767Z",
+    "updatedAt": "2025-06-17T07:19:27.033Z",
+    "__v": 0,
+    "image": "data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAATIAAAEeCAYAAAAJqJmIAAAMPmlDQ1BJQ0MgUHJvZmlsZQAASImVVwdYU8kWnluSkEBCCV1K6E2KSAkgJYQWQHoRbIQkQCghBo..."
+}
+```
+
 NEED TO BE ADDED
 
 - For User db schema
