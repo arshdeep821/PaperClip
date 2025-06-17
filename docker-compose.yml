@@ -1,0 +1,24 @@
+services:
+    mongo:
+        image: mongo:6.0
+        ports:
+            - "27017:27017"
+        volumes:
+            - mongo-data:/data/db
+
+    server:
+        build: ./server
+        ports:
+            - "3001:3001"
+        depends_on:
+            - mongo
+
+    client:
+        build: ./client
+        ports:
+            - "5173:5173"
+        depends_on:
+            - server
+
+volumes:
+    mongo-data:
