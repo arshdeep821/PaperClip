@@ -1,11 +1,38 @@
-const mongoose = require("mongoose")
+import { Schema, model } from "mongoose";
 
-const tradeSchema = new mongoose.Schema({
-    user1: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    user2: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    items1: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item', required: true }],
-    items2: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item', required: true }],
-    status: { type: String, enum: ['pending', 'accepted', 'rejected', 'cancelled'], default: 'pending' },
-}, { timestamps: true, collection: "Trades" });
+const tradeSchema = new Schema(
+	{
+		user1: {
+			type: Schema.Types.ObjectId,
+			ref: "User",
+			required: true,
+		},
+		user2: {
+			type: Schema.Types.ObjectId,
+			ref: "User",
+			required: true,
+		},
+		items1: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: "Item",
+				required: true,
+			},
+		],
+		items2: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: "Item",
+				required: true,
+			},
+		],
+		status: {
+			type: String,
+			enum: ["pending", "accepted", "rejected", "cancelled"],
+			default: "pending",
+		},
+	},
+	{ timestamps: true, collection: "Trades" }
+);
 
-module.exports = mongoose.model('Trade', tradeSchema);
+export default model("Trade", tradeSchema);
