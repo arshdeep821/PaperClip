@@ -1,18 +1,18 @@
 require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
+import express, { json } from "express";
+import cors from "cors";
 
-const connectDB = require("./db/connect");
+import connectDB from "./db/connect";
 
-const testRouter = require("./routes/testRouter");
-const UserRouter = require("./routes/users");
-const CategoryRouter = require("./routes/categories");
-const ItemRouter = require("./routes/items");
+import testRouter from "./routes/testRouter";
+import UserRouter from "./routes/users";
+import CategoryRouter from "./routes/categories";
+import ItemRouter from "./routes/items";
 
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+app.use(json());
 
 app.use("/test", testRouter);
 app.use("/users", UserRouter);

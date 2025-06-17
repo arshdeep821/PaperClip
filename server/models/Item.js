@@ -1,10 +1,21 @@
-const mongoose = require("mongoose")
+import { Schema, model } from "mongoose";
 
-const ItemSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    description: { type: String, required: true },
-    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
-    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-}, { timestamps: true, collection: 'Items' })
+const ItemSchema = new Schema(
+	{
+		name: { type: String, required: true },
+		description: { type: String, required: true },
+		category: {
+			type: Schema.Types.ObjectId,
+			ref: "Category",
+			required: true,
+		},
+		owner: {
+			type: Schema.Types.ObjectId,
+			ref: "User",
+			required: true,
+		},
+	},
+	{ timestamps: true, collection: "Items" }
+);
 
-module.exports = mongoose.model('Item', ItemSchema)
+export default model("Item", ItemSchema);
