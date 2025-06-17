@@ -33,7 +33,7 @@ Example Body
 - POST http://localhost:3001/items
 
 Example body - Use formData on postman so you can attach files
-[Body](./assets/createItem.png)
+![Body](./assets/createItem.png)
 
 NEED TO BE ADDED
 
