@@ -1,4 +1,4 @@
-import Category, { findOne, find } from "../models/Category";
+import Category from "../models/Category.js";
 import { StatusCodes } from "http-status-codes";
 
 const createCategory = async (req, res) => {
@@ -11,7 +11,7 @@ const createCategory = async (req, res) => {
 				.json({ error: "Category name is required." });
 		}
 
-		const existing = await findOne({ name });
+		const existing = await Category.findOne({ name });
 		if (existing) {
 			return res
 				.status(StatusCodes.CONFLICT)
@@ -32,7 +32,7 @@ const createCategory = async (req, res) => {
 
 const getAllCategories = async (req, res) => {
 	try {
-		const categories = await find().sort({ name: 1 }); // Alphabetical order
+		const categories = await Category.find().sort({ name: 1 }); // Alphabetical order
 		res.status(StatusCodes.OK).json(categories);
 	} catch (err) {
 		console.error("Error fetching categories:", err);
@@ -42,7 +42,7 @@ const getAllCategories = async (req, res) => {
 	}
 };
 
-export default {
+export {
 	createCategory,
 	getAllCategories,
 };

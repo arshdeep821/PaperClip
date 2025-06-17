@@ -1,18 +1,19 @@
-require("dotenv").config();
-import express, { json } from "express";
+import dotenv from "dotenv";
+dotenv.config();
+import express from "express";
 import cors from "cors";
 
-import connectDB from "./db/connect";
+import connectDB from "./db/connect.js";
 
-import testRouter from "./routes/testRouter";
-import UserRouter from "./routes/users";
-import CategoryRouter from "./routes/categories";
-import ItemRouter from "./routes/items";
+import testRouter from "./routes/testRouter.js";
+import UserRouter from "./routes/users.js";
+import CategoryRouter from "./routes/categories.js";
+import ItemRouter from "./routes/items.js";
 
 const app = express();
 
 app.use(cors());
-app.use(json());
+app.use(express.json());
 
 app.use("/test", testRouter);
 app.use("/users", UserRouter);

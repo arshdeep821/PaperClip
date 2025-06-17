@@ -1,8 +1,7 @@
 import { Router } from "express";
 const router = Router();
 
-const { createCategory, getAllCategories } =
-	require("../controllers/categories").default.default;
+import { createCategory, getAllCategories } from "../controllers/categories.js"
 
 router.route("/").post(createCategory).get(getAllCategories);
 

@@ -1,6 +1,6 @@
-import Item from "../models/Item";
-import { findById } from "../models/User";
-import { findById as _findById } from "../models/Category";
+import Item from "../models/Item.js";
+import User from "../models/User.js";
+import Category from "../models/Category.js";
 
 import { StatusCodes } from "http-status-codes";
 
@@ -16,7 +16,7 @@ const createItem = async (req, res) => {
 		}
 
 		// Check if category exists
-		const existingCategory = await _findById(category);
+		const existingCategory = await Category.findById(category);
 		if (!existingCategory) {
 			return res
 				.status(StatusCodes.NOT_FOUND)
@@ -24,7 +24,7 @@ const createItem = async (req, res) => {
 		}
 
 		// Check if owner exists
-		const existingOwner = await findById(owner);
+		const existingOwner = await User.findById(owner);
 		if (!existingOwner) {
 			return res.status(404).json({ error: "Owner (User) not found." });
 		}

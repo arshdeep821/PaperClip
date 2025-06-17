@@ -1,4 +1,4 @@
-import User, { findOne, findById } from "../models/User";
+import User from "../models/User.js";
 import { StatusCodes } from "http-status-codes";
 
 const createUser = async (req, res) => {
@@ -13,7 +13,7 @@ const createUser = async (req, res) => {
 		}
 
 		// Check if user already exists
-		const existingUser = await findOne({ username });
+		const existingUser = await User.findOne({ username });
 		if (existingUser) {
 			return res
 				.status(StatusCodes.CONFLICT)
@@ -51,7 +51,7 @@ const getUser = async (req, res) => {
 	try {
 		const { id } = req.params;
 
-		const user = await findById(id)
+		const user = await User.findById(id)
 			.populate("inventory") // Populate inventory items
 			.select("-password"); // Exclude password from response
 

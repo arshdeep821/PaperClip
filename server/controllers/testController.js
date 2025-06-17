@@ -1,8 +1,8 @@
 import { StatusCodes } from "http-status-codes";
-import { create } from "../models/TestSchema";
+import Test from "../models/TestSchema.js";
 
 const testController = async (req, res) => {
-	const test = await create({ name: "Arshdeep" });
+	const test = await Test.create({ name: "Arshdeep" });
 	res.status(StatusCodes.OK).json(test);
 };
 
