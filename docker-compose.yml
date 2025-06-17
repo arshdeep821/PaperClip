@@ -12,6 +12,8 @@ services:
             - "3001:3001"
         depends_on:
             - mongo
+        volumes:
+            - ./server/public:/app/public:rw
 
     client:
         build: ./client

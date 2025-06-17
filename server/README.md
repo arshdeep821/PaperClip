@@ -31,15 +31,9 @@ Example Body
 ## ITEMS 
 
 - POST http://localhost:3001/items
-```bash
-Example body
-{
-    "name": "iPhone 15",
-    "description": "iPhone 15 pro with 16GB ram",
-    "category": "684fbe650536f9c922f1795f",
-    "owner": "684fb995a91862cc27263b8e"
-}
-```
+
+Example body - Use formData on postman so you can attach files
+[Body](./assets/createItem.png)
 
 NEED TO BE ADDED
 
