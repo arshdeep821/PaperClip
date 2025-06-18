@@ -6,10 +6,18 @@ import styles from "../styles/Inventory.module.css";
 import InventoryItem from "../components/InventoryItem";
 import Sidebar from "../components/Sidebar";
 import UploadItemForm from "../components/UploadItemForm";
+import EditItemForm from "../components/EditItemForm";
 
 const Inventory = () => {
     const items = useSelector((state) => state.inventory.items);
     const [showForm, setShowForm] = useState(false);
+    const [editItem, setEditItem] = useState(null);
+
+    const handleEditSubmit = (formData) => {
+        console.log("Editing item:", formData);
+        // TODO: Dispatch action to update item
+        setEditItem(null);
+    };
 
     return (
         <div className={styles.inventoryPage}>
@@ -29,8 +37,16 @@ const Inventory = () => {
                     onClose={() => setShowForm(false)}
                     onSubmit={(formData) => {
                         console.log("Submitting:", formData);
-                        setShowForm(false)
+                        setShowForm(false);
                     }}
+                />
+            )}
+
+            {editItem && (
+                <EditItemForm
+                    item={editItem}
+                    onClose={() => setEditItem(null)}
+                    onSubmit={handleEditSubmit}
                 />
             )}
 
@@ -41,7 +57,11 @@ const Inventory = () => {
                 ) : (
                     <div className={styles.inventoryGrid}>
                         {items.map((item) => (
-                            <InventoryItem key={item.id} item={item} />
+                            <InventoryItem 
+                                key={item.id} 
+                                item={item} 
+                                onEdit={(item) => setEditItem(item)} 
+                            />
                         ))}
                     </div>
                 )}
