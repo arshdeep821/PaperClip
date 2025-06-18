@@ -99,3 +99,8 @@ You can run
 ```bash
 npm run dev
 ```
+
+## Milestone 2
+
+Running application: `docker-compose up --build`
+Running application with only server and client logs: `docker-compose up --build -d && docker-compose logs -f server client`
