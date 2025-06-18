@@ -11,35 +11,26 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
     const [fields, setFields] = useState({
         name: "",
         description: "",
-        category: "",
+		category: "",
         condition: "",
         image: null,
     });
 
-    const dispatch = useDispatch();
+	const [categories, setCategories] = useState([]);
 
-    const [categories, setCategories] = useState([]);
+	useEffect(() => {
+		fetch("http://localhost:3001/categories")
+		.then(response => response.json())
+		.then(data => {
+			const fetchedCategories = data.map(category => ({
+				id: category.id,
+				name: category.name,
+			}));
 
-    const userId = useSelector(state => state.user.id)
-    const inventory = useSelector(state => state.user.inventory);
-
-    useEffect(() => {
-        console.log("Inventory updated:", inventory);
-    }, [inventory]);
-
-    useEffect(() => {
-        fetch("http://localhost:3001/categories")
-            .then(response => response.json())
-            .then(data => {
-                const fetchedCategories = data.map(category => ({
-                    id: category._id,
-                    name: category.name,
-                }));
-
-                console.log(fetchedCategories);
-                setCategories(fetchedCategories);
-            }).catch(error => console.error("Error fetching categories:", error));
-    }, []);
+			console.log(fetchedCategories);
+			setCategories(fetchedCategories);
+		}).catch(error => console.error("Error fetching categories:", error));
+	}, []);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -121,21 +112,21 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                 <TextField
                     label="Item Category"
                     name="category"
-                    value={fields.category}
+                    value={formData.category}
                     onChange={(e) => handleChange(e)}
                     select
                     fullWidth
                     required
                 >
                     {categories.length > 0 ? (
-                        categories.map((category) => (
-                            <MenuItem key={category.id} value={category}>
-                                {category.name}
-                            </MenuItem>
-                        ))) : (
-                        <MenuItem disabled>No categories found</MenuItem>
-                    )
-                    }
+						categories.map((category) => (
+                        <MenuItem key={category.id} value={category.name}>
+                            {category.name}
+                        </MenuItem>
+						))) : (
+							<MenuItem disabled>No categories found</MenuItem>
+						)
+					}
                 </TextField>
                 <TextField
                     label="Condition"
