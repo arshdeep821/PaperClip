@@ -4,6 +4,7 @@ import express from "express";
 import cors from "cors";
 
 import connectDB from "./db/connect.js";
+import seedDatabase from "./db/seed.js";
 
 import testRouter from "./routes/testRouter.js";
 import UserRouter from "./routes/users.js";
@@ -26,6 +27,8 @@ const start = async () => {
 	try {
 		await connectDB("mongodb://mongo:27017/database");
 		console.log("Connected to MongoDB");
+
+        await seedDatabase()
 
 		app.listen(port, () => {
 			console.log(`Server is listening on port ${port}`);
