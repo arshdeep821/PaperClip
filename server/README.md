@@ -1,30 +1,37 @@
 # List of End points that have been created so far
 
-- GET http://localhost:3001/test
-For testing server connection
+-   GET http://localhost:3001/test
+    For testing server connection
 
 ## USERS
-- POST http://localhost:3001/users
+
+-   POST http://localhost:3001/users
+
 ```bash
 Example Body
 {
-    "username": "Arshdeep",
-    "password": "password",
-    "location": "Vancouver"
+    "username": "Arshdeep_is_Awesome",
+	"name": "Arshdeep",
+    "password": "password123",
+    "city": "Vancouver",
+	"country": "Canada"
 }
 
-Example of what gets returned 
+Example of what gets returned
 {
     "_id": "68510d80587ba5eebf9c2e0d",
-    "username": "Sony",
-    "location": "Vancouver",
+    "username": "Sony123",
+	"name": "Sony",
+    "city": "Vancouver",
+	"country": "Canada",
     "tradingRadius": 10,
     "inventory": [],
     "createdAt": "2025-06-17T06:38:56.679Z"
 }
 ```
 
-- GET http://localhost:3001/users/:id
+-   GET http://localhost:3001/users/:id
+
 ```bash
 Example of what gets returned
 
@@ -39,7 +46,7 @@ Example of what gets returned
     "__v": 18
 }
 
-or 
+or
 
 {
     "_id": "6850dfc4e36623cf51dff709",
@@ -66,9 +73,10 @@ or
 }
 ```
 
-
 ## CATEGORIES
-- POST http://localhost:3001/categories
+
+-   POST http://localhost:3001/categories
+
 ```bash
 Example Body
 {
@@ -86,7 +94,7 @@ Example of what gets returned
 }
 ```
 
-- GET http://localhost:3001/categories
+-   GET http://localhost:3001/categories
 
 ```bash
 Example of what gets returned
@@ -109,9 +117,9 @@ Example of what gets returned
 ]
 ```
 
-## ITEMS 
+## ITEMS
 
-- POST http://localhost:3001/items
+-   POST http://localhost:3001/items
 
 Example body - Use formData on postman so you can attach files
 ![Body](./assets/createItem.png)
@@ -134,7 +142,7 @@ Example of what gets returned
 }
 ```
 
-- DELETE http://localhost:3001/items/:id
+-   DELETE http://localhost:3001/items/:id
 
 ```bash
 Example of what gets returned
@@ -143,13 +151,13 @@ Example of what gets returned
 }
 ```
 
-- PATCH http://localhost:3001/items/:id
+-   PATCH http://localhost:3001/items/:id
 
 Example body - Use formData on postman so you can attach files
 ![Body](./assets/updateItem.png)
 
 ```bash
-Example of what gets returned 
+Example of what gets returned
 
 {
     "_id": "685115534fa25e0b72d4beab",
@@ -168,17 +176,17 @@ Example of what gets returned
 
 NEED TO BE ADDED
 
-- For User db schema
-GET http://localhost:3001/users
+-   For User db schema
+    GET http://localhost:3001/users
 
 GET/DELETE/PATCH http://localhost:3001/users/:id
 
-- For Item db schema
-GET/POST http://localhost:3001/items
+-   For Item db schema
+    GET/POST http://localhost:3001/items
 
 GET/DELETE/PATCH http://localhost:3001/items/:id
 
-- For Trades db schema
-GET/POST http://localhost:3001/trades
+-   For Trades db schema
+    GET/POST http://localhost:3001/trades
 
 GET/DELETE/PATCH http://localhost:3001/items/:id

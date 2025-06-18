@@ -1,14 +1,19 @@
 import User from "../models/User.js";
 import { StatusCodes } from "http-status-codes";
+import { hash } from "bcrypt";
+
+const DEFAULT_USER_RADIUS = 10;
+const HASH_ROUNDS = 10;
 
 const createUser = async (req, res) => {
 	try {
-		const { username, password, location, tradingRadius } = req.body;
+		const { username, name, password, city, country, tradingRadius } =
+			req.body;
 
 		// Basic validation
-		if (!username || !password || !location) {
+		if (!username || !name || !password || !city || !country) {
 			return res.status(400).json({
-				error: "Username, password, and location are required.",
+				error: "Username, name, password, city, and country are required.",
 			});
 		}
 
@@ -20,11 +25,16 @@ const createUser = async (req, res) => {
 				.json({ error: "Username already exists." });
 		}
 
+		// Hash the password
+		const hashedPassword = await hash(password, HASH_ROUNDS);
+
 		const newUser = new User({
 			username,
-			password,
-			location,
-			tradingRadius: tradingRadius || 10, // default to 10 if not provided
+			name,
+			password: hashedPassword,
+			city,
+			country,
+			tradingRadius: tradingRadius || DEFAULT_USER_RADIUS,
 		});
 
 		await newUser.save();
@@ -32,7 +42,9 @@ const createUser = async (req, res) => {
 		const userResponse = {
 			_id: newUser._id,
 			username: newUser.username,
-			location: newUser.location,
+			name: newUser.name,
+			city: newUser.city,
+			country: newUser.country,
 			tradingRadius: newUser.tradingRadius,
 			inventory: newUser.inventory,
 			createdAt: newUser.createdAt,
