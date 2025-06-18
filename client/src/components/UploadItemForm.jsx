@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TextField, MenuItem, Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "../styles/UploadItemForm.module.css";
@@ -9,9 +9,26 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
     const [formData, setFormData] = useState({
         name: "",
         description: "",
+		category: "",
         condition: "",
         image: null,
     });
+
+	const [categories, setCategories] = useState([]);
+
+	useEffect(() => {
+		fetch("http://localhost:3001/categories")
+		.then(response => response.json())
+		.then(data => {
+			const fetchedCategories = data.map(category => ({
+				id: category.id,
+				name: category.name,
+			}));
+
+			console.log(fetchedCategories);
+			setCategories(fetchedCategories);
+		}).catch(error => console.error("Error fetching categories:", error));
+	}, []);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -53,6 +70,25 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                     rows={4}
                     required
                 />
+                <TextField
+                    label="Item Category"
+                    name="category"
+                    value={formData.category}
+                    onChange={(e) => handleChange(e)}
+                    select
+                    fullWidth
+                    required
+                >
+                    {categories.length > 0 ? (
+						categories.map((category) => (
+                        <MenuItem key={category.id} value={category.name}>
+                            {category.name}
+                        </MenuItem>
+						))) : (
+							<MenuItem disabled>No categories found</MenuItem>
+						)
+					}
+                </TextField>
                 <TextField
                     label="Condition"
                     name="condition"
