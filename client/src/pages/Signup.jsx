@@ -29,8 +29,7 @@ const Signup = () => {
 			if (countryObject) {
 				const isoCode = countryObject.isoCode;
 				const cityList = City.getCitiesOfCountry(isoCode);
-				const limitedCityList = cityList.slice(0, 25);
-				setCities(limitedCityList);
+				setCities(cityList);
 				setFormData((prev) => ({ ...prev, city: "" }));
 			}
 		} else {
@@ -65,7 +64,6 @@ const Signup = () => {
 			}
 
 			const userData = await response.json();
-			console.log("User data:", userData);
 
 			navigate("/login");
 			alert("Account Successfully Created");

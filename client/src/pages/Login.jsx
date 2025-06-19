@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/Login.module.css";
 import PaperClipLogo from "../assets/PaperClip.png";
 
+import { setUser } from "../redux/slices/userSlice";
+import { useDispatch } from "react-redux";
+
+const BACKEND_URL = "http://localhost:3001";
+
 function Login() {
+	const dispatch = useDispatch();
 	const [formData, setFormData] = useState({
 		username: "",
 		password: "",
@@ -12,17 +18,34 @@ function Login() {
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
-		setFormData((prevState) => ({
-			...prevState, // keep previous state
-			[name]: value, // override previous state value, name can be username or password, value is the value of the input
-		}));
+		setFormData((prev) => ({ ...prev, [name]: value }));
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		// TODO: Implement login logic here
-		console.log("Login attempt:", formData);
-		navigate("/home");
+
+		try {
+			const response = await fetch(`${BACKEND_URL}/users/login`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					username: formData.username,
+					password: formData.password,
+				}),
+			});
+
+			if (!response.ok) {
+				alert("An error trying to login");
+			}
+
+			const userData = await response.json();
+			dispatch(setUser(userData));
+
+			navigate("/home");
+			alert("Successfully Logged In");
+		} catch (error) {
+			console.error("Error:", error);
+		}
 	};
 
 	const handleCreateAccount = () => {
@@ -50,6 +73,7 @@ function Login() {
 							name="username"
 							value={formData.username}
 							onChange={(e) => handleChange(e)}
+							style={{ paddingLeft: "10px" }}
 							required
 						/>
 					</div>
@@ -61,6 +85,7 @@ function Login() {
 							name="password"
 							value={formData.password}
 							onChange={(e) => handleChange(e)}
+							style={{ paddingLeft: "10px" }}
 							required
 						/>
 					</div>
