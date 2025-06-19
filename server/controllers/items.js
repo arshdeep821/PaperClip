@@ -26,7 +26,8 @@ const createItem = async (req, res) => {
         }
 
         // get image path
-        const imagePath = `./public/${req.file.filename}`
+        // const imagePath = `./public/${req.file.filename}`
+        const imagePath = `${req.file.filename}`
 
         // Check if category exists
         const existingCategory = await Category.findById(category);
@@ -51,13 +52,13 @@ const createItem = async (req, res) => {
         await existingOwner.save();
 
         // get image and convert to base64
-        const imageFile = fs.readFileSync(imagePath)
-        const base64Image = `data:image/jpeg;base64,${imageFile.toString('base64')}`;
+        // const imageFile = fs.readFileSync(`./public/${imagePath}`)
+        // const base64Image = `data:image/jpeg;base64,${imageFile.toString('base64')}`;
 
         const newItemWithCategory = await Item.findById(newItem._id).populate("category");
 
         // create new object that will be returned
-        const newItemObj = { ...newItemWithCategory.toObject(), image: base64Image }
+        const newItemObj = { ...newItemWithCategory.toObject() }
 
         res.status(StatusCodes.CREATED).json(newItemObj);
     } catch (err) {
@@ -80,7 +81,7 @@ const deleteItem = async (req, res) => {
 
         // if image exists, delete it
         if (item.imagePath) {
-            const imageFullPath = path.resolve(item.imagePath);
+            const imageFullPath = path.resolve(`./public/${item.imagePath}`);
             if (fs.existsSync(imageFullPath)) {
                 fs.unlinkSync(imageFullPath);
             }
@@ -136,10 +137,12 @@ const updateItem = async (req, res) => {
         }
 
         if (req.file) {
-            const newImagePath = `./public/${req.file.filename}`;
+            // const newImagePath = `./public/${req.file.filename}`;
+            const newImagePath = `${req.file.filename}`
+
 
             // Delete old image
-            if (item.imagePath && fs.existsSync(item.imagePath)) {
+            if (item.imagePath && fs.existsSync(`./public/${item.imagePath}`)) {
                 fs.unlinkSync(item.imagePath);
             }
 
@@ -148,10 +151,10 @@ const updateItem = async (req, res) => {
 
         await item.save();
 
-        const imageFile = fs.readFileSync(item.imagePath);
-        const base64Image = `data:image/jpeg;base64,${imageFile.toString("base64")}`;
+        // const imageFile = fs.readFileSync(item.imagePath);
+        // const base64Image = `data:image/jpeg;base64,${imageFile.toString("base64")}`;
 
-        res.status(StatusCodes.OK).json({ ...item.toObject(), image: base64Image });
+        res.status(StatusCodes.OK).json({ ...item.toObject() });
     } catch (err) {
         console.error("Error updating item:", err);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({

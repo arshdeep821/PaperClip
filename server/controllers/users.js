@@ -75,7 +75,7 @@ const loginUser = async (req, res) => {
 				},
 			});
 
-			
+
 		if (!user) {
 			return res.status(StatusCodes.UNAUTHORIZED).json({
 				error: "Invalid username.",
@@ -91,14 +91,14 @@ const loginUser = async (req, res) => {
 
 		req.session.userId = user._id;
 
-		const inventory = user.inventory.map((item) => {
-			const imageFile = fs.readFileSync(item.imagePath);
-			const base64Image = `data:image/jpeg;base64,${imageFile.toString("base64")}`;
-			return {
-				...item.toObject(),
-				image: base64Image
-			}
-		})
+		// const inventory = user.inventory.map((item) => {
+		// 	const imageFile = fs.readFileSync(`./public/${item.imagePath}`);
+		// 	const base64Image = `data:image/jpeg;base64,${imageFile.toString("base64")}`;
+		// 	return {
+		// 		...item.toObject(),
+		// 		image: base64Image
+		// 	}
+		// })
 
 		const userResponse = {
 			_id: user._id,
@@ -107,7 +107,7 @@ const loginUser = async (req, res) => {
 			city: user.city,
 			country: user.country,
 			tradingRadius: user.tradingRadius,
-			inventory: inventory,
+			inventory: user.inventory,
 			createdAt: user.createdAt,
 		};
 

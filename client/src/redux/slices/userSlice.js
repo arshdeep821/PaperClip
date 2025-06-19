@@ -48,7 +48,7 @@ export const userSlice = createSlice({
         },
         updateItem: (state, action) => {
             const { id, name, description, category, image } = action.payload;
-            const item = state.items.find((item) => item.id === id);
+            const item = state.inventory.find((item) => item._id === id);
             if (item) {
                 item.name = name;
                 item.description = description;

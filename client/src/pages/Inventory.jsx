@@ -8,7 +8,8 @@ import InventoryItem from "../components/InventoryItem";
 import Sidebar from "../components/Sidebar";
 import UploadItemForm from "../components/UploadItemForm";
 import EditItemForm from "../components/EditItemForm";
-import { removeItem } from "../redux/slices/userSlice";
+import { removeItem, updateItem } from "../redux/slices/userSlice";
+import { data } from "react-router-dom";
 
 const Inventory = () => {
     const items = useSelector((state) => state.user.inventory);
@@ -23,9 +24,58 @@ const Inventory = () => {
     const dispatch = useDispatch();
 
 
-    const handleEditSubmit = (formData) => {
+    const handleEditSubmit = async (formData) => {
         console.log("Editing item:", formData);
         // TODO: Dispatch action to update item
+
+        const data = new FormData()
+        if (formData.name) {
+            data.append("name", formData.name);
+        }
+        if (formData.description) {
+            data.append("description", formData.description);
+        }
+
+        console.log("category", formData.category);
+        
+
+        if (formData.category) {
+            data.append("category", formData.category.id);
+        }
+
+        // if (formData.image) {
+        //     data.append("image", formData.image);
+        // }
+
+        try {
+            
+            const response = await fetch(`http://localhost:3001/items/${editItem._id}`, {
+                method: "PATCH",
+                body: data,
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                console.error("Server error:", result.error);
+            }
+
+            console.log("Item updated:", result);
+
+            dispatch(updateItem({
+                "id": editItem._id,
+                "name": formData.name,
+                "description": formData.description,
+                "category": formData.category,
+                // "image": formData.image,
+            }));
+
+            // onSubmit(result);
+            // onClose();
+        } catch (err) {
+            console.error("Edit item error:", err);
+        }
+
         setEditItem(null);
     };
 

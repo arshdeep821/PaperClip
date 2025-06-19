@@ -29,7 +29,7 @@ const items = [
 		name: "iPhone 15",
 		description: "Latest iPhone model in perfect condition",
 		condition: "New",
-		imagePath: "./public/iPhone.png",
+		imagePath: "iPhone.png",
 	},
 ];
 
