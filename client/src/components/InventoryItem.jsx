@@ -2,21 +2,13 @@ import styles from "../styles/Inventory.module.css";
 import { useState } from "react";
 import { Checkbox } from "@mui/material";
 
-function InventoryItem({ item, onEdit, deleteMode }) {
-
-//    const handleDelete = () => {
-//        if (!window.confirm("Are you sure you want to delete this product? This action cannot be undone.")) {
-//            return;
-//        }
-//
-//    }
+function InventoryItem({ item, onEdit, deleteMode, onSelect }) {
 
 	const [deleteStatus, setDeleteStatus] = useState(false);
 
     const handleEdit = () => {
         onEdit(item)
     }
-
 
     return (
         <div
@@ -26,7 +18,10 @@ function InventoryItem({ item, onEdit, deleteMode }) {
 			{deleteMode && (
 				<Checkbox
 					style={{ position: "absolute", top: 8, right: 8 }}
-					onChange={() => setDeleteStatus(!deleteStatus)}
+					onChange={() => {
+                        setDeleteStatus(!deleteStatus)
+                        onSelect(item._id)
+                    }}
 				/>
 			)}
             {item.image && (

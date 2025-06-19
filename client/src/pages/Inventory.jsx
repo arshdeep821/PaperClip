@@ -8,34 +8,19 @@ import InventoryItem from "../components/InventoryItem";
 import Sidebar from "../components/Sidebar";
 import UploadItemForm from "../components/UploadItemForm";
 import EditItemForm from "../components/EditItemForm";
-import { setItems } from "../redux/slices/inventorySlice";
+import { removeItem } from "../redux/slices/userSlice";
 
 const Inventory = () => {
     const items = useSelector((state) => state.user.inventory);
 
     console.log(items);
-    
+
     const [showForm, setShowForm] = useState(false);
     const [editItem, setEditItem] = useState(null);
-	const [deleteMode, setDeleteMode] = useState(false);
+    const [deleteMode, setDeleteMode] = useState(false);
+    const [selectedItems, setSelectedItems] = useState([]);
 
-	const dispatch = useDispatch();
-
-	// useEffect(() => {
-	// 	const fetchInventory = async () => {
-	// 		try {
-	// 			const res = await fetch("http://localhost:3001/users/123456789012345678901234");
-	// 			const data = await res.json();
-	// 			dispatch(setItems(data.inventory));
-	// 		} catch (err) {
-	// 			console.error("Error fetching inventory:", err);
-	// 		}
-	// 	}
-
-	// 	fetchInventory();
-
-	// }, [dispatch]);
-
+    const dispatch = useDispatch();
 
 
     const handleEditSubmit = (formData) => {
@@ -44,15 +29,35 @@ const Inventory = () => {
         setEditItem(null);
     };
 
-    const handleDelete = () => {
-		// TODO: Dispatch action to delete items
-
-        if (!window.confirm("Are you sure you want to delete this product? This action cannot be undone.")) {
+    const handleDelete = async () => {
+        if (!window.confirm("Are you sure you want to delete these products? This action cannot be undone.")) {
             return;
         }
 
-    }
+        try {
+            // Send all DELETE requests in parallel
+            await Promise.all(selectedItems.map(async (itemId) => {
+                const res = await fetch(`http://localhost:3001/items/${itemId}`, {
+                    method: "DELETE",
+                });
 
+                if (!res.ok) {
+                    console.error(`Failed to delete item with ID: ${itemId}`);
+                }
+            }));
+
+
+            selectedItems.map((itemId) => {
+                dispatch(removeItem(itemId))
+            })
+
+            // Optionally, update local state or refetch inventory after deletion
+            setSelectedItems([]); // Clear selected items
+            // Optionally: dispatch(fetchInventory()) if you re-enable useEffect logic
+        } catch (error) {
+            console.error("Error deleting items:", error);
+        }
+    };
     return (
         <div className={styles.inventoryPage}>
             <Sidebar />
@@ -87,29 +92,29 @@ const Inventory = () => {
 
             <div className={styles.inventoryListWrapper}>
 
-				<div className={styles.inventoryHeader}>
-					<h2>Inventory</h2>
+                <div className={styles.inventoryHeader}>
+                    <h2>Inventory</h2>
 
-					{deleteMode && (
-						<button
-							className={styles.deleteConfirm}
-							onClick={handleDelete}
-						>
-							Confirm Delete
-						</button>
-					)}
+                    {deleteMode && (
+                        <button
+                            className={styles.deleteConfirm}
+                            onClick={handleDelete}
+                        >
+                            Confirm Delete
+                        </button>
+                    )}
 
-					<div className={styles.deleteButtonWrapper}>
-						<Button
-							variant="contained"
-							startIcon={<DeleteIcon />}
-							className={`${styles.itemButton} ${styles.deleteButton}`}
-							onClick={() => setDeleteMode((prev) => !prev)}
-						>
-							{deleteMode ? "Cancel Delete" : "Delete Item(s)"}
-						</Button>
-					</div>
-				</div>
+                    <div className={styles.deleteButtonWrapper}>
+                        <Button
+                            variant="contained"
+                            startIcon={<DeleteIcon />}
+                            className={`${styles.itemButton} ${styles.deleteButton}`}
+                            onClick={() => setDeleteMode((prev) => !prev)}
+                        >
+                            {deleteMode ? "Cancel Delete" : "Delete Item(s)"}
+                        </Button>
+                    </div>
+                </div>
 
                 {items.length === 0 ? (
                     <p>No items in inventory</p>
@@ -120,7 +125,15 @@ const Inventory = () => {
                                 key={item._id}
                                 item={item}
                                 onEdit={(item) => setEditItem(item)}
-								deleteMode = {deleteMode}
+                                deleteMode={deleteMode}
+                                onSelect={(id) => {
+                                    setSelectedItems((prev) =>
+                                        prev.includes(id)
+                                            ? prev.filter((itemId) => itemId !== id)
+                                            : [...prev, id]
+                                    );
+                                }}
+
                             />
                         ))}
                     </div>

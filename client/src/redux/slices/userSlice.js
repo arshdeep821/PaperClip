@@ -44,7 +44,7 @@ export const userSlice = createSlice({
             state.inventory.push(action.payload);
         },
         removeItem: (state, action) => {
-            state.items = state.items.filter((item) => item.id !== action.payload);
+			state.inventory = state.inventory.filter((item) => item._id !== action.payload);
         },
         updateItem: (state, action) => {
             const { id, name, description, category, image } = action.payload;
@@ -62,6 +62,6 @@ export const userSlice = createSlice({
 	},
 });
 
-export const { setUser, addItem, remoteItem, updateItem, setItems } = userSlice.actions;
+export const { setUser, addItem, removeItem, updateItem, setItems } = userSlice.actions;
 
 export default userSlice.reducer;
