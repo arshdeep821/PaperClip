@@ -20,6 +20,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 
     const [categories, setCategories] = useState([]);
 
+    const userId = useSelector(state => state.user.id)
     const inventory = useSelector(state => state.user.inventory);
 
     useEffect(() => {
@@ -56,7 +57,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
         data.append("name", fields.name);
         data.append("description", fields.description);
         data.append("category", fields.category.id);
-        data.append("owner", "123456789012345678901234");
+        data.append("owner", userId);
         data.append("condition", fields.condition);
 
         console.log(data);
