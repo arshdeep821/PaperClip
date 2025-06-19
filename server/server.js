@@ -27,6 +27,8 @@ app.use(
 		},
 	})
 );
+
+app.use("/static", express.static("public"));
 app.use("/test", testRouter);
 app.use("/users", UserRouter);
 app.use("/categories", CategoryRouter);

@@ -2,14 +2,7 @@ import styles from "../styles/Inventory.module.css";
 import { useState } from "react";
 import { Checkbox } from "@mui/material";
 
-function InventoryItem({ item, onEdit, deleteMode }) {
-
-//    const handleDelete = () => {
-//        if (!window.confirm("Are you sure you want to delete this product? This action cannot be undone.")) {
-//            return;
-//        }
-//
-//    }
+function InventoryItem({ item, onEdit, deleteMode, onSelect }) {
 
 	const [deleteStatus, setDeleteStatus] = useState(false);
 
@@ -17,21 +10,23 @@ function InventoryItem({ item, onEdit, deleteMode }) {
         onEdit(item)
     }
 
-
     return (
         <div
-            key={item.id}
+            key={item._id}
             className={styles.inventoryItem}
         >
 			{deleteMode && (
 				<Checkbox
 					style={{ position: "absolute", top: 8, right: 8 }}
-					onChange={() => setDeleteStatus(!deleteStatus)}
+					onChange={() => {
+                        setDeleteStatus(!deleteStatus)
+                        onSelect(item._id)
+                    }}
 				/>
 			)}
-            {item.image && (
+            {item.imagePath && (
                 <img
-                    src={item.image}
+                    src={`http://localhost:3001/static/${item.imagePath.replace(/^\//, "")}?t=${item._id || Date.now()}`}
                     alt={item.name}
                     className={styles.itemImage}
                 />
@@ -39,7 +34,7 @@ function InventoryItem({ item, onEdit, deleteMode }) {
             <div>
                 <h3>{item.name}</h3>
                 <p>{item.description}</p>
-                <p className={styles.itemCategory}>Category: {item.category}</p>
+                <p className={styles.itemCategory}>Category: {item.category.name}</p>
 				{/*
                 <button
                     className={`${styles.itemButton} ${styles.deleteButton}`}
