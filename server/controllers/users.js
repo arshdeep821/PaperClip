@@ -121,4 +121,62 @@ const getUser = async (req, res) => {
 	}
 };
 
-export { createUser, loginUser, getUser };
+const updateUser = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { username, password, location, tradingRadius, name, email, city, country } = req.body;
+
+		const user = await User.findById(id);
+
+		if (!user) {
+			return res.status(404).json({ error: "User not found." });
+		}
+
+		if (username && username !== user.username) {
+			const existingUser = await User.findOne({ username });
+			if (existingUser) {
+				return res
+					.status(StatusCodes.CONFLICT)
+					.json({ error: "Username already exists." });
+			}
+		}
+
+		const updatedUser = await User.findByIdAndUpdate(
+			id,
+			{
+				...(username && { username }),
+				...(password && { password }),
+				...(location && { location }),
+				...(tradingRadius && { tradingRadius }),
+				...(name && { name }),
+				...(email && { email }),
+				...(city && { city }),
+				...(country && { country })
+			},
+			{ new: true, runValidators: true }
+		).select("-password");
+
+		const userResponse = {
+			_id: updatedUser._id,
+			username: updatedUser.username,
+			location: updatedUser.location,
+			tradingRadius: updatedUser.tradingRadius,
+			name: updatedUser.name,
+			email: updatedUser.email,
+			city: updatedUser.city,
+			country: updatedUser.country,
+			inventory: updatedUser.inventory,
+			createdAt: updatedUser.createdAt,
+			updatedAt: updatedUser.updatedAt,
+		};
+
+		res.status(StatusCodes.OK).json(userResponse);
+	} catch (err) {
+		console.error("Error updating user:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Server error. Could not update user.",
+		});
+	}
+};
+
+export { createUser, loginUser, getUser, updateUser };

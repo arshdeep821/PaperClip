@@ -2,6 +2,9 @@ import React from "react";
 import styles from "../styles/Profile.module.css";
 import Sidebar from "../components/Sidebar";
 import corgiImage from "../assets/corgi.jpg";
+import hustlerIcon from "../assets/hustlericon.png";
+import paperClipIcon from "../assets/PaperClip.png";
+import houseIcon from "../assets/houseicon2.png";
 
 function Profile() {
   return (
@@ -21,6 +24,14 @@ function Profile() {
           </div>
           <fieldset className={styles.fieldset}>
             <legend className={styles.legend}>Account Details</legend>
+            <div className={styles.inputGroup}>
+              <label className={styles.label} htmlFor="username">Username:</label>
+              <div className={styles.staticText}>Admin</div>
+            </div>
+            <div className={styles.inputGroup}>
+              <label className={styles.label} htmlFor="password">Password:</label>
+              <div className={styles.staticText}>••••••••</div>
+            </div>
             <div className={styles.inputGroup}>
               <label className={styles.label} htmlFor="name">Name:</label>
               <div className={styles.staticText}>test</div>
@@ -63,7 +74,7 @@ function Profile() {
                 <figure className={styles.achievementFigure}>
                   <img
                     className={styles.achievementIcon}
-                    src="/src/assets/hustlericon.png"
+                    src={hustlerIcon}
                     alt="Hustler Achievement"
                   />
                   <figcaption>
@@ -78,7 +89,7 @@ function Profile() {
                 <figure className={styles.achievementFigure}>
                   <img
                     className={styles.achievementIcon}
-                    src="/src/assets/PaperClip.png"
+                    src={paperClipIcon}
                     alt="From Nothing Achievement"
                   />
                   <figcaption>
@@ -93,7 +104,7 @@ function Profile() {
                 <figure className={styles.achievementFigure}>
                   <img
                     className={styles.achievementIcon}
-                    src="/src/assets/houseicon2.png"
+                    src={houseIcon}
                     alt="Closed the Deal Achievement"
                   />
                   <figcaption>
