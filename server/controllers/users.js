@@ -1,18 +1,22 @@
 import User from "../models/User.js";
 import { StatusCodes } from "http-status-codes";
+import { hash, compare } from "bcrypt";
+import fs from "fs"
+
+const DEFAULT_USER_RADIUS = 10;
+const HASH_ROUNDS = 10;
 
 const createUser = async (req, res) => {
 	try {
-		const { username, password, location, tradingRadius } = req.body;
+		const { username, name, password, city, country, tradingRadius } =
+			req.body;
 
-		// Basic validation
-		if (!username || !password || !location) {
+		if (!username || !name || !password || !city || !country) {
 			return res.status(400).json({
-				error: "Username, password, and location are required.",
+				error: "Username, name, password, city, and country are required.",
 			});
 		}
 
-		// Check if user already exists
 		const existingUser = await User.findOne({ username });
 		if (existingUser) {
 			return res
@@ -20,11 +24,15 @@ const createUser = async (req, res) => {
 				.json({ error: "Username already exists." });
 		}
 
+		const hashedPassword = await hash(password, HASH_ROUNDS);
+
 		const newUser = new User({
 			username,
-			password,
-			location,
-			tradingRadius: tradingRadius || 10, // default to 10 if not provided
+			name,
+			password: hashedPassword,
+			city,
+			country,
+			tradingRadius: tradingRadius || DEFAULT_USER_RADIUS,
 		});
 
 		await newUser.save();
@@ -32,7 +40,9 @@ const createUser = async (req, res) => {
 		const userResponse = {
 			_id: newUser._id,
 			username: newUser.username,
-			location: newUser.location,
+			name: newUser.name,
+			city: newUser.city,
+			country: newUser.country,
 			tradingRadius: newUser.tradingRadius,
 			inventory: newUser.inventory,
 			createdAt: newUser.createdAt,
@@ -43,6 +53,69 @@ const createUser = async (req, res) => {
 		console.error("Error creating user:", err);
 		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
 			error: "Server error. Could not create user.",
+		});
+	}
+};
+
+const loginUser = async (req, res) => {
+	try {
+		const { username, password } = req.body;
+
+		if (!username || !password) {
+			return res.status(StatusCodes.BAD_REQUEST).json({
+				error: "Username and password are required.",
+			});
+		}
+
+		const user = await User.findOne({ username })
+			.populate({
+				path: "inventory",
+				populate: {
+					path: "category", // deep populate category inside each item
+				},
+			});
+
+
+		if (!user) {
+			return res.status(StatusCodes.UNAUTHORIZED).json({
+				error: "Invalid username.",
+			});
+		}
+
+		const isMatch = await compare(password, user.password);
+		if (!isMatch) {
+			return res.status(StatusCodes.UNAUTHORIZED).json({
+				error: "Invalid password.",
+			});
+		}
+
+		req.session.userId = user._id;
+
+		// const inventory = user.inventory.map((item) => {
+		// 	const imageFile = fs.readFileSync(`./public/${item.imagePath}`);
+		// 	const base64Image = `data:image/jpeg;base64,${imageFile.toString("base64")}`;
+		// 	return {
+		// 		...item.toObject(),
+		// 		image: base64Image
+		// 	}
+		// })
+
+		const userResponse = {
+			_id: user._id,
+			username: user.username,
+			name: user.name,
+			city: user.city,
+			country: user.country,
+			tradingRadius: user.tradingRadius,
+			inventory: user.inventory,
+			createdAt: user.createdAt,
+		};
+
+		res.status(StatusCodes.OK).json(userResponse);
+	} catch (err) {
+		console.error("Error logging in:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Server error. Could not login.",
 		});
 	}
 };
@@ -66,4 +139,4 @@ const getUser = async (req, res) => {
 	}
 };
 
-export { createUser, getUser };
+export { createUser, loginUser, getUser };

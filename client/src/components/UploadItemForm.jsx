@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { TextField, MenuItem, Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "../styles/UploadItemForm.module.css";
+import { addItem } from "../redux/slices/userSlice.js";
+import { useDispatch, useSelector } from "react-redux";
 
 const conditions = ["New", "Used", "Damaged"];
 
@@ -9,11 +11,16 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
     const [fields, setFields] = useState({
         name: "",
         description: "",
+<<<<<<< HEAD
 		category: "",
+=======
+        category: "",
+>>>>>>> 778cc8aca88f433631fb34984b8375398d25a3a6
         condition: "",
         image: null,
     });
 
+<<<<<<< HEAD
 	const [categories, setCategories] = useState([]);
 
 	useEffect(() => {
@@ -29,6 +36,32 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 			setCategories(fetchedCategories);
 		}).catch(error => console.error("Error fetching categories:", error));
 	}, []);
+=======
+    const dispatch = useDispatch();
+
+    const [categories, setCategories] = useState([]);
+
+    const userId = useSelector(state => state.user.id)
+    const inventory = useSelector(state => state.user.inventory);
+
+    useEffect(() => {
+        console.log("Inventory updated:", inventory);
+    }, [inventory]);
+
+    useEffect(() => {
+        fetch("http://localhost:3001/categories")
+            .then(response => response.json())
+            .then(data => {
+                const fetchedCategories = data.map(category => ({
+                    id: category._id,
+                    name: category.name,
+                }));
+
+                console.log(fetchedCategories);
+                setCategories(fetchedCategories);
+            }).catch(error => console.error("Error fetching categories:", error));
+    }, []);
+>>>>>>> 778cc8aca88f433631fb34984b8375398d25a3a6
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -41,6 +74,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+<<<<<<< HEAD
 		const data = new FormData();
 
 		data.append("name", fields.name);
@@ -74,6 +108,46 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 		} catch (error) {
 			console.error("Submission error:", error);
 		}
+=======
+        const data = new FormData();
+
+        data.append("name", fields.name);
+        data.append("description", fields.description);
+        data.append("category", fields.category.id);
+        data.append("owner", userId);
+        data.append("condition", fields.condition);
+
+        console.log(data);
+
+
+        if (fields.image) {
+            data.append("image", fields.image);
+        }
+
+        try {
+            console.log(data);
+            const response = await fetch("http://localhost:3001/items", {
+                method: "POST",
+                body: data,
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                console.error("Server error:", result.error);
+            }
+
+            console.log("Item created:", result);
+
+            dispatch(addItem(result))
+
+            onSubmit(result);
+            onClose();
+
+        } catch (error) {
+            console.error("Submission error:", error);
+        }
+>>>>>>> 778cc8aca88f433631fb34984b8375398d25a3a6
     };
 
     return (
@@ -85,7 +159,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 
                 <h2>Upload New Item</h2>
                 <TextField
-                	label="Item Name"
+                    label="Item Name"
                     name="name"
                     value={fields.name}
                     onChange={(e) => handleChange(e)}
@@ -112,6 +186,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                     required
                 >
                     {categories.length > 0 ? (
+<<<<<<< HEAD
 						categories.map((category) => (
                         <MenuItem key={category.id} value={category}>
 							{category.name}
@@ -120,6 +195,16 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 							<MenuItem disabled>No categories found</MenuItem>
 						)
 					}
+=======
+                        categories.map((category) => (
+                            <MenuItem key={category.id} value={category}>
+                                {category.name}
+                            </MenuItem>
+                        ))) : (
+                        <MenuItem disabled>No categories found</MenuItem>
+                    )
+                    }
+>>>>>>> 778cc8aca88f433631fb34984b8375398d25a3a6
                 </TextField>
                 <TextField
                     label="Condition"
