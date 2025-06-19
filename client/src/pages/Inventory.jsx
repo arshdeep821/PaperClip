@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -8,12 +8,30 @@ import InventoryItem from "../components/InventoryItem";
 import Sidebar from "../components/Sidebar";
 import UploadItemForm from "../components/UploadItemForm";
 import EditItemForm from "../components/EditItemForm";
+import { setItems } from "../redux/slices/inventorySlice";
 
 const Inventory = () => {
     const items = useSelector((state) => state.inventory.items);
     const [showForm, setShowForm] = useState(false);
     const [editItem, setEditItem] = useState(null);
 	const [deleteMode, setDeleteMode] = useState(false);
+
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		const fetchInventory = async () => {
+			try {
+				const res = await fetch("http://localhost:3001/users/123456789012345678901234");
+				const data = await res.json();
+				dispatch(setItems(data.inventory));
+			} catch (err) {
+				console.error("Error fetching inventory:", err);
+			}
+		}
+
+		fetchInventory();
+
+	}, [dispatch]);
 
     const handleEditSubmit = (formData) => {
         console.log("Editing item:", formData);
