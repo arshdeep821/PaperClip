@@ -23,7 +23,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 		.then(response => response.json())
 		.then(data => {
 			const fetchedCategories = data.map(category => ({
-				id: category.id,
+				id: category._id,
 				name: category.name,
 			}));
 
@@ -43,44 +43,39 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const data = new FormData();
+		const data = new FormData();
 
-        data.append("name", fields.name);
-        data.append("description", fields.description);
-        data.append("category", fields.category.id);
-        data.append("owner", userId);
-        data.append("condition", fields.condition);
+		data.append("name", fields.name);
+		data.append("description", fields.description);
+		data.append("category", fields.category.id);
+		data.append("owner", "123456789012345678901234");
+		data.append("condition", fields.condition);
 
-        console.log(data);
+		if (fields.image) {
+			data.append("image", fields.image);
+		}
 
+		try {
+			console.log(data);
+			const response = await fetch("http://localhost:3001/items", {
+				method: "POST",
+				headers: { "Content-Type": "multipart/form-data" },
+				body: data,
+			});
 
-        if (fields.image) {
-            data.append("image", fields.image);
-        }
+			const result = await response.json();
 
-        try {
-            console.log(data);
-            const response = await fetch("http://localhost:3001/items", {
-                method: "POST",
-                body: data,
-            });
+			if (!response.ok) {
+				console.error("Server error:", result.error);
+			}
 
-            const result = await response.json();
+			console.log("Item created:", result);
+			onSubmit(result);
+			onClose();
 
-            if (!response.ok) {
-                console.error("Server error:", result.error);
-            }
-
-            console.log("Item created:", result);
-
-            dispatch(addItem(result))
-
-            onSubmit(result);
-            onClose();
-
-        } catch (error) {
-            console.error("Submission error:", error);
-        }
+		} catch (error) {
+			console.error("Submission error:", error);
+		}
     };
 
     return (
@@ -112,7 +107,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                 <TextField
                     label="Item Category"
                     name="category"
-                    value={formData.category}
+                    value={fields.category}
                     onChange={(e) => handleChange(e)}
                     select
                     fullWidth
@@ -120,8 +115,8 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                 >
                     {categories.length > 0 ? (
 						categories.map((category) => (
-                        <MenuItem key={category.id} value={category.name}>
-                            {category.name}
+                        <MenuItem key={category.id} value={category}>
+							{category.name}
                         </MenuItem>
 						))) : (
 							<MenuItem disabled>No categories found</MenuItem>
