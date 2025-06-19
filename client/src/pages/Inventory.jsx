@@ -8,8 +8,7 @@ import InventoryItem from "../components/InventoryItem";
 import Sidebar from "../components/Sidebar";
 import UploadItemForm from "../components/UploadItemForm";
 import EditItemForm from "../components/EditItemForm";
-import { removeItem, updateItem } from "../redux/slices/userSlice";
-import { data } from "react-router-dom";
+import { setItems } from "../redux/slices/inventorySlice";
 
 const Inventory = () => {
     const items = useSelector((state) => state.user.inventory);
@@ -21,10 +20,24 @@ const Inventory = () => {
     const [deleteMode, setDeleteMode] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
 
-    const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
+	useEffect(() => {
+		const fetchInventory = async () => {
+			try {
+				const res = await fetch("http://localhost:3001/users/123456789012345678901234");
+				const data = await res.json();
+				dispatch(setItems(data.inventory));
+			} catch (err) {
+				console.error("Error fetching inventory:", err);
+			}
+		}
 
-    const handleEditSubmit = async (formData) => {
+		fetchInventory();
+
+	}, [dispatch]);
+
+    const handleEditSubmit = (formData) => {
         console.log("Editing item:", formData);
         // TODO: Dispatch action to update item
 
@@ -37,7 +50,7 @@ const Inventory = () => {
         }
 
         console.log("category", formData.category);
-        
+
 
         if (formData.category) {
             data.append("category", formData.category.id);
@@ -48,7 +61,7 @@ const Inventory = () => {
         // }
 
         try {
-            
+
             const response = await fetch(`http://localhost:3001/items/${editItem._id}`, {
                 method: "PATCH",
                 body: data,
