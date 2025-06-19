@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { TextField, MenuItem, Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "../styles/UploadItemForm.module.css";
+import { addItem } from "../redux/slices/userSlice.js";
+import { useDispatch, useSelector } from "react-redux";
 
 const conditions = ["New", "Used", "Damaged"];
 
@@ -9,26 +11,34 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
     const [fields, setFields] = useState({
         name: "",
         description: "",
-		category: "",
+        category: "",
         condition: "",
         image: null,
     });
 
-	const [categories, setCategories] = useState([]);
+    const dispatch = useDispatch();
 
-	useEffect(() => {
-		fetch("http://localhost:3001/categories")
-		.then(response => response.json())
-		.then(data => {
-			const fetchedCategories = data.map(category => ({
-				id: category._id,
-				name: category.name,
-			}));
+    const [categories, setCategories] = useState([]);
 
-			console.log(fetchedCategories);
-			setCategories(fetchedCategories);
-		}).catch(error => console.error("Error fetching categories:", error));
-	}, []);
+    const inventory = useSelector(state => state.user.inventory);
+
+    useEffect(() => {
+        console.log("Inventory updated:", inventory);
+    }, [inventory]);
+
+    useEffect(() => {
+        fetch("http://localhost:3001/categories")
+            .then(response => response.json())
+            .then(data => {
+                const fetchedCategories = data.map(category => ({
+                    id: category._id,
+                    name: category.name,
+                }));
+
+                console.log(fetchedCategories);
+                setCategories(fetchedCategories);
+            }).catch(error => console.error("Error fetching categories:", error));
+    }, []);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -41,39 +51,44 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-		const data = new FormData();
+        const data = new FormData();
 
-		data.append("name", fields.name);
-		data.append("description", fields.description);
-		data.append("category", fields.category.id);
-		data.append("owner", "123456789012345678901234");
-		data.append("condition", fields.condition);
+        data.append("name", fields.name);
+        data.append("description", fields.description);
+        data.append("category", fields.category.id);
+        data.append("owner", "123456789012345678901234");
+        data.append("condition", fields.condition);
 
-		if (fields.image) {
-			data.append("image", fields.image);
-		}
+        console.log(data);
 
-		try {
-			console.log(data);
-			const response = await fetch("http://localhost:3001/items", {
-				method: "POST",
-				headers: { "Content-Type": "multipart/form-data" },
-				body: data,
-			});
 
-			const result = await response.json();
+        if (fields.image) {
+            data.append("image", fields.image);
+        }
 
-			if (!response.ok) {
-				console.error("Server error:", result.error);
-			}
+        try {
+            console.log(data);
+            const response = await fetch("http://localhost:3001/items", {
+                method: "POST",
+                body: data,
+            });
 
-			console.log("Item created:", result);
-			onSubmit(result);
-			onClose();
+            const result = await response.json();
 
-		} catch (error) {
-			console.error("Submission error:", error);
-		}
+            if (!response.ok) {
+                console.error("Server error:", result.error);
+            }
+
+            console.log("Item created:", result);
+
+            dispatch(addItem(result))
+
+            onSubmit(result);
+            onClose();
+
+        } catch (error) {
+            console.error("Submission error:", error);
+        }
     };
 
     return (
@@ -85,7 +100,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 
                 <h2>Upload New Item</h2>
                 <TextField
-                	label="Item Name"
+                    label="Item Name"
                     name="name"
                     value={fields.name}
                     onChange={(e) => handleChange(e)}
@@ -112,14 +127,14 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                     required
                 >
                     {categories.length > 0 ? (
-						categories.map((category) => (
-                        <MenuItem key={category.id} value={category}>
-							{category.name}
-                        </MenuItem>
-						))) : (
-							<MenuItem disabled>No categories found</MenuItem>
-						)
-					}
+                        categories.map((category) => (
+                            <MenuItem key={category.id} value={category}>
+                                {category.name}
+                            </MenuItem>
+                        ))) : (
+                        <MenuItem disabled>No categories found</MenuItem>
+                    )
+                    }
                 </TextField>
                 <TextField
                     label="Condition"

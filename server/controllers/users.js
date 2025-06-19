@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import { StatusCodes } from "http-status-codes";
 import { hash, compare } from "bcrypt";
+import fs from "fs"
 
 const DEFAULT_USER_RADIUS = 10;
 const HASH_ROUNDS = 10;
@@ -66,7 +67,15 @@ const loginUser = async (req, res) => {
 			});
 		}
 
-		const user = await User.findOne({ username }).populate("inventory");
+		const user = await User.findOne({ username })
+			.populate({
+				path: "inventory",
+				populate: {
+					path: "category", // deep populate category inside each item
+				},
+			});
+
+			
 		if (!user) {
 			return res.status(StatusCodes.UNAUTHORIZED).json({
 				error: "Invalid username.",
@@ -82,6 +91,15 @@ const loginUser = async (req, res) => {
 
 		req.session.userId = user._id;
 
+		const inventory = user.inventory.map((item) => {
+			const imageFile = fs.readFileSync(item.imagePath);
+			const base64Image = `data:image/jpeg;base64,${imageFile.toString("base64")}`;
+			return {
+				...item.toObject(),
+				image: base64Image
+			}
+		})
+
 		const userResponse = {
 			_id: user._id,
 			username: user.username,
@@ -89,7 +107,7 @@ const loginUser = async (req, res) => {
 			city: user.city,
 			country: user.country,
 			tradingRadius: user.tradingRadius,
-			inventory: user.inventory,
+			inventory: inventory,
 			createdAt: user.createdAt,
 		};
 

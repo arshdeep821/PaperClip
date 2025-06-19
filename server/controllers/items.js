@@ -54,8 +54,10 @@ const createItem = async (req, res) => {
         const imageFile = fs.readFileSync(imagePath)
         const base64Image = `data:image/jpeg;base64,${imageFile.toString('base64')}`;
 
+        const newItemWithCategory = await Item.findById(newItem._id).populate("category");
+
         // create new object that will be returned
-        const newItemObj = { ...newItem.toObject(), image: base64Image }
+        const newItemObj = { ...newItemWithCategory.toObject(), image: base64Image }
 
         res.status(StatusCodes.CREATED).json(newItemObj);
     } catch (err) {

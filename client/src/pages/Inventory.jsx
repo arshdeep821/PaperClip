@@ -11,27 +11,32 @@ import EditItemForm from "../components/EditItemForm";
 import { setItems } from "../redux/slices/inventorySlice";
 
 const Inventory = () => {
-    const items = useSelector((state) => state.inventory.items);
+    const items = useSelector((state) => state.user.inventory);
+
+    console.log(items);
+    
     const [showForm, setShowForm] = useState(false);
     const [editItem, setEditItem] = useState(null);
 	const [deleteMode, setDeleteMode] = useState(false);
 
 	const dispatch = useDispatch();
 
-	useEffect(() => {
-		const fetchInventory = async () => {
-			try {
-				const res = await fetch("http://localhost:3001/users/123456789012345678901234");
-				const data = await res.json();
-				dispatch(setItems(data.inventory));
-			} catch (err) {
-				console.error("Error fetching inventory:", err);
-			}
-		}
+	// useEffect(() => {
+	// 	const fetchInventory = async () => {
+	// 		try {
+	// 			const res = await fetch("http://localhost:3001/users/123456789012345678901234");
+	// 			const data = await res.json();
+	// 			dispatch(setItems(data.inventory));
+	// 		} catch (err) {
+	// 			console.error("Error fetching inventory:", err);
+	// 		}
+	// 	}
 
-		fetchInventory();
+	// 	fetchInventory();
 
-	}, [dispatch]);
+	// }, [dispatch]);
+
+
 
     const handleEditSubmit = (formData) => {
         console.log("Editing item:", formData);
@@ -112,7 +117,7 @@ const Inventory = () => {
                     <div className={styles.inventoryGrid}>
                         {items.map((item) => (
                             <InventoryItem
-                                key={item.id}
+                                key={item._id}
                                 item={item}
                                 onEdit={(item) => setEditItem(item)}
 								deleteMode = {deleteMode}

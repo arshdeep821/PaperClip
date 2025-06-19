@@ -20,7 +20,7 @@ function InventoryItem({ item, onEdit, deleteMode }) {
 
     return (
         <div
-            key={item.id}
+            key={item._id}
             className={styles.inventoryItem}
         >
 			{deleteMode && (
@@ -39,7 +39,7 @@ function InventoryItem({ item, onEdit, deleteMode }) {
             <div>
                 <h3>{item.name}</h3>
                 <p>{item.description}</p>
-                <p className={styles.itemCategory}>Category: {item.category}</p>
+                <p className={styles.itemCategory}>Category: {item.category.name}</p>
 				{/*
                 <button
                     className={`${styles.itemButton} ${styles.deleteButton}`}
