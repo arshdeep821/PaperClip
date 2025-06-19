@@ -30,6 +30,28 @@ Example of what gets returned
 }
 ```
 
+-   POST http://localhost:3001/users/login
+
+```bash
+Example Body
+{
+    "username": "Arshdeep_is_Awesome",
+    "password": "password123",
+}
+
+Example of what gets returned
+{
+    "_id": "68510d80587ba5eebf9c2e0d",
+    "username": "Sony123",
+	"name": "Sony",
+    "city": "Vancouver",
+	"country": "Canada",
+    "tradingRadius": 10,
+    "inventory": [],
+    "createdAt": "2025-06-17T06:38:56.679Z"
+}
+```
+
 -   GET http://localhost:3001/users/:id
 
 ```bash
