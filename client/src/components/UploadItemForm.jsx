@@ -6,7 +6,7 @@ import styles from "../styles/UploadItemForm.module.css";
 const conditions = ["New", "Used", "Damaged"];
 
 const UploadItemForm = ({ onClose, onSubmit }) => {
-    const [formData, setFormData] = useState({
+    const [fields, setFields] = useState({
         name: "",
         description: "",
 		category: "",
@@ -21,7 +21,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 		.then(response => response.json())
 		.then(data => {
 			const fetchedCategories = data.map(category => ({
-				id: category.id,
+				id: category._id,
 				name: category.name,
 			}));
 
@@ -32,16 +32,48 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
-        setFormData((prev) => ({
+        setFields((prev) => ({
             ...prev,
             [name]: files ? files[0] : value,
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onSubmit(formData);
-        onClose();
+
+		const data = new FormData();
+
+		data.append("name", fields.name);
+		data.append("description", fields.description);
+		data.append("category", fields.category.id);
+		data.append("owner", "123456789012345678901234");
+		data.append("condition", fields.condition);
+
+		if (fields.image) {
+			data.append("image", fields.image);
+		}
+
+		try {
+			console.log(data);
+			const response = await fetch("http://localhost:3001/items", {
+				method: "POST",
+				headers: { "Content-Type": "multipart/form-data" },
+				body: data,
+			});
+
+			const result = await response.json();
+
+			if (!response.ok) {
+				console.error("Server error:", result.error);
+			}
+
+			console.log("Item created:", result);
+			onSubmit(result);
+			onClose();
+
+		} catch (error) {
+			console.error("Submission error:", error);
+		}
     };
 
     return (
@@ -55,7 +87,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                 <TextField
                 	label="Item Name"
                     name="name"
-                    value={formData.name}
+                    value={fields.name}
                     onChange={(e) => handleChange(e)}
                     fullWidth
                     required
@@ -63,7 +95,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                 <TextField
                     label="Item Description"
                     name="description"
-                    value={formData.description}
+                    value={fields.description}
                     onChange={(e) => handleChange(e)}
                     fullWidth
                     multiline
@@ -73,7 +105,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                 <TextField
                     label="Item Category"
                     name="category"
-                    value={formData.category}
+                    value={fields.category}
                     onChange={(e) => handleChange(e)}
                     select
                     fullWidth
@@ -81,8 +113,8 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                 >
                     {categories.length > 0 ? (
 						categories.map((category) => (
-                        <MenuItem key={category.id} value={category.name}>
-                            {category.name}
+                        <MenuItem key={category.id} value={category}>
+							{category.name}
                         </MenuItem>
 						))) : (
 							<MenuItem disabled>No categories found</MenuItem>
@@ -92,7 +124,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                 <TextField
                     label="Condition"
                     name="condition"
-                    value={formData.condition}
+                    value={fields.condition}
                     onChange={(e) => handleChange(e)}
                     select
                     fullWidth
@@ -118,8 +150,8 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                         required
                         className={styles.hiddenFileInput}
                     />
-                    {formData.image && (
-                        <p className={styles.fileName}>Selected: {formData.image.name}</p>
+                    {fields.image && (
+                        <p className={styles.fileName}>Selected: {fields.image.name}</p>
                     )}
                 </div>
 
