@@ -7,12 +7,12 @@ const HASH_ROUNDS = 10;
 
 const createUser = async (req, res) => {
 	try {
-		const { username, name, password, city, country, tradingRadius } =
+		const { username, name, password, email, city, country, tradingRadius } =
 			req.body;
 
-		if (!username || !name || !password || !city || !country) {
+		if (!username || !name || !password || !email || !city || !country) {
 			return res.status(400).json({
-				error: "Username, name, password, city, and country are required.",
+				error: "Username, name, password, email, city, and country are required.",
 			});
 		}
 
@@ -29,6 +29,7 @@ const createUser = async (req, res) => {
 			username,
 			name,
 			password: hashedPassword,
+			email,
 			city,
 			country,
 			tradingRadius: tradingRadius || DEFAULT_USER_RADIUS,
@@ -40,6 +41,7 @@ const createUser = async (req, res) => {
 			_id: newUser._id,
 			username: newUser.username,
 			name: newUser.name,
+			email: newUser.email,
 			city: newUser.city,
 			country: newUser.country,
 			tradingRadius: newUser.tradingRadius,

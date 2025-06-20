@@ -22,6 +22,8 @@ const user = {
 	password: hashedPassword,
 	city: "Vancouver",
 	country: "Canada",
+	email: "admin@example.com",
+	radius: "5km",
 };
 
 const items = [
