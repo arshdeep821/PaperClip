@@ -80,7 +80,7 @@ const EditItemForm = ({ item, onClose, onSubmit }) => {
                         <select
                             id="category"
                             name="category"
-                            value={formData.category.id || ""}
+                            value={formData.category?.id || formData.category?._id || ""}
                             onChange={(e) => {
                                 const selected = categories.find(c => c.id === e.target.value);
                                 handleChange({
