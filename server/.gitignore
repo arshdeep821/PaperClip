@@ -1,2 +1,7 @@
 node_modules
 .env
+
+# stop tracking pitures
+public/*.png
+public/*.jpg
+public/*.jpeg

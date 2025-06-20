@@ -9,6 +9,22 @@ const EditItemForm = ({ item, onClose, onSubmit }) => {
         condition: ''
     });
 
+    const [categories, setCategories] = useState([])
+
+    useEffect(() => {
+        fetch("http://localhost:3001/categories")
+            .then(response => response.json())
+            .then(data => {
+                const fetchedCategories = data.map(category => ({
+                    id: category._id,
+                    name: category.name,
+                }));
+
+                console.log(fetchedCategories);
+                setCategories(fetchedCategories);
+            }).catch(error => console.error("Error fetching categories:", error));
+    }, []);
+
     useEffect(() => {
         // Initialize form with item data
         setFormData({
@@ -61,14 +77,28 @@ const EditItemForm = ({ item, onClose, onSubmit }) => {
                     </div>
                     <div className={styles.formGroup}>
                         <label htmlFor="category">Category</label>
-                        <input
-                            type="text"
+                        <select
                             id="category"
                             name="category"
-                            value={formData.category}
-                            onChange={(e) => handleChange(e)}
+                            value={formData.category.id || ""}
+                            onChange={(e) => {
+                                const selected = categories.find(c => c.id === e.target.value);
+                                handleChange({
+                                    target: {
+                                        name: "category",
+                                        value: selected,
+                                    },
+                                });
+                            }}
                             required
-                        />
+                        >
+                            <option value="" disabled>Select a category</option>
+                            {categories.map(category => (
+                                <option key={category.id} value={category.id}>
+                                    {category.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div className={styles.formGroup}>
                         <label htmlFor="condition">Condition</label>
@@ -88,8 +118,8 @@ const EditItemForm = ({ item, onClose, onSubmit }) => {
                         <button type="submit" className={styles.submitButton}>
                             Save Changes
                         </button>
-                        <button 
-                            type="button" 
+                        <button
+                            type="button"
                             className={styles.cancelButton}
                             onClick={() => onClose()}
                         >
