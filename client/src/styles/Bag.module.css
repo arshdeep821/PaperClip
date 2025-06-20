@@ -49,6 +49,7 @@
 .smallItem {
 	display: flex;
 	justify-content: center;
+	flex-direction: column;
 }
 
 .smallItem img {
@@ -60,6 +61,10 @@
 
 .smallItem:hover {
 	transform: scale(1.05);
+}
+
+.itemName {
+	/* TODO: add styling */
 }
 
 @keyframes slideUp {

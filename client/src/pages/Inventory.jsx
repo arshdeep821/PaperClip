@@ -12,7 +12,7 @@ import { removeItem, updateItem } from "../redux/slices/userSlice";
 import { data } from "react-router-dom";
 
 const Inventory = () => {
-    const items = useSelector((state) => state.user.inventory);
+    const items = useSelector((state) => state.user.inventory || []);
 
     console.log(items);
 
@@ -37,7 +37,7 @@ const Inventory = () => {
         }
 
         console.log("category", formData.category);
-        
+
 
         if (formData.category) {
             data.append("category", formData.category.id);
@@ -48,7 +48,7 @@ const Inventory = () => {
         // }
 
         try {
-            
+
             const response = await fetch(`http://localhost:3001/items/${editItem._id}`, {
                 method: "PATCH",
                 body: data,
