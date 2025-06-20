@@ -20,7 +20,6 @@ const EditItemForm = ({ item, onClose, onSubmit }) => {
                     name: category.name,
                 }));
 
-                console.log(fetchedCategories);
                 setCategories(fetchedCategories);
             }).catch(error => console.error("Error fetching categories:", error));
     }, []);
@@ -45,7 +44,6 @@ const EditItemForm = ({ item, onClose, onSubmit }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
         onSubmit({ ...formData, id: item.id });
     };
 

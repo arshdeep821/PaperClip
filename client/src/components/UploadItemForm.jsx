@@ -36,7 +36,6 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                     name: category.name,
                 }));
 
-                console.log(fetchedCategories);
                 setCategories(fetchedCategories);
             }).catch(error => console.error("Error fetching categories:", error));
     }, []);
@@ -60,15 +59,11 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
         data.append("owner", userId);
         data.append("condition", fields.condition);
 
-        console.log(data);
-
-
         if (fields.image) {
             data.append("image", fields.image);
         }
 
         try {
-            console.log(data);
             const response = await fetch("http://localhost:3001/items", {
                 method: "POST",
                 body: data,
@@ -79,8 +74,6 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
             if (!response.ok) {
                 console.error("Server error:", result.error);
             }
-
-            console.log("Item created:", result);
 
             dispatch(addItem(result))
 
