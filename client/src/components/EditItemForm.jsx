@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import styles from '../styles/Inventory.module.css';
 
+const BACKEND_URL = "http://localhost:3001";
+
 const EditItemForm = ({ item, onClose, onSubmit }) => {
     const [formData, setFormData] = useState({
         name: '',
@@ -12,7 +14,7 @@ const EditItemForm = ({ item, onClose, onSubmit }) => {
     const [categories, setCategories] = useState([])
 
     useEffect(() => {
-        fetch("http://localhost:3001/categories")
+        fetch(`${BACKEND_URL}/categories`)
             .then(response => response.json())
             .then(data => {
                 const fetchedCategories = data.map(category => ({
@@ -20,7 +22,6 @@ const EditItemForm = ({ item, onClose, onSubmit }) => {
                     name: category.name,
                 }));
 
-                console.log(fetchedCategories);
                 setCategories(fetchedCategories);
             }).catch(error => console.error("Error fetching categories:", error));
     }, []);
@@ -45,7 +46,6 @@ const EditItemForm = ({ item, onClose, onSubmit }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
         onSubmit({ ...formData, id: item.id });
     };
 
@@ -80,7 +80,7 @@ const EditItemForm = ({ item, onClose, onSubmit }) => {
                         <select
                             id="category"
                             name="category"
-                            value={formData.category.id || ""}
+                            value={formData.category?.id || formData.category?._id || ""}
                             onChange={(e) => {
                                 const selected = categories.find(c => c.id === e.target.value);
                                 handleChange({

@@ -39,21 +39,20 @@ export const userSlice = createSlice({
 			state.createdAt = createdAt;
 		},
 		addItem: (state, action) => {
-			console.log("Action", action.payload);
-
             state.inventory.push(action.payload);
         },
         removeItem: (state, action) => {
 			state.inventory = state.inventory.filter((item) => item._id !== action.payload);
         },
         updateItem: (state, action) => {
-            const { id, name, description, category, image } = action.payload;
+            const { id, name, description, category, condition, image } = action.payload;
             const item = state.inventory.find((item) => item._id === id);
             if (item) {
                 item.name = name;
                 item.description = description;
                 item.category = category;
                 item.image = image;
+				item.condition = condition;
             }
         },
 		setItems: (state, action) => {

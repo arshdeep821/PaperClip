@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 const conditions = ["New", "Used", "Damaged"];
 
+const BACKEND_URL = "http://localhost:3001";
+
 const UploadItemForm = ({ onClose, onSubmit }) => {
     const [fields, setFields] = useState({
         name: "",
@@ -28,7 +30,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
     }, [inventory]);
 
     useEffect(() => {
-        fetch("http://localhost:3001/categories")
+        fetch(`${BACKEND_URL}/categories`)
             .then(response => response.json())
             .then(data => {
                 const fetchedCategories = data.map(category => ({
@@ -36,7 +38,6 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                     name: category.name,
                 }));
 
-                console.log(fetchedCategories);
                 setCategories(fetchedCategories);
             }).catch(error => console.error("Error fetching categories:", error));
     }, []);
@@ -60,16 +61,12 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
         data.append("owner", userId);
         data.append("condition", fields.condition);
 
-        console.log(data);
-
-
         if (fields.image) {
             data.append("image", fields.image);
         }
 
         try {
-            console.log(data);
-            const response = await fetch("http://localhost:3001/items", {
+            const response = await fetch(`${BACKEND_URL}/items`, {
                 method: "POST",
                 body: data,
             });
@@ -79,8 +76,6 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
             if (!response.ok) {
                 console.error("Server error:", result.error);
             }
-
-            console.log("Item created:", result);
 
             dispatch(addItem(result))
 
