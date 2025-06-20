@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -9,7 +9,6 @@ import Sidebar from "../components/Sidebar";
 import UploadItemForm from "../components/UploadItemForm";
 import EditItemForm from "../components/EditItemForm";
 import { removeItem, updateItem } from "../redux/slices/userSlice";
-import { data } from "react-router-dom";
 
 const Inventory = () => {
     const items = useSelector((state) => state.user.inventory || []);
@@ -37,10 +36,6 @@ const Inventory = () => {
             data.append("category", formData.category.id);
         }
 
-        // if (formData.image) {
-        //     data.append("image", formData.image);
-        // }
-
         try {
 
             const response = await fetch(`http://localhost:3001/items/${editItem._id}`, {
@@ -59,11 +54,8 @@ const Inventory = () => {
                 "name": formData.name,
                 "description": formData.description,
                 "category": formData.category,
-                // "image": formData.image,
             }));
 
-            // onSubmit(result);
-            // onClose();
         } catch (err) {
             console.error("Edit item error:", err);
         }
