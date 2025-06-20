@@ -46,6 +46,10 @@ const Inventory = () => {
             data.append("category", formData.category.id);
         }
 
+		if (formData.category) {
+			data.append("condition", formData.condition);
+		}
+
         try {
 
             const response = await fetch(`${BACKEND_URL}/items/${editItem._id}`, {
@@ -64,6 +68,7 @@ const Inventory = () => {
                 "name": formData.name,
                 "description": formData.description,
                 "category": formData.category,
+				"condition": formData.condition,
             }));
 
         } catch (err) {

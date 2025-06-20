@@ -36,6 +36,7 @@ function InventoryItem({ item, onEdit, deleteMode, onSelect }) {
                 <h3>{item.name}</h3>
                 <p>{item.description}</p>
                 <p className={styles.itemCategory}>Category: {item.category.name}</p>
+				<p className={styles.itemCondition}>Condition: {item.condition}</p>
                 <button
                     className={`${styles.itemButton} ${styles.editButton}`}
                     onClick={() => handleEdit()}

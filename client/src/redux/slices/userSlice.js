@@ -45,13 +45,14 @@ export const userSlice = createSlice({
 			state.inventory = state.inventory.filter((item) => item._id !== action.payload);
         },
         updateItem: (state, action) => {
-            const { id, name, description, category, image } = action.payload;
+            const { id, name, description, category, condition, image } = action.payload;
             const item = state.inventory.find((item) => item._id === id);
             if (item) {
                 item.name = name;
                 item.description = description;
                 item.category = category;
                 item.image = image;
+				item.condition = condition;
             }
         },
 		setItems: (state, action) => {
