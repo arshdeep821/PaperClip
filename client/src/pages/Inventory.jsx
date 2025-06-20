@@ -11,7 +11,7 @@ import EditItemForm from "../components/EditItemForm";
 import { setItems } from "../redux/slices/inventorySlice";
 
 const Inventory = () => {
-    const items = useSelector((state) => state.user.inventory);
+    const items = useSelector((state) => state.user.inventory || []);
 
     console.log(items);
 
