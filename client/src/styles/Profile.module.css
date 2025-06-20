@@ -206,3 +206,19 @@
     display: flex;
     align-items: center;
 }
+
+.editInput {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    background-color: white;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.editInput:focus {
+    outline: none;
+    border-color: #0056b3;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
