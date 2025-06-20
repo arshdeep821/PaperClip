@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import styles from '../styles/Inventory.module.css';
 
+const BACKEND_URL = "http://localhost:3001";
+
 const EditItemForm = ({ item, onClose, onSubmit }) => {
     const [formData, setFormData] = useState({
         name: '',
@@ -12,7 +14,7 @@ const EditItemForm = ({ item, onClose, onSubmit }) => {
     const [categories, setCategories] = useState([])
 
     useEffect(() => {
-        fetch("http://localhost:3001/categories")
+        fetch(`${BACKEND_URL}/categories`)
             .then(response => response.json())
             .then(data => {
                 const fetchedCategories = data.map(category => ({
