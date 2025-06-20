@@ -10,6 +10,7 @@ const Signup = () => {
 	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		username: "",
+		email: "",
 		name: "",
 		password1: "",
 		password2: "",
@@ -52,6 +53,7 @@ const Signup = () => {
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
 					username: formData.username,
+					email: formData.email,
 					name: formData.name,
 					password: formData.password1,
 					country: formData.country,
@@ -63,7 +65,7 @@ const Signup = () => {
 				alert("An error occured trying to make your account");
 			}
 
-			const userData = await response.json();
+			// const userData = await response.json();
 
 			navigate("/login");
 			alert("Account Successfully Created");
@@ -96,6 +98,18 @@ const Signup = () => {
 							id="username"
 							name="username"
 							value={formData.username}
+							onChange={(e) => handleChange(e)}
+							style={{ paddingLeft: "10px" }}
+							required
+						/>
+					</div>
+					<div className={styles.formSection}>
+						<label htmlFor="email">Email</label>
+						<input
+							type="email"
+							id="email"
+							name="email"
+							value={formData.email}
 							onChange={(e) => handleChange(e)}
 							style={{ paddingLeft: "10px" }}
 							required

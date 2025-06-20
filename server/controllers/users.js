@@ -8,20 +8,27 @@ const HASH_ROUNDS = 10;
 
 const createUser = async (req, res) => {
 	try {
-		const { username, name, password, city, country, tradingRadius } =
-			req.body;
+		const { username, name, email, password, city, country, tradingRadius } = req.body;
 
-		if (!username || !name || !password || !city || !country) {
+		if (!username || !name || !email || !password || !city || !country) {
 			return res.status(400).json({
-				error: "Username, name, password, city, and country are required.",
+				error: "Username, name, email, password, city, and country are required.",
 			});
 		}
 
-		const existingUser = await User.findOne({ username });
+		// Email format validation
+		const emailRegex = /^\S+@\S+\.\S+$/;
+		if (!emailRegex.test(email)) {
+			return res.status(400).json({ error: "Invalid email format." });
+		}
+
+		const existingUser = await User.findOne({ $or: [{ username }, { email }] });
 		if (existingUser) {
-			return res
-				.status(StatusCodes.CONFLICT)
-				.json({ error: "Username already exists." });
+			if (existingUser.username === username) {
+				return res.status(StatusCodes.CONFLICT).json({ error: "Username already exists." });
+			} else {
+				return res.status(StatusCodes.CONFLICT).json({ error: "Email already exists." });
+			}
 		}
 
 		const hashedPassword = await hash(password, HASH_ROUNDS);
@@ -29,6 +36,7 @@ const createUser = async (req, res) => {
 		const newUser = new User({
 			username,
 			name,
+			email,
 			password: hashedPassword,
 			city,
 			country,
@@ -41,6 +49,7 @@ const createUser = async (req, res) => {
 			_id: newUser._id,
 			username: newUser.username,
 			name: newUser.name,
+			email: newUser.email,
 			city: newUser.city,
 			country: newUser.country,
 			tradingRadius: newUser.tradingRadius,
@@ -59,26 +68,24 @@ const createUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
 	try {
-		const { username, password } = req.body;
+		const { username, email, password } = req.body;
 
-		if (!username || !password) {
+		if ((!username && !email) || !password) {
 			return res.status(StatusCodes.BAD_REQUEST).json({
-				error: "Username and password are required.",
+				error: "Username or email and password are required.",
 			});
 		}
 
-		const user = await User.findOne({ username })
-			.populate({
-				path: "inventory",
-				populate: {
-					path: "category", // deep populate category inside each item
-				},
-			});
-
+		const user = await User.findOne(
+			username ? { username } : { email }
+		).populate({
+			path: "inventory",
+			populate: { path: "category" },
+		});
 
 		if (!user) {
 			return res.status(StatusCodes.UNAUTHORIZED).json({
-				error: "Invalid username.",
+				error: username ? "Invalid username." : "Invalid email.",
 			});
 		}
 
@@ -91,19 +98,11 @@ const loginUser = async (req, res) => {
 
 		req.session.userId = user._id;
 
-		// const inventory = user.inventory.map((item) => {
-		// 	const imageFile = fs.readFileSync(`./public/${item.imagePath}`);
-		// 	const base64Image = `data:image/jpeg;base64,${imageFile.toString("base64")}`;
-		// 	return {
-		// 		...item.toObject(),
-		// 		image: base64Image
-		// 	}
-		// })
-
 		const userResponse = {
 			_id: user._id,
 			username: user.username,
 			name: user.name,
+			email: user.email,
 			city: user.city,
 			country: user.country,
 			tradingRadius: user.tradingRadius,
