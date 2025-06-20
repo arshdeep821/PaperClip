@@ -40,7 +40,7 @@ export const userSlice = createSlice({
 		},
 		addItem: (state, action) => {
 			console.log("Action", action.payload);
-			
+
             state.inventory.push(action.payload);
         },
         removeItem: (state, action) => {
