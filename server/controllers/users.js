@@ -8,12 +8,12 @@ const HASH_ROUNDS = 10;
 
 const createUser = async (req, res) => {
 	try {
-		const { username, name, password, email, city, country, tradingRadius } =
+		const { username, name, password, city, country, tradingRadius } =
 			req.body;
 
-		if (!username || !name || !password || !email || !city || !country) {
+		if (!username || !name || !password || !city || !country) {
 			return res.status(400).json({
-				error: "Username, name, password, email, city, and country are required.",
+				error: "Username, name, password, city, and country are required.",
 			});
 		}
 
@@ -30,7 +30,6 @@ const createUser = async (req, res) => {
 			username,
 			name,
 			password: hashedPassword,
-			email,
 			city,
 			country,
 			tradingRadius: tradingRadius || DEFAULT_USER_RADIUS,
@@ -42,7 +41,6 @@ const createUser = async (req, res) => {
 			_id: newUser._id,
 			username: newUser.username,
 			name: newUser.name,
-			email: newUser.email,
 			city: newUser.city,
 			country: newUser.country,
 			tradingRadius: newUser.tradingRadius,
@@ -106,7 +104,6 @@ const loginUser = async (req, res) => {
 			_id: user._id,
 			username: user.username,
 			name: user.name,
-			email: user.email,
 			city: user.city,
 			country: user.country,
 			tradingRadius: user.tradingRadius,
@@ -128,8 +125,8 @@ const getUser = async (req, res) => {
 		const { id } = req.params;
 
 		const user = await User.findById(id)
-			.populate("inventory")
-			.select("-password");
+			.populate("inventory") // Populate inventory items
+			.select("-password"); // Exclude password from response
 
 		if (!user) {
 			return res.status(404).json({ error: "User not found." });
@@ -142,98 +139,4 @@ const getUser = async (req, res) => {
 	}
 };
 
-const updateUser = async (req, res) => {
-	try {
-		const { id } = req.params;
-		const { username, tradingRadius, name, email, city, country } = req.body;
-
-		const user = await User.findById(id);
-
-		if (!user) {
-			return res.status(404).json({ error: "User not found." });
-		}
-
-		if (username && username !== user.username) {
-			const existingUser = await User.findOne({ username });
-			if (existingUser) {
-				return res
-					.status(StatusCodes.CONFLICT)
-					.json({ error: "Username already exists." });
-			}
-		}
-
-		const updatedUser = await User.findByIdAndUpdate(
-			id,
-			{
-				...(username && { username }),
-				...(tradingRadius && { tradingRadius }),
-				...(name && { name }),
-				...(email && { email }),
-				...(city && { city }),
-				...(country && { country })
-			},
-			{ new: true, runValidators: true }
-		).select("-password");
-
-		const userResponse = {
-			_id: updatedUser._id,
-			username: updatedUser.username,
-			tradingRadius: updatedUser.tradingRadius,
-			name: updatedUser.name,
-			email: updatedUser.email,
-			city: updatedUser.city,
-			country: updatedUser.country,
-			inventory: updatedUser.inventory,
-			createdAt: updatedUser.createdAt,
-			updatedAt: updatedUser.updatedAt,
-		};
-
-		res.status(StatusCodes.OK).json(userResponse);
-	} catch (err) {
-		console.error("Error updating user:", err);
-		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-			error: "Server error. Could not update user.",
-		});
-	}
-};
-
-const validateSession = async (req, res) => {
-	try {
-		const userId = req.session.userId;
-
-		if (!userId) {
-			return res.status(StatusCodes.UNAUTHORIZED).json({
-				error: "No active session."
-			});
-		}
-
-		const user = await User.findById(userId).select("-password");
-
-		if (!user) {
-			return res.status(StatusCodes.UNAUTHORIZED).json({
-				error: "User not found."
-			});
-		}
-
-		const userResponse = {
-			_id: user._id,
-			username: user.username,
-			name: user.name,
-			email: user.email,
-			city: user.city,
-			country: user.country,
-			tradingRadius: user.tradingRadius,
-			inventory: user.inventory,
-			createdAt: user.createdAt,
-		};
-
-		res.status(StatusCodes.OK).json(userResponse);
-	} catch (err) {
-		console.error("Error validating session:", err);
-		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-			error: "Server error. Could not validate session.",
-		});
-	}
-};
-
-export { createUser, loginUser, getUser, updateUser, validateSession };
+export { createUser, loginUser, getUser };

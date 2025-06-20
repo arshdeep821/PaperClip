@@ -1,20 +1,16 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { Country, City } from "country-state-city";
-import { createUser, loginUser } from "../redux/slices/userSlice";
 import styles from "../styles/Signup.module.css";
 import PaperClipLogo from "../assets/PaperClip.png";
 
+const BACKEND_URL = "http://localhost:3001";
+
 const Signup = () => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
-	const { loading, error, isLoggedIn } = useSelector((state) => state.user);
-
 	const [formData, setFormData] = useState({
 		username: "",
 		name: "",
-		email: "",
 		password1: "",
 		password2: "",
 		country: "",
@@ -42,12 +38,6 @@ const Signup = () => {
 		}
 	}, [formData.country]);
 
-	useEffect(() => {
-		if (isLoggedIn) {
-			navigate("/");
-		}
-	}, [isLoggedIn, navigate]);
-
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({ ...prev, [name]: value }));
@@ -56,32 +46,29 @@ const Signup = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		if (formData.password1 !== formData.password2) {
-			alert("Passwords do not match");
-			return;
-		}
-
 		try {
-			const userData = {
-				username: formData.username,
-				name: formData.name,
-				email: formData.email,
-				password: formData.password1,
-				country: formData.country,
-				city: formData.city,
-			};
+			const response = await fetch(`${BACKEND_URL}/users`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					username: formData.username,
+					name: formData.name,
+					password: formData.password1,
+					country: formData.country,
+					city: formData.city,
+				}),
+			});
 
-			await dispatch(createUser(userData)).unwrap();
+			if (!response.ok) {
+				alert("An error occured trying to make your account");
+			}
 
-			const loginCredentials = {
-				username: formData.username,
-				password: formData.password1,
-			};
+			const userData = await response.json();
 
-			await dispatch(loginUser(loginCredentials)).unwrap();
+			navigate("/login");
 			alert("Account Successfully Created");
 		} catch (error) {
-			alert(error.message || "An error occurred trying to create your account");
+			console.error("Error:", error);
 		}
 	};
 
@@ -101,7 +88,6 @@ const Signup = () => {
 					<h1>PaperClip</h1>
 				</div>
 				<h2>Create an Account</h2>
-				{error && <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>}
 				<form onSubmit={(e) => handleSubmit(e)}>
 					<div className={styles.formSection}>
 						<label htmlFor="username">Username</label>
@@ -122,18 +108,6 @@ const Signup = () => {
 							id="name"
 							name="name"
 							value={formData.name}
-							onChange={(e) => handleChange(e)}
-							style={{ paddingLeft: "10px" }}
-							required
-						/>
-					</div>
-					<div className={styles.formSection}>
-						<label htmlFor="email">Email</label>
-						<input
-							type="email"
-							id="email"
-							name="email"
-							value={formData.email}
 							onChange={(e) => handleChange(e)}
 							style={{ paddingLeft: "10px" }}
 							required
@@ -204,8 +178,8 @@ const Signup = () => {
 							))}
 						</datalist>
 					</div>
-					<button type="submit" className={styles.button} disabled={loading}>
-						{loading ? "Creating Account..." : "Create Account"}
+					<button type="submit" className={styles.button}>
+						Create Account
 					</button>
 				</form>
 				<div className={styles.loginHyperlink}>

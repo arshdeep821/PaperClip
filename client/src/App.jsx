@@ -4,9 +4,6 @@ import {
 	Route,
 	Navigate,
 } from "react-router-dom";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { validateSession } from "./redux/slices/userSlice";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Inventory from "./pages/Inventory";
@@ -19,41 +16,26 @@ import ViewOffers from "./pages/ViewOffers";
 import Search from "./pages/Search";
 import NotFoundPage from "./pages/NotFoundPage";
 
-function AppContent() {
-	const dispatch = useDispatch();
-	const { isLoggedIn } = useSelector((state) => state.user);
-
-	useEffect(() => {
-		if (isLoggedIn) {
-			dispatch(validateSession());
-		}
-	}, [dispatch, isLoggedIn]);
-
-	return (
-		<Router>
-			<Routes>
-				<Route
-					path="/"
-					element={<Navigate to={isLoggedIn ? "/home" : "/login"} replace />}
-				/>
-				<Route path="/login" element={isLoggedIn ? <Navigate to="/home" replace /> : <Login />} />
-				<Route path="/inventory" element={isLoggedIn ? <Inventory /> : <Navigate to="/login" replace />} />
-				<Route path="/products" element={isLoggedIn ? <ViewProducts /> : <Navigate to="/login" replace />} />
-				<Route path="/offers" element={isLoggedIn ? <ViewOffers /> : <Navigate to="/login" replace />} />
-				<Route path="/profile" element={isLoggedIn ? <Profile /> : <Navigate to="/login" replace />} />
-				<Route path="/signup" element={isLoggedIn ? <Navigate to="/home" replace /> : <Signup />} />
-				<Route path="/home" element={isLoggedIn ? <Home /> : <Navigate to="/login" replace />} />
-				<Route path="/search" element={isLoggedIn ? <Search /> : <Navigate to="/login" replace />} />
-				<Route path="/*" element={<NotFoundPage />} />
-			</Routes>
-		</Router>
-	);
-}
-
 function App() {
 	return (
 		<Provider store={store}>
-			<AppContent />
+			<Router>
+				<Routes>
+					<Route
+						path="/"
+						element={<Navigate to="/login" replace />}
+					/>
+					<Route path="/login" element={<Login />} />
+					<Route path="/inventory" element={<Inventory />} />
+					<Route path="/products" element={<ViewProducts />} />
+					<Route path="/offers" element={<ViewOffers />} />
+					<Route path="/profile" element={<Profile />} />
+					<Route path="/signup" element={<Signup />} />
+					<Route path="/home" element={<Home />} />
+					<Route path="/search" element={<Search />} />
+          <Route path="/*" element={<NotFoundPage />} />
+				</Routes>
+			</Router>
 		</Provider>
 	);
 }

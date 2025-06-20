@@ -3,7 +3,6 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import session from "express-session";
-import MongoStore from "connect-mongo";
 
 import connectDB from "./db/connect.js";
 import seedDatabase from "./db/seed.js";
@@ -15,11 +14,6 @@ import ItemRouter from "./routes/items.js";
 
 const app = express();
 
-const sessionStore = MongoStore.create({
-	mongoUrl: "mongodb://mongo:27017/database",
-	collectionName: "sessions",
-});
-
 app.use(cors());
 app.use(express.json());
 app.use(
@@ -27,7 +21,6 @@ app.use(
 		secret: "temp_secret_for_dev",
 		resave: false,
 		saveUninitialized: false,
-		store: sessionStore,
 		cookie: {
 			maxAge: 1000 * 60 * 60 * 24,
 			secure: false,
