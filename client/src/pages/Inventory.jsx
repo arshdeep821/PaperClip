@@ -10,6 +10,8 @@ import UploadItemForm from "../components/UploadItemForm";
 import EditItemForm from "../components/EditItemForm";
 import { removeItem, updateItem } from "../redux/slices/userSlice";
 
+const BACKEND_URL = "http://localhost:3001";
+
 const Inventory = () => {
     const items = useSelector((state) => state.user.inventory || []);
 
@@ -46,7 +48,7 @@ const Inventory = () => {
 
         try {
 
-            const response = await fetch(`http://localhost:3001/items/${editItem._id}`, {
+            const response = await fetch(`${BACKEND_URL}/items/${editItem._id}`, {
                 method: "PATCH",
                 body: data,
             });
@@ -78,7 +80,7 @@ const Inventory = () => {
 
         try {
             await Promise.all(selectedItems.map(async (itemId) => {
-                const res = await fetch(`http://localhost:3001/items/${itemId}`, {
+                const res = await fetch(`${BACKEND_URL}/items/${itemId}`, {
                     method: "DELETE",
                 });
 

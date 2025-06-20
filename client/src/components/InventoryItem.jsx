@@ -2,8 +2,9 @@ import styles from "../styles/Inventory.module.css";
 import { useState } from "react";
 import { Checkbox } from "@mui/material";
 
-function InventoryItem({ item, onEdit, deleteMode, onSelect }) {
+const BACKEND_URL = "http://localhost:3001";
 
+function InventoryItem({ item, onEdit, deleteMode, onSelect }) {
 	const [deleteStatus, setDeleteStatus] = useState(false);
 
     const handleEdit = () => {
@@ -26,7 +27,7 @@ function InventoryItem({ item, onEdit, deleteMode, onSelect }) {
 			)}
             {item.imagePath && (
                 <img
-                    src={`http://localhost:3001/static/${item.imagePath.replace(/^\//, "")}?t=${item._id || Date.now()}`}
+                    src={`${BACKEND_URL}static/${item.imagePath.replace(/^\//, "")}?t=${item._id || Date.now()}`}
                     alt={item.name}
                     className={styles.itemImage}
                 />

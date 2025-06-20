@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 const conditions = ["New", "Used", "Damaged"];
 
+const BACKEND_URL = "http://localhost:3001";
+
 const UploadItemForm = ({ onClose, onSubmit }) => {
     const [fields, setFields] = useState({
         name: "",
@@ -35,7 +37,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
     }, [inventory]);
 
     useEffect(() => {
-        fetch("http://localhost:3001/categories")
+        fetch(`${BACKEND_URL}/categories`)
             .then(response => response.json())
             .then(data => {
                 const fetchedCategories = data.map(category => ({
@@ -71,7 +73,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
         }
 
         try {
-            const response = await fetch("http://localhost:3001/items", {
+            const response = await fetch(`${BACKEND_URL}/items`, {
                 method: "POST",
                 body: data,
             });
