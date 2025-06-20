@@ -39,8 +39,6 @@ export const userSlice = createSlice({
 			state.createdAt = createdAt;
 		},
 		addItem: (state, action) => {
-			console.log("Action", action.payload);
-
             state.inventory.push(action.payload);
         },
         removeItem: (state, action) => {

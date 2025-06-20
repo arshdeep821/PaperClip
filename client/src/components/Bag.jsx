@@ -4,11 +4,11 @@ import BackpackIcon from '@mui/icons-material/Backpack';
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
+const BACKEND_URL = "http://localhost:3001";
+
 function Bag() {
 	const [open, setOpen] = useState(false);
 	const items = useSelector((state) => state.user.inventory || []);
-
-	console.log("Bag items:", items);
 
 	return (
 		<div className={styles.bag}>
@@ -29,7 +29,7 @@ function Bag() {
 							className={styles.smallItem}
 						>
 							<p className={styles.itemName}>{item.name}</p>
-							<img src={`http://localhost:3001/static/${item.imagePath}`} alt={item.name} />
+							<img src={`${BACKEND_URL}/static/${item.imagePath}`} alt={item.name} />
 						</li>
 					))}
 				</ul>
