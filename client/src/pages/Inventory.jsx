@@ -32,8 +32,6 @@ const Inventory = () => {
 		}
 
     const handleEditSubmit = async (formData) => {
-        // TODO: Dispatch action to update item
-
         const data = new FormData()
         if (formData.name) {
             data.append("name", formData.name);
