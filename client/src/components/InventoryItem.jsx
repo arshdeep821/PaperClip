@@ -27,7 +27,7 @@ function InventoryItem({ item, onEdit, deleteMode, onSelect }) {
 			)}
             {item.imagePath && (
                 <img
-                    src={`${BACKEND_URL}static/${item.imagePath.replace(/^\//, "")}?t=${item._id || Date.now()}`}
+                    src={`${BACKEND_URL}/static/${item.imagePath.replace(/^\//, "")}?t=${item._id || Date.now()}`}
                     alt={item.name}
                     className={styles.itemImage}
                 />
