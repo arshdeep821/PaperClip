@@ -123,6 +123,7 @@ const getUser = async (req, res) => {
 	}
 };
 
+// added updateUser
 const updateUser = async (req, res) => {
 	try {
 		const { id } = req.params;
