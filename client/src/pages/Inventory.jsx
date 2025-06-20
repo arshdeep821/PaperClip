@@ -13,8 +13,6 @@ import { setItems } from "../redux/slices/inventorySlice";
 const Inventory = () => {
     const items = useSelector((state) => state.user.inventory || []);
 
-    console.log(items);
-
     const [showForm, setShowForm] = useState(false);
     const [editItem, setEditItem] = useState(null);
     const [deleteMode, setDeleteMode] = useState(false);
@@ -33,12 +31,7 @@ const Inventory = () => {
 			}
 		}
 
-		fetchInventory();
-
-	}, [dispatch]);
-
-    const handleEditSubmit = (formData) => {
-        console.log("Editing item:", formData);
+    const handleEditSubmit = async (formData) => {
         // TODO: Dispatch action to update item
 
         const data = new FormData()
@@ -48,9 +41,6 @@ const Inventory = () => {
         if (formData.description) {
             data.append("description", formData.description);
         }
-
-        console.log("category", formData.category);
-
 
         if (formData.category) {
             data.append("category", formData.category.id);
@@ -72,8 +62,6 @@ const Inventory = () => {
             if (!response.ok) {
                 console.error("Server error:", result.error);
             }
-
-            console.log("Item updated:", result);
 
             dispatch(updateItem({
                 "id": editItem._id,
@@ -98,7 +86,6 @@ const Inventory = () => {
         }
 
         try {
-            // Send all DELETE requests in parallel
             await Promise.all(selectedItems.map(async (itemId) => {
                 const res = await fetch(`http://localhost:3001/items/${itemId}`, {
                     method: "DELETE",
@@ -114,9 +101,8 @@ const Inventory = () => {
                 dispatch(removeItem(itemId))
             })
 
-            // Optionally, update local state or refetch inventory after deletion
-            setSelectedItems([]); // Clear selected items
-            // Optionally: dispatch(fetchInventory()) if you re-enable useEffect logic
+            setSelectedItems([]);
+			setDeleteMode(false);
         } catch (error) {
             console.error("Error deleting items:", error);
         }
@@ -138,10 +124,7 @@ const Inventory = () => {
             {showForm && (
                 <UploadItemForm
                     onClose={() => setShowForm(false)}
-                    onSubmit={(formData) => {
-                        console.log("Submitting:", formData);
-                        setShowForm(false);
-                    }}
+                    onSubmit={() => (setShowForm(false))}
                 />
             )}
 

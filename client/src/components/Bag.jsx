@@ -8,8 +8,6 @@ function Bag() {
 	const [open, setOpen] = useState(false);
 	const items = useSelector((state) => state.user.inventory || []);
 
-	console.log("Bag items:", items);
-
 	return (
 		<div className={styles.bag}>
 			<div

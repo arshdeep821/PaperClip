@@ -27,10 +27,25 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 				name: category.name,
 			}));
 
-			console.log(fetchedCategories);
-			setCategories(fetchedCategories);
-		}).catch(error => console.error("Error fetching categories:", error));
-	}, []);
+    const userId = useSelector(state => state.user.id)
+    const inventory = useSelector(state => state.user.inventory);
+
+    useEffect(() => {
+        console.log("Inventory updated:", inventory);
+    }, [inventory]);
+
+    useEffect(() => {
+        fetch("http://localhost:3001/categories")
+            .then(response => response.json())
+            .then(data => {
+                const fetchedCategories = data.map(category => ({
+                    id: category._id,
+                    name: category.name,
+                }));
+
+                setCategories(fetchedCategories);
+            }).catch(error => console.error("Error fetching categories:", error));
+    }, []);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -51,31 +66,32 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 		data.append("owner", "123456789012345678901234");
 		data.append("condition", fields.condition);
 
-		if (fields.image) {
-			data.append("image", fields.image);
-		}
+        if (fields.image) {
+            data.append("image", fields.image);
+        }
 
-		try {
-			console.log(data);
-			const response = await fetch("http://localhost:3001/items", {
-				method: "POST",
-				headers: { "Content-Type": "multipart/form-data" },
-				body: data,
-			});
-
-			const result = await response.json();
-
-			if (!response.ok) {
-				console.error("Server error:", result.error);
-			}
+        try {
+            const response = await fetch("http://localhost:3001/items", {
+                method: "POST",
+                body: data,
+            });
 
 			console.log("Item created:", result);
 			onSubmit(result);
 			onClose();
 
-		} catch (error) {
-			console.error("Submission error:", error);
-		}
+            if (!response.ok) {
+                console.error("Server error:", result.error);
+            }
+
+            dispatch(addItem(result))
+
+            onSubmit(result);
+            onClose();
+
+        } catch (error) {
+            console.error("Submission error:", error);
+        }
     };
 
     return (
