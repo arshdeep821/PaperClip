@@ -163,4 +163,17 @@ const updateItem = async (req, res) => {
     }
 }
 
-export { createItem, deleteItem, updateItem };
+const getAllItems = async (req, res) => {
+    try {
+        const items = await Item.find({})
+            .populate("category") // populate the full category object
+            .populate("owner");   // optional: also populate the owner if needed
+
+        res.status(StatusCodes.OK).json(items);
+    } catch (error) {
+        console.error("Error fetching items:", error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Failed to fetch items." });
+    }
+};
+
+export { createItem, deleteItem, updateItem, getAllItems };

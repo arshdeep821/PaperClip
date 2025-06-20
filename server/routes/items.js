@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 
 const router = Router();
 
-import { createItem, deleteItem, updateItem } from "../controllers/items.js";
+import { createItem, deleteItem, updateItem, getAllItems } from "../controllers/items.js";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.route("/").post(upload.single('image'), createItem);
+router.route("/").post(upload.single('image'), createItem).get(getAllItems);
 router.route("/:id").delete(deleteItem).patch(upload.single('image'), updateItem)
 
 export default router;
