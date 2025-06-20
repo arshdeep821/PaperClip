@@ -88,6 +88,7 @@ const loginUser = async (req, res) => {
 			_id: user._id,
 			username: user.username,
 			name: user.name,
+			email: user.email,
 			city: user.city,
 			country: user.country,
 			tradingRadius: user.tradingRadius,
@@ -109,8 +110,8 @@ const getUser = async (req, res) => {
 		const { id } = req.params;
 
 		const user = await User.findById(id)
-			.populate("inventory") // Populate inventory items
-			.select("-password"); // Exclude password from response
+			.populate("inventory")
+			.select("-password");
 
 		if (!user) {
 			return res.status(404).json({ error: "User not found." });
@@ -123,11 +124,10 @@ const getUser = async (req, res) => {
 	}
 };
 
-// added updateUser code
 const updateUser = async (req, res) => {
 	try {
 		const { id } = req.params;
-		const { username, password, location, tradingRadius, name, email, city, country } = req.body;
+		const { username, tradingRadius, name, email, city, country } = req.body;
 
 		const user = await User.findById(id);
 
@@ -148,8 +148,6 @@ const updateUser = async (req, res) => {
 			id,
 			{
 				...(username && { username }),
-				...(password && { password }),
-				...(location && { location }),
 				...(tradingRadius && { tradingRadius }),
 				...(name && { name }),
 				...(email && { email }),
@@ -162,7 +160,6 @@ const updateUser = async (req, res) => {
 		const userResponse = {
 			_id: updatedUser._id,
 			username: updatedUser.username,
-			location: updatedUser.location,
 			tradingRadius: updatedUser.tradingRadius,
 			name: updatedUser.name,
 			email: updatedUser.email,
@@ -182,4 +179,43 @@ const updateUser = async (req, res) => {
 	}
 };
 
-export { createUser, loginUser, getUser, updateUser };
+const validateSession = async (req, res) => {
+	try {
+		const userId = req.session.userId;
+
+		if (!userId) {
+			return res.status(StatusCodes.UNAUTHORIZED).json({
+				error: "No active session."
+			});
+		}
+
+		const user = await User.findById(userId).select("-password");
+
+		if (!user) {
+			return res.status(StatusCodes.UNAUTHORIZED).json({
+				error: "User not found."
+			});
+		}
+
+		const userResponse = {
+			_id: user._id,
+			username: user.username,
+			name: user.name,
+			email: user.email,
+			city: user.city,
+			country: user.country,
+			tradingRadius: user.tradingRadius,
+			inventory: user.inventory,
+			createdAt: user.createdAt,
+		};
+
+		res.status(StatusCodes.OK).json(userResponse);
+	} catch (err) {
+		console.error("Error validating session:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Server error. Could not validate session.",
+		});
+	}
+};
+
+export { createUser, loginUser, getUser, updateUser, validateSession };
