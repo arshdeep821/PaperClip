@@ -10,6 +10,11 @@ const conditions = ["New", "Used", "Damaged"];
 const BACKEND_URL = "http://localhost:3001";
 
 const UploadItemForm = ({ onClose, onSubmit }) => {
+    const dispatch = useDispatch();
+    const user = useSelector(state => state.user);
+    const userId = user.id;
+    const inventory = useSelector(state => state.user.inventory);
+
     const [fields, setFields] = useState({
         name: "",
         description: "",
@@ -21,7 +26,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 	const [categories, setCategories] = useState([]);
 
 	useEffect(() => {
-		fetch("http://localhost:3001/categories")
+		fetch(`${BACKEND_URL}/categories`)
 		.then(response => response.json())
 		.then(data => {
 			const fetchedCategories = data.map(category => ({
@@ -29,25 +34,14 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 				name: category.name,
 			}));
 
-    const userId = useSelector(state => state.user.id)
-    const inventory = useSelector(state => state.user.inventory);
+			console.log(fetchedCategories);
+			setCategories(fetchedCategories);
+		}).catch(error => console.error("Error fetching categories:", error));
+	}, []);
 
     useEffect(() => {
         console.log("Inventory updated:", inventory);
     }, [inventory]);
-
-    useEffect(() => {
-        fetch(`${BACKEND_URL}/categories`)
-            .then(response => response.json())
-            .then(data => {
-                const fetchedCategories = data.map(category => ({
-                    id: category._id,
-                    name: category.name,
-                }));
-
-                setCategories(fetchedCategories);
-            }).catch(error => console.error("Error fetching categories:", error));
-    }, []);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -65,7 +59,7 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
 		data.append("name", fields.name);
 		data.append("description", fields.description);
 		data.append("category", fields.category.id);
-		data.append("owner", "123456789012345678901234");
+		data.append("owner", userId);
 		data.append("condition", fields.condition);
 
         if (fields.image) {
@@ -78,16 +72,14 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                 body: data,
             });
 
-			console.log("Item created:", result);
-			onSubmit(result);
-			onClose();
+            const result = await response.json();
 
             if (!response.ok) {
                 console.error("Server error:", result.error);
             }
 
-            dispatch(addItem(result))
-
+            console.log("Item created:", result);
+            dispatch(addItem(result));
             onSubmit(result);
             onClose();
 

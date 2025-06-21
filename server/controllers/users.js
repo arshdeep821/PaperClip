@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import { StatusCodes } from "http-status-codes";
 import { hash, compare } from "bcrypt";
 import fs from "fs"
+import mongoose from "mongoose";
 
 const DEFAULT_USER_RADIUS = 10;
 const HASH_ROUNDS = 10;
@@ -138,4 +139,86 @@ const getUser = async (req, res) => {
 	}
 };
 
-export { createUser, loginUser, getUser };
+const updateUser = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { username, name, email, password, city, country, tradingRadius } = req.body;
+
+		const user = await User.findById(id);
+		if (!user) {
+			return res.status(StatusCodes.NOT_FOUND).json({ error: "User not found." });
+		}
+
+		if (email) {
+			const emailRegex = /^\S+@\S+\.\S+$/;
+			if (!emailRegex.test(email)) {
+				return res.status(400).json({ error: "Invalid email format." });
+			}
+		}
+
+		if (username || email) {
+			const queryConditions = [];
+			if (username) queryConditions.push({ username });
+			if (email) queryConditions.push({ email });
+
+			const existingUser = await User.findOne({
+				$and: [
+					{ _id: { $ne: new mongoose.Types.ObjectId(id) } },
+					{ $or: queryConditions }
+				]
+			});
+
+
+			if (existingUser) {
+				if (username && existingUser.username === username) {
+					return res.status(StatusCodes.CONFLICT).json({ error: "Username already exists." });
+				} else if (email && existingUser.email === email) {
+					return res.status(StatusCodes.CONFLICT).json({ error: "Email already exists." });
+				}
+			}
+		}
+
+		const updateData = {};
+		if (username) updateData.username = username;
+		if (name) updateData.name = name;
+		if (email) updateData.email = email;
+		if (city) updateData.city = city;
+		if (country) updateData.country = country;
+		if (tradingRadius) updateData.tradingRadius = tradingRadius;
+
+		if (password) {
+			const hashedPassword = await hash(password, HASH_ROUNDS);
+			updateData.password = hashedPassword;
+		}
+
+		const updatedUser = await User.findByIdAndUpdate(
+			id,
+			updateData,
+			{ new: true, runValidators: true }
+		).populate({
+			path: "inventory",
+			populate: { path: "category" },
+		});
+
+		const userResponse = {
+			_id: updatedUser._id,
+			username: updatedUser.username,
+			name: updatedUser.name,
+			email: updatedUser.email,
+			city: updatedUser.city,
+			country: updatedUser.country,
+			tradingRadius: updatedUser.tradingRadius,
+			inventory: updatedUser.inventory,
+			createdAt: updatedUser.createdAt,
+		};
+
+		res.status(StatusCodes.OK).json(userResponse);
+	} catch (err) {
+		console.error("Error updating user:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Server error. Could not update user.",
+		});
+	}
+};
+
+export { createUser, loginUser, getUser, updateUser };

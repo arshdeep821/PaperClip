@@ -34,17 +34,19 @@ function Login() {
 				}),
 			});
 
+			const userData = await response.json();
+
 			if (!response.ok) {
-				alert("An error trying to login");
+				alert(userData.error || "An error trying to login");
+				return;
 			}
 
-			const userData = await response.json();
 			dispatch(setUser(userData));
-
 			navigate("/home");
 			alert("Successfully Logged In");
 		} catch (error) {
 			console.error("Error:", error);
+			alert("Network error. Please try again.");
 		}
 	};
 

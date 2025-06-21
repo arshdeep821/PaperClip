@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -8,19 +8,18 @@ import InventoryItem from "../components/InventoryItem";
 import Sidebar from "../components/Sidebar";
 import UploadItemForm from "../components/UploadItemForm";
 import EditItemForm from "../components/EditItemForm";
-import { removeItem, updateItem } from "../redux/slices/userSlice";
+import { removeItem, updateItem, setItems } from "../redux/slices/userSlice";
 
 const BACKEND_URL = "http://localhost:3001";
 
 const Inventory = () => {
     const items = useSelector((state) => state.user.inventory || []);
+    const dispatch = useDispatch();
 
     const [showForm, setShowForm] = useState(false);
     const [editItem, setEditItem] = useState(null);
     const [deleteMode, setDeleteMode] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
-
-	const dispatch = useDispatch();
 
 	useEffect(() => {
 		const fetchInventory = async () => {
@@ -31,7 +30,10 @@ const Inventory = () => {
 			} catch (err) {
 				console.error("Error fetching inventory:", err);
 			}
-		}
+		};
+
+		fetchInventory();
+	}, [dispatch]);
 
     const handleEditSubmit = async (formData) => {
         const data = new FormData()
@@ -46,7 +48,7 @@ const Inventory = () => {
             data.append("category", formData.category.id);
         }
 
-		if (formData.category) {
+		if (formData.condition) {
 			data.append("condition", formData.condition);
 		}
 
@@ -105,6 +107,7 @@ const Inventory = () => {
             console.error("Error deleting items:", error);
         }
     };
+
     return (
         <div className={styles.inventoryPage}>
             <Sidebar />
