@@ -5,6 +5,7 @@ const initialState = {
 	id: null,
 	username: null,
 	name: null,
+	email: null,
 	city: null,
 	country: null,
 	tradingRadius: null,
@@ -21,6 +22,7 @@ export const userSlice = createSlice({
 				_id,
 				username,
 				name,
+				email,
 				city,
 				country,
 				tradingRadius,
@@ -32,6 +34,7 @@ export const userSlice = createSlice({
 			state.id = _id;
 			state.username = username;
 			state.name = name;
+			state.email = email;
 			state.city = city;
 			state.country = country;
 			state.tradingRadius = tradingRadius;

@@ -19,6 +19,7 @@ const user = {
 	_id: new mongoose.Types.ObjectId("123456789012345678901234"),
 	username: "Admin",
 	name: "Admin Name",
+	email: "admin@example.com",
 	password: hashedPassword,
 	city: "Vancouver",
 	country: "Canada",

@@ -1,9 +1,12 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import styles from "../styles/Profile.module.css";
 import Sidebar from "../components/Sidebar";
 import corgiImage from "../assets/corgi.jpg";
 
 function Profile() {
+  const user = useSelector((state) => state.user);
+
   return (
     <main className={styles.profilePage}>
       <Sidebar />
@@ -22,24 +25,28 @@ function Profile() {
           <fieldset className={styles.fieldset}>
             <legend className={styles.legend}>Account Details</legend>
             <div className={styles.inputGroup}>
+              <label className={styles.label} htmlFor="username">Username:</label>
+              <div className={styles.staticText}>{user.username || "Not available"}</div>
+            </div>
+            <div className={styles.inputGroup}>
               <label className={styles.label} htmlFor="name">Name:</label>
-              <div className={styles.staticText}>test</div>
+              <div className={styles.staticText}>{user.name || "Not available"}</div>
             </div>
             <div className={styles.inputGroup}>
               <label className={styles.label} htmlFor="email">Email:</label>
-              <div className={styles.staticText}>test@gmail.com</div>
+              <div className={styles.staticText}>{user.email || "Not available"}</div>
             </div>
             <div className={styles.inputGroup}>
               <label className={styles.label} htmlFor="city">City:</label>
-              <div className={styles.staticText}>Vancouver</div>
+              <div className={styles.staticText}>{user.city || "Not available"}</div>
             </div>
             <div className={styles.inputGroup}>
               <label className={styles.label} htmlFor="country">Country:</label>
-              <div className={styles.staticText}>Canada</div>
+              <div className={styles.staticText}>{user.country || "Not available"}</div>
             </div>
             <div className={styles.inputGroup}>
               <label className={styles.label} htmlFor="radius">Radius:</label>
-              <div className={styles.staticText}>5km</div>
+              <div className={styles.staticText}>{user.tradingRadius ? `${user.tradingRadius}km` : "Not available"}</div>
             </div>
           </fieldset>
         </section>
