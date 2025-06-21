@@ -43,6 +43,19 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
         console.log("Inventory updated:", inventory);
     }, [inventory]);
 
+    useEffect(() => {
+        fetch(`${BACKEND_URL}/categories`)
+            .then(response => response.json())
+            .then(data => {
+                const fetchedCategories = data.map(category => ({
+                    id: category._id,
+                    name: category.name,
+                }));
+
+                setCategories(fetchedCategories);
+            }).catch(error => console.error("Error fetching categories:", error));
+    }, []);
+
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         setFields((prev) => ({
@@ -54,13 +67,13 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-		const data = new FormData();
+        const data = new FormData();
 
-		data.append("name", fields.name);
-		data.append("description", fields.description);
-		data.append("category", fields.category.id);
-		data.append("owner", userId);
-		data.append("condition", fields.condition);
+        data.append("name", fields.name);
+        data.append("description", fields.description);
+        data.append("category", fields.category.id);
+        data.append("owner", userId);
+        data.append("condition", fields.condition);
 
         if (fields.image) {
             data.append("image", fields.image);
@@ -78,8 +91,8 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
                 console.error("Server error:", result.error);
             }
 
-            console.log("Item created:", result);
-            dispatch(addItem(result));
+            dispatch(addItem(result))
+
             onSubmit(result);
             onClose();
 
