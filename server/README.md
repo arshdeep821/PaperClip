@@ -5,7 +5,7 @@
 
 ## USERS
 
--   POST http://localhost:3001/users
+-   POST http://localhost:3001/users (CREATE USER)
 
 ```bash
 Example Body
@@ -52,7 +52,7 @@ Example of what gets returned
 }
 ```
 
--   GET http://localhost:3001/users/:id
+-   GET http://localhost:3001/users/:id (GET USER)
 
 ```bash
 Example of what gets returned
@@ -97,7 +97,7 @@ or
 
 ## CATEGORIES
 
--   POST http://localhost:3001/categories
+-   POST http://localhost:3001/categories (CREATE CATEGORY)
 
 ```bash
 Example Body
@@ -116,7 +116,7 @@ Example of what gets returned
 }
 ```
 
--   GET http://localhost:3001/categories
+-   GET http://localhost:3001/categories (GET ALL CATEGORIES)
 
 ```bash
 Example of what gets returned
@@ -141,7 +141,7 @@ Example of what gets returned
 
 ## ITEMS
 
--   POST http://localhost:3001/items
+-   POST http://localhost:3001/items (CREATE ITEM)
 
 Example body - Use formData on postman so you can attach files
 ![Body](./assets/createItem.png)
@@ -160,11 +160,10 @@ Example of what gets returned
     "createdAt": "2025-06-17T06:37:36.900Z",
     "updatedAt": "2025-06-17T06:37:36.900Z",
     "__v": 0,
-    "image": "data:image/jpeg;base64,/9j/4AAUSkZJRgABAQEBLAEsAABBTVBG/+EKrEV4aWYAAE1NACoAAAAIAA4BDwACAAAABgAAALYBEAACAAAADgAAALwBEgADAAAAAQABAAABGgAFAAAAAQAAAMoBGwAFAAAAAQAAANIBKAADAAAAAQACAAABMQACAAAABwAAANoBMgACAAAAFAAAAOIBPAACAAAADgAAAPYBQgAEAAAAAQAAAgABQwAEAAAAAQAAAgACEwADAAAAAQABAACHaQAEAAAAAQAAAQSIJQAEAAAAA..."
 }
 ```
 
--   DELETE http://localhost:3001/items/:id
+-   DELETE http://localhost:3001/items/:id (DELETE ITEM)
 
 ```bash
 Example of what gets returned
@@ -173,7 +172,7 @@ Example of what gets returned
 }
 ```
 
--   PATCH http://localhost:3001/items/:id
+-   PATCH http://localhost:3001/items/:id (UPDATE ITEM)
 
 Example body - Use formData on postman so you can attach files
 ![Body](./assets/updateItem.png)
@@ -192,8 +191,51 @@ Example of what gets returned
     "createdAt": "2025-06-17T07:12:19.767Z",
     "updatedAt": "2025-06-17T07:19:27.033Z",
     "__v": 0,
-    "image": "data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAATIAAAEeCAYAAAAJqJmIAAAMPmlDQ1BJQ0MgUHJvZmlsZQAASImVVwdYU8kWnluSkEBCCV1K6E2KSAkgJYQWQHoRbIQkQCghBo..."
 }
+```
+
+-   GET http://localhost:3001/items (GET ITEMS)
+
+```bash
+Example of what gets returned
+[
+    {
+        "_id": "6855d1fbc45a5c67ff72729e",
+        "name": "iPhone 15",
+        "description": "Latest iPhone model in perfect condition",
+        "category": {
+            "_id": "6855d1fbc45a5c67ff727296",
+            "name": "Electronics",
+            "__v": 0,
+            "createdAt": "2025-06-20T21:26:19.709Z",
+            "updatedAt": "2025-06-20T21:26:19.709Z"
+        },
+        "owner": {
+            "_id": "123456789012345678901234",
+            "username": "Admin",
+            "name": "Admin Name",
+            "password": "$2b$10$ShVLu9k7WGuAxzx/gaiPDu.f1N1a/aJSlO/8YJfZXfLERqOF28xey",
+            "city": "Vancouver",
+            "country": "Canada",
+            "tradingRadius": 10,
+            "inventory": [
+                "6855d1fbc45a5c67ff72729e",
+                "6855d1fbc45a5c67ff72729f",
+                "6855d1fbc45a5c67ff7272a0",
+                "6855d1fbc45a5c67ff7272a1",
+                "6855d1fbc45a5c67ff7272a2"
+            ],
+            "createdAt": "2025-06-20T21:26:19.718Z",
+            "updatedAt": "2025-06-20T21:26:19.726Z",
+            "__v": 0
+        },
+        "condition": "New",
+        "imagePath": "iPhone.png",
+        "__v": 0,
+        "createdAt": "2025-06-20T21:26:19.723Z",
+        "updatedAt": "2025-06-20T21:26:19.723Z"
+    },
+]
 ```
 
 NEED TO BE ADDED

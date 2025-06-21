@@ -1,29 +1,32 @@
 .inventoryPage {
 	width: 100vw;
-	height: 100vh;
+	min-height: 100vh;
 	display: flex;
 	justify-content: center;
-	align-items: center;
-	align-content: center;
+	align-items: flex-start;
+	align-content: flex-start;
+	padding-top: 0;
+	position: relative
 }
 
 .uploadButtonWrapper {
   position: absolute;
   top: 40px;
   right: 60px;
+  z-index: 10;
 }
 
 .inventoryHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  magin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .inventoryListWrapper {
   width: 100%;
   max-width: 800px;
-  margin: 0 auto;
+  margin: 80px auto 0 auto;
   padding: 20px;
   background: white;
   border-radius: 8px;
@@ -31,8 +34,10 @@
 }
 
 .inventoryGrid {
-  display: grid;
-  gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
 }
 
 .inventoryItem {
@@ -43,6 +48,10 @@
   gap: 20px;
   align-items: center;
   position: relative;
+  background: #fff;
+  max-width: 100%;
+  box-sizing: border-box;
+  flex-wrap: wrap;
 }
 
 .itemImage {
@@ -50,6 +59,7 @@
   height: 100px;
   object-fit: cover;
   border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .itemCategory {
@@ -145,4 +155,12 @@
 .cancelButton {
     background-color: #f5f5f5;
     color: #333;
+}
+
+@media (min-width: 700px) {
+  .inventoryGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 }

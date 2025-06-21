@@ -6,10 +6,11 @@ import { hash } from "bcrypt";
 
 const categories = [
 	{ name: "Electronics" },
+	{ name: "Sports" },
 	{ name: "Clothing" },
 	{ name: "Books" },
 	{ name: "Furniture" },
-	{ name: "Sports" },
+	
 ];
 
 const HASH_ROUNDS = 10;
@@ -31,6 +32,30 @@ const items = [
 		condition: "New",
 		imagePath: "iPhone.png",
 	},
+	{
+		name: "Basketball",
+		description: "Spalding NBA Basketball",
+		condition: "Used",
+		imagePath: "Basketball.png"
+	},
+	{
+		name: "Stephen Curry Shirt",
+		description: "Golden State Warriors Stephen Curry T Shirt",
+		condition: "Used",
+		imagePath: "T-shirt.png",
+	},
+	{
+		name: "Harry Potter And the Sorcerers stone",
+		description: "Original copy of harry potter and the sorcerers stone",
+		condition: "Damaged",
+		imagePath: "Harry-Potter.png"
+	},
+	{
+		name: "Comfy Chair",
+		description: "Old chair that can seat 1 person",
+		condition: "Damaged",
+		imagePath: "Chair.png"
+	}
 ];
 
 const seedDatabase = async () => {

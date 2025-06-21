@@ -33,7 +33,8 @@ const Inventory = () => {
         }
 
         if (formData.category) {
-            data.append("category", formData.category.id);
+            const categoryId = formData.category.id || formData.category._id;
+            data.append("category", categoryId);
         }
 
 		if (formData.category) {
