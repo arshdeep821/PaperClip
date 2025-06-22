@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import styles from "../styles/ViewProducts.module.css";
 import ProductItem from "../components/ProductItem";
 import Sidebar from "../components/Sidebar";
@@ -8,12 +8,23 @@ import Sidebar from "../components/Sidebar";
 import TopOptionButtons from "../components/TopOptionButtons";
 import BottomOptionButtons from "../components/BottomOptionButtons";
 import Bag from "../components/Bag";
+import { fetchProducts } from "../redux/slices/productsSlice";
 
 const ViewProducts = () => {
 	const products = useSelector((state) => state.products.products);
-	const NUM_PRODUCTS = 3;
+	const status = useSelector((state) => state.products.status)
+	const error = useSelector((state) => state.products.error)
+
+	const dispatch = useDispatch()
+	const NUM_PRODUCTS = products.length || 0;
 
 	const [itemIdx, setItemIdx] = useState(0);
+
+	useEffect(() => {
+		if (status === 'idle') {
+			dispatch(fetchProducts())
+		}
+	}, [status, dispatch])
 
 	useEffect(() => {
 		const handleKeyDown = (e) => {
@@ -39,6 +50,15 @@ const ViewProducts = () => {
 	const handleRightButton = () => {
 		setItemIdx((currIdx) => (currIdx < NUM_PRODUCTS - 1 ? currIdx + 1 : 0));
 	};
+
+
+	if (!products || products.length === 0 || status === 'loading') {
+		return <h1>Loading ...</h1>
+	}
+
+	if (status == 'failed') {
+		return <h1>Error loading products {error}</h1>
+	}
 
 	return (
 		<div className={styles.productsPage}>
