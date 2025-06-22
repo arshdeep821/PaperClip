@@ -21,10 +21,10 @@ const ViewProducts = () => {
 	const [itemIdx, setItemIdx] = useState(0);
 
 	useEffect(() => {
-		if (status === 'idle') {
-			dispatch(fetchProducts())
-		}
-	}, [status, dispatch])
+		// if (status === 'idle') { 
+		dispatch(fetchProducts())
+		// }
+	}, [])
 
 	useEffect(() => {
 		const handleKeyDown = (e) => {
