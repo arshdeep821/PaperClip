@@ -26,6 +26,17 @@ export const uploadItem = createAsyncThunk('items/uploadItem', async (data) => {
 	return result
 })
 
+export const deleteItem = createAsyncThunk('items/deleteItem', async (itemId) => {
+	const res = await fetch(`${BACKEND_URL}/items/${itemId}`, {
+		method: "DELETE",
+	});
+
+	if (!res.ok) {
+		return rejectWithValue(`Error deleting item with id: ${itemId}`);
+	}
+	return itemId
+})
+
 export const userSlice = createSlice({
 	name: "user",
 	initialState,
@@ -85,7 +96,18 @@ export const userSlice = createSlice({
 			.addCase(uploadItem.rejected, (state, action) => {
 				state.status = 'failed';
 				state.error = action.error.message;
-			});
+			})
+			.addCase(deleteItem.pending, (state) => {
+				state.status = 'deleting_item'
+			})
+			.addCase(deleteItem.fulfilled, (state, action) => {
+				state.status = 'deleted'
+				state.inventory = state.inventory.filter((item) => item._id !== action.payload);
+			})
+			.addCase(deleteItem.rejected, (state, action) => {
+				state.status = 'failed'
+				state.error = action.payload || action.error.message;
+			})
 	},
 });
 
