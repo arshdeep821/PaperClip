@@ -10,13 +10,13 @@ const categories = [
 	{ name: "Clothing" },
 	{ name: "Books" },
 	{ name: "Furniture" },
-	
+
 ];
 
 const HASH_ROUNDS = 10;
-const hashedPassword = await hash("password", HASH_ROUNDS);
+let hashedPassword = await hash("password", HASH_ROUNDS);
 
-const user = {
+const adminUser = {
 	_id: new mongoose.Types.ObjectId("123456789012345678901234"),
 	username: "Admin",
 	name: "Admin Name",
@@ -25,7 +25,7 @@ const user = {
 	country: "Canada",
 };
 
-const items = [
+const adminItems = [
 	{
 		name: "iPhone 15",
 		description: "Latest iPhone model in perfect condition",
@@ -58,6 +58,47 @@ const items = [
 	}
 ];
 
+hashedPassword = await hash("password", HASH_ROUNDS);
+const execUser = {
+	username: "Exec",
+	name: "Exec Name",
+	password: hashedPassword,
+	city: "Toronto",
+	country: "Canada"
+}
+
+const execItems = [
+	{
+		name: "Macbook Pro",
+		description: "Apple Macbook Pro (16 inch, 2024)",
+		condition: "Used",
+		imagePath: "Macbook.png"
+	},
+	{
+		name: "Soccer Ball",
+		description: "Premier League 24-25 - Nike",
+		condition: "New",
+		imagePath: "Soccerball.png"
+	}, {
+		name: "Naruto Shirt",
+		description: "Naruto Shippuden Kakashi Hatake Shirt",
+		condition: "New",
+		imagePath: "NarutoShirt.png",
+	},
+	{
+		name: "Shadow and Bone",
+		description: "Two Copies of Shadow and Bone Book",
+		condition: "Used",
+		imagePath: "ShadowAndBone.png"
+	},
+	{
+		name: "Metal Stool",
+		description: "Sturdy Metal Stool",
+		condition: "Used",
+		imagePath: "Stool.png"
+	}
+]
+
 const seedDatabase = async () => {
 	try {
 		// Clear existing data
@@ -71,24 +112,41 @@ const seedDatabase = async () => {
 		console.log("Created categories");
 
 		// Create single user with specific ID
-		const createdUser = await User.create(user);
-		console.log("Created user with ID:", createdUser._id);
+		let createdUser = await User.create(adminUser);
+		console.log("Created Admin user with ID:", createdUser._id);
 
 		// Create items with references to the single user
-		const itemsWithRefs = items.map((item, index) => ({
+		let itemsWithRefs = adminItems.map((item, index) => ({
 			...item,
 			category: createdCategories[index % createdCategories.length]._id,
 			owner: createdUser._id,
 		}));
 
-		const createdItems = await Item.insertMany(itemsWithRefs);
-		console.log("Created items");
+		let createdItems = await Item.insertMany(itemsWithRefs);
+		console.log("Created Admin items");
 
 		// Update user with all items in inventory
 		await User.findByIdAndUpdate(createdUser._id, {
 			inventory: createdItems.map((item) => item._id),
 		});
-		console.log("Updated user inventory");
+		console.log("Updated Admin user inventory");
+
+		createdUser = await User.create(execUser)
+		console.log("Created Exec user with ID:", createdUser._id);
+
+		itemsWithRefs = execItems.map((item, index) => ({
+			...item,
+			category: createdCategories[index % createdCategories.length]._id,
+			owner: createdUser._id,
+		}));
+
+		createdItems = await Item.insertMany(itemsWithRefs);
+		console.log("Created Exec items");
+
+		await User.findByIdAndUpdate(createdUser._id, {
+			inventory: createdItems.map((item) => item._id),
+		});
+
 
 		console.log("Database seeded successfully!");
 	} catch (error) {
