@@ -4,6 +4,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import styles from "../styles/UploadItemForm.module.css";
 import { addItem } from "../redux/slices/userSlice.js";
 import { useDispatch, useSelector } from "react-redux";
+import { uploadItem } from "../redux/slices/userSlice.js";
 
 const conditions = ["New", "Used", "Damaged"];
 
@@ -65,26 +66,30 @@ const UploadItemForm = ({ onClose, onSubmit }) => {
             data.append("image", fields.image);
         }
 
-        try {
-            const response = await fetch(`${BACKEND_URL}/items`, {
-                method: "POST",
-                body: data,
-            });
+        // try {
+            // const response = await fetch(`${BACKEND_URL}/items`, {
+            //     method: "POST",
+            //     body: data,
+            // });
 
-            const result = await response.json();
+        //     const result = await response.json();
 
-            if (!response.ok) {
-                console.error("Server error:", result.error);
-            }
+        //     if (!response.ok) {
+        //         console.error("Server error:", result.error);
+        //     }
 
-            dispatch(addItem(result))
+        //     dispatch(addItem(result))
 
-            onSubmit(result);
-            onClose();
+            // onSubmit(result);
+            // onClose();
 
-        } catch (error) {
-            console.error("Submission error:", error);
-        }
+        // } catch (error) {
+        //     console.error("Submission error:", error);
+        // }
+
+        dispatch(uploadItem(data))
+        onSubmit();
+        onClose();
     };
 
     return (
