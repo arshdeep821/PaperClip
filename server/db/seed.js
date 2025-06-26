@@ -146,6 +146,7 @@ const seedDatabase = async () => {
 		await User.findByIdAndUpdate(createdUser._id, {
 			inventory: createdItems.map((item) => item._id),
 		});
+		console.log("Updated Exec user inventory");
 
 
 		console.log("Database seeded successfully!");
