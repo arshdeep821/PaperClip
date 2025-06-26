@@ -8,7 +8,7 @@ import InventoryItem from "../components/InventoryItem";
 import Sidebar from "../components/Sidebar";
 import UploadItemForm from "../components/UploadItemForm";
 import EditItemForm from "../components/EditItemForm";
-import { removeItem, updateItem } from "../redux/slices/userSlice";
+import { removeItem, updateItem, deleteItem } from "../redux/slices/userSlice";
 
 const BACKEND_URL = "http://localhost:3001";
 
@@ -76,13 +76,16 @@ const Inventory = () => {
 
         try {
             await Promise.all(selectedItems.map(async (itemId) => {
-                const res = await fetch(`${BACKEND_URL}/items/${itemId}`, {
-                    method: "DELETE",
-                });
+                // const res = await fetch(`${BACKEND_URL}/items/${itemId}`, {
+                //     method: "DELETE",
+                // });
 
-                if (!res.ok) {
-                    console.error(`Failed to delete item with ID: ${itemId}`);
-                }
+                // if (!res.ok) {
+                //     console.error(`Failed to delete item with ID: ${itemId}`);
+                // }
+
+                dispatch(deleteItem(itemId))
+
             }));
 
 
