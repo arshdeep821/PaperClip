@@ -1,12 +1,14 @@
 import styles from "../styles/ProductItem.module.css";
 
+const BACKEND_URL = "http://localhost:3001";
+
 const ProductItem = ({ item }) => {
 	return (
-		<div key={item.id} className={styles.productItem}>
-			{item.image && (
+		<div key={item._id} className={styles.productItem}>
+			{item.imagePath && (
 				<div className={styles.imageWrapper}>
 					<img
-						src={item.image}
+						src={`${BACKEND_URL}/static/${item.imagePath}`}
 						alt={item.name}
 						className={styles.productImage}
 					/>
@@ -20,7 +22,7 @@ const ProductItem = ({ item }) => {
 						</div>
 						<br />
 						<div className={styles.overlayText}>
-							{item.category}
+							{item.category.name}
 						</div>
 					</div>
 				</div>
