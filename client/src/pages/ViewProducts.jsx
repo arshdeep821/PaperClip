@@ -24,7 +24,7 @@ const ViewProducts = () => {
 		// if (status === 'idle') { 
 		dispatch(fetchProducts())
 		// }
-	}, [])
+	}, [dispatch])
 
 	useEffect(() => {
 		const handleKeyDown = (e) => {
