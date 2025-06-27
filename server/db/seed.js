@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import User from "../models/User.js";
 import Category from "../models/Category.js";
 import Item from "../models/Item.js";
+import Trade from "../models/Trade.js"
 import { hash } from "bcrypt";
 
 const categories = [
@@ -102,6 +103,7 @@ const execItems = [
 const seedDatabase = async () => {
 	try {
 		// Clear existing data
+		await Trade.deleteMany({})
 		await User.deleteMany({});
 		await Category.deleteMany({});
 		await Item.deleteMany({});
@@ -147,6 +149,18 @@ const seedDatabase = async () => {
 			inventory: createdItems.map((item) => item._id),
 		});
 		console.log("Updated Exec user inventory");
+
+		const admin = await User.findOne({ username: "Admin" }).populate("inventory");
+		const exec = await User.findOne({ username: "Exec" }).populate("inventory");
+
+		const trade = await Trade.create({
+			user1: admin._id,
+			user2: exec._id,
+			items1: [admin.inventory[0]], // first Admin item
+			items2: [exec.inventory[exec.inventory.length - 1], exec.inventory[exec.inventory.length - 2]], // last Exec item
+		});
+
+		console.log("Created trade between Admin and Exec:", trade._id);
 
 
 		console.log("Database seeded successfully!");

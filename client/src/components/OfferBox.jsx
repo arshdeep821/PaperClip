@@ -1,14 +1,16 @@
 import styles from "../styles/OfferBox.module.css";
 
-function OfferBox({offer, theirWants}) {
+const BACKEND_URL = "http://localhost:3001";
+
+function OfferBox({otherUser, currUser}) {
 	return (
 		<div className={styles.offerBox}>
 			<div className={styles.theirOffer}>
 				<h4 className={styles.boxHeader}>Their Offer</h4>
 				<div className={styles.itemsContainer}>
-					{offer.map((item) => (
-						<div key={item.id} className={styles.offerItem}>
-							<img src={item.image} alt={item.name} />
+					{otherUser.items.map((item) => (
+						<div key={item._id} className={styles.offerItem}>
+							<img src={`${BACKEND_URL}/static/${item.imagePath}`} alt={item.name} />
 						</div>
 					))}
 				</div>
@@ -19,9 +21,9 @@ function OfferBox({offer, theirWants}) {
 			<div className={styles.theirWants}>
 				<h4 className={styles.boxHeader}>For your following item(s)</h4>
 				<div className={styles.itemsContainer}>
-					{theirWants.map((item) => (
-						<div key={item.id} className={styles.wantItem}>
-							<img src={item.image} alt={item.name} />
+					{currUser.items.map((item) => (
+						<div key={item._id} className={styles.wantItem}>
+							<img src={`${BACKEND_URL}/static/${item.imagePath}`} alt={item.name} />
 						</div>
 					))}
 				</div>
