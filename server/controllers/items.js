@@ -163,9 +163,15 @@ const updateItem = async (req, res) => {
     }
 }
 
-const getAllItems = async (req, res) => {
+const getProducts = async (req, res) => {
     try {
-        const items = await Item.find({})
+        const { id } = req.params;
+
+        if (!id) {
+            res.status(StatusCodes.BAD_REQUEST).json({error: "Please provide user ID"})
+        }
+
+        const items = await Item.find({ owner: { $ne: id } })
             .populate("category") // populate the full category object
             .populate("owner");   // optional: also populate the owner if needed
 
@@ -176,4 +182,4 @@ const getAllItems = async (req, res) => {
     }
 };
 
-export { createItem, deleteItem, updateItem, getAllItems };
+export { createItem, deleteItem, updateItem, getProducts };

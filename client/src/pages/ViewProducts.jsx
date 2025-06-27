@@ -14,6 +14,7 @@ const ViewProducts = () => {
 	const products = useSelector((state) => state.products.products);
 	const status = useSelector((state) => state.products.status)
 	const error = useSelector((state) => state.products.error)
+	const userId = useSelector((state) => state.user.id)
 
 	const dispatch = useDispatch()
 	const NUM_PRODUCTS = products.length || 0;
@@ -22,7 +23,7 @@ const ViewProducts = () => {
 
 	useEffect(() => {
 		// if (status === 'idle') { 
-		dispatch(fetchProducts())
+		dispatch(fetchProducts(userId))
 		// }
 	}, [dispatch])
 
