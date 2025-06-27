@@ -11,7 +11,7 @@ import testRouter from "./routes/testRouter.js";
 import UserRouter from "./routes/users.js";
 import CategoryRouter from "./routes/categories.js";
 import ItemRouter from "./routes/items.js";
-import TradeRouter from "./routes/items.js";
+import TradeRouter from "./routes/trades.js";
 
 const app = express();
 

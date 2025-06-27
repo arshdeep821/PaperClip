@@ -1,4 +1,4 @@
-import Trade from "../models/Trade"
+import Trade from "../models/Trade.js"
 import { StatusCodes } from "http-status-codes";
 
 // Controller to create a new trade between two users
@@ -23,7 +23,13 @@ const createTrade = async (req, res) => {
         });
         await newTrade.save();
 
-        res.status(StatusCodes.CREATED).json(newTrade);
+        const populatedTrade = await Trade.findById(newTrade._id)
+            .populate('user1')
+            .populate('user2')
+            .populate('items1')
+            .populate('items2')
+
+        res.status(StatusCodes.CREATED).json(populatedTrade);
     } catch (err) {
         console.error("Error creating trade:", err);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -32,5 +38,34 @@ const createTrade = async (req, res) => {
     }
 };
 
-export { createTrade };
+const getTradesByUserId = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Basic validation
+        if (!id) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                error: "userId is required."
+            });
+        }
+
+        // Find all trades where the user is either user1 or user2
+        const trades = await Trade.find({ user1: id })
+            .populate('user1')
+            .populate('user2')
+            .populate('items1')
+            .populate('items2')
+            .sort({ createdAt: -1 }); // sort by newest first
+
+        res.status(StatusCodes.OK).json(trades);
+
+    } catch (err) {
+        console.error("Error fetching trades:", err);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: "Server error. Could not fetch trades."
+        });
+    }
+}
+
+export { createTrade, getTradesByUserId };
 
