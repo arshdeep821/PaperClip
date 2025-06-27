@@ -11,6 +11,7 @@ import testRouter from "./routes/testRouter.js";
 import UserRouter from "./routes/users.js";
 import CategoryRouter from "./routes/categories.js";
 import ItemRouter from "./routes/items.js";
+import TradeRouter from "./routes/items.js";
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use("/test", testRouter);
 app.use("/users", UserRouter);
 app.use("/categories", CategoryRouter);
 app.use("/items", ItemRouter);
+app.use("/trades", TradeRouter);
 
 const port = 3001;
 
