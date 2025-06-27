@@ -16,7 +16,7 @@ function ViewOffers() {
 	const userId = useSelector((state) => state.user.id)
 	const status = useSelector((state) => state.offers.status)
 
-	
+
 	useEffect(() => {
 		dispatch(fetchOffers(userId))
 	}, [])
@@ -27,7 +27,7 @@ function ViewOffers() {
 	}
 
 	if (!offers || offers.length === 0) {
-		return <h1>No Current Offers</h1>
+
 	}
 
 	return (
@@ -39,7 +39,11 @@ function ViewOffers() {
 			</div>
 
 			<div className={styles.mainContent}>
-				<OfferBox otherUser={{user: offers[0].user2, items: offers[0].items2}} currUser={{user: offers[0].user1, items: offers[0].items1}} />
+				{
+					(!offers || offers.length === 0) ?
+						<h1>No Current Offers</h1> :
+						<OfferBox otherUser={{ user: offers[0].user2, items: offers[0].items2 }} currUser={{ user: offers[0].user1, items: offers[0].items1 }} />
+				}
 			</div>
 
 			<div className={styles.bottom}>
