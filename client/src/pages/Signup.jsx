@@ -11,6 +11,7 @@ const Signup = () => {
 	const [formData, setFormData] = useState({
 		username: "",
 		name: "",
+		email: "",
 		password1: "",
 		password2: "",
 		country: "",
@@ -46,6 +47,12 @@ const Signup = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
+		// Check if passwords match
+		if (formData.password1 !== formData.password2) {
+			alert("Passwords do not match!");
+			return;
+		}
+
 		try {
 			const response = await fetch(`${BACKEND_URL}/users`, {
 				method: "POST",
@@ -53,6 +60,7 @@ const Signup = () => {
 				body: JSON.stringify({
 					username: formData.username,
 					name: formData.name,
+					email: formData.email,
 					password: formData.password1,
 					country: formData.country,
 					city: formData.city,
@@ -60,7 +68,9 @@ const Signup = () => {
 			});
 
 			if (!response.ok) {
-				alert("An error occured trying to make your account");
+				const errorData = await response.json();
+				alert(`Error: ${errorData.error || "An error occurred trying to make your account"}`);
+				return;
 			}
 
 			const userData = await response.json();
@@ -69,6 +79,7 @@ const Signup = () => {
 			alert("Account Successfully Created");
 		} catch (error) {
 			console.error("Error:", error);
+			alert("Network error. Please try again.");
 		}
 	};
 
@@ -108,6 +119,18 @@ const Signup = () => {
 							id="name"
 							name="name"
 							value={formData.name}
+							onChange={(e) => handleChange(e)}
+							style={{ paddingLeft: "10px" }}
+							required
+						/>
+					</div>
+					<div className={styles.formSection}>
+						<label htmlFor="email">Email</label>
+						<input
+							type="email"
+							id="email"
+							name="email"
+							value={formData.email}
 							onChange={(e) => handleChange(e)}
 							style={{ paddingLeft: "10px" }}
 							required

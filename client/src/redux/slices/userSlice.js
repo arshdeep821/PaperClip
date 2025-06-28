@@ -17,6 +17,60 @@ const initialState = {
 	error: null,
 };
 
+export const createUser = createAsyncThunk(
+	"user/createUser",
+	async (userData) => {
+		const response = await fetch(`${BACKEND_URL}/users`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(userData),
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json();
+			throw new Error(errorData.error || "Failed to create user");
+		}
+
+		return await response.json();
+	}
+);
+
+export const loginUser = createAsyncThunk(
+	"user/loginUser",
+	async (credentials) => {
+		const response = await fetch(`${BACKEND_URL}/users/login`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(credentials),
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json();
+			throw new Error(errorData.error || "Login failed");
+		}
+
+		return await response.json();
+	}
+);
+
+export const updateUser = createAsyncThunk(
+	"user/updateUser",
+	async ({ userId, userData }) => {
+		const response = await fetch(`${BACKEND_URL}/users/${userId}`, {
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(userData),
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json();
+			throw new Error(errorData.error || "Failed to update user");
+		}
+
+		return await response.json();
+	}
+);
+
 export const uploadItem = createAsyncThunk('items/uploadItem', async (data) => {
 	const response = await fetch(`${BACKEND_URL}/items`, {
 		method: "POST",
@@ -32,7 +86,7 @@ export const deleteItem = createAsyncThunk('items/deleteItem', async (itemId) =>
 	});
 
 	if (!res.ok) {
-		return rejectWithValue(`Error deleting item with id: ${itemId}`);
+		throw new Error(`Error deleting item with id: ${itemId}`);
 	}
 	return itemId
 })
@@ -62,6 +116,22 @@ export const userSlice = createSlice({
 			state.tradingRadius = tradingRadius;
 			state.inventory = inventory;
 			state.createdAt = createdAt;
+		},
+		logout: (state) => {
+			state.isLoggedIn = false;
+			state.id = null;
+			state.username = null;
+			state.name = null;
+			state.email = null;
+			state.city = null;
+			state.country = null;
+			state.tradingRadius = null;
+			state.inventory = null;
+			state.createdAt = null;
+			state.error = null;
+		},
+		clearError: (state) => {
+			state.error = null;
 		},
 		addItem: (state, action) => {
 			state.inventory.push(action.payload);
@@ -108,9 +178,76 @@ export const userSlice = createSlice({
 				state.status = 'failed'
 				state.error = action.payload || action.error.message;
 			})
+			.addCase(createUser.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(createUser.fulfilled, (state) => {
+				state.loading = false;
+				state.error = null;
+			})
+			.addCase(createUser.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message;
+			})
+			.addCase(loginUser.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(loginUser.fulfilled, (state, action) => {
+				const {
+					_id,
+					username,
+					name,
+					email,
+					city,
+					country,
+					tradingRadius,
+					inventory,
+					createdAt,
+				} = action.payload;
+
+				state.isLoggedIn = true;
+				state.id = _id;
+				state.username = username;
+				state.name = name;
+				state.email = email;
+				state.city = city;
+				state.country = country;
+				state.tradingRadius = tradingRadius;
+				state.inventory = inventory;
+				state.createdAt = createdAt;
+				state.loading = false;
+				state.error = null;
+			})
+			.addCase(loginUser.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message;
+			})
+			.addCase(updateUser.pending, (state) => {
+				state.status = 'updating_user';
+			})
+			.addCase(updateUser.fulfilled, (state, action) => {
+				state.status = 'updated';
+				state.isLoggedIn = true;
+				state.id = action.payload._id;
+				state.username = action.payload.username;
+				state.name = action.payload.name;
+				state.email = action.payload.email;
+				state.city = action.payload.city;
+				state.country = action.payload.country;
+				state.tradingRadius = action.payload.tradingRadius;
+				state.inventory = action.payload.inventory;
+				state.createdAt = action.payload.createdAt;
+				state.error = null;
+			})
+			.addCase(updateUser.rejected, (state, action) => {
+				state.status = 'failed';
+				state.error = action.error.message;
+			});
 	},
 });
 
-export const { setUser, addItem, removeItem, updateItem, setItems } = userSlice.actions;
+export const { setUser, logout, clearError, addItem, removeItem, updateItem, setItems } = userSlice.actions;
 
 export default userSlice.reducer;

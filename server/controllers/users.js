@@ -1,19 +1,18 @@
 import User from "../models/User.js";
 import { StatusCodes } from "http-status-codes";
 import { hash, compare } from "bcrypt";
-import fs from "fs"
 
 const DEFAULT_USER_RADIUS = 10;
 const HASH_ROUNDS = 10;
 
 const createUser = async (req, res) => {
 	try {
-		const { username, name, password, city, country, tradingRadius } =
+		const { username, name, password, email, city, country, tradingRadius } =
 			req.body;
 
-		if (!username || !name || !password || !city || !country) {
+		if (!username || !name || !password || !email || !city || !country) {
 			return res.status(400).json({
-				error: "Username, name, password, city, and country are required.",
+				error: "Username, name, password, email, city, and country are required.",
 			});
 		}
 
@@ -30,6 +29,7 @@ const createUser = async (req, res) => {
 			username,
 			name,
 			password: hashedPassword,
+			email,
 			city,
 			country,
 			tradingRadius: tradingRadius || DEFAULT_USER_RADIUS,
@@ -41,6 +41,7 @@ const createUser = async (req, res) => {
 			_id: newUser._id,
 			username: newUser.username,
 			name: newUser.name,
+			email: newUser.email,
 			city: newUser.city,
 			country: newUser.country,
 			tradingRadius: newUser.tradingRadius,
@@ -67,15 +68,7 @@ const loginUser = async (req, res) => {
 			});
 		}
 
-		const user = await User.findOne({ username })
-			.populate({
-				path: "inventory",
-				populate: {
-					path: "category", // deep populate category inside each item
-				},
-			});
-
-
+		const user = await User.findOne({ username }).populate("inventory");
 		if (!user) {
 			return res.status(StatusCodes.UNAUTHORIZED).json({
 				error: "Invalid username.",
@@ -91,19 +84,11 @@ const loginUser = async (req, res) => {
 
 		req.session.userId = user._id;
 
-		// const inventory = user.inventory.map((item) => {
-		// 	const imageFile = fs.readFileSync(`./public/${item.imagePath}`);
-		// 	const base64Image = `data:image/jpeg;base64,${imageFile.toString("base64")}`;
-		// 	return {
-		// 		...item.toObject(),
-		// 		image: base64Image
-		// 	}
-		// })
-
 		const userResponse = {
 			_id: user._id,
 			username: user.username,
 			name: user.name,
+			email: user.email,
 			city: user.city,
 			country: user.country,
 			tradingRadius: user.tradingRadius,
@@ -139,4 +124,79 @@ const getUser = async (req, res) => {
 	}
 };
 
-export { createUser, loginUser, getUser };
+// added updateUser
+const updateUser = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { username, password, tradingRadius, name, email, city, country } = req.body;
+
+		const user = await User.findById(id);
+
+		if (!user) {
+			return res.status(404).json({ error: "User not found." });
+		}
+
+		// Check for duplicate username if username is being changed
+		if (username && username !== user.username) {
+			const existingUser = await User.findOne({ username });
+			if (existingUser) {
+				return res
+					.status(StatusCodes.CONFLICT)
+					.json({ error: "Username already exists." });
+			}
+		}
+
+		// Check for duplicate email if email is being changed
+		if (email && email !== user.email) {
+			const existingUser = await User.findOne({ email });
+			if (existingUser) {
+				return res
+					.status(StatusCodes.CONFLICT)
+					.json({ error: "Email already exists." });
+			}
+		}
+
+		// Prepare update object
+		const updateData = {};
+		if (username) updateData.username = username;
+		if (name) updateData.name = name;
+		if (email) updateData.email = email;
+		if (city) updateData.city = city;
+		if (country) updateData.country = country;
+		if (tradingRadius) updateData.tradingRadius = tradingRadius;
+
+		// Handle password hashing if password is being updated
+		if (password) {
+			updateData.password = await hash(password, HASH_ROUNDS);
+		}
+
+		const updatedUser = await User.findByIdAndUpdate(
+			id,
+			updateData,
+			{ new: true, runValidators: true }
+		).select("-password");
+
+		const userResponse = {
+			_id: updatedUser._id,
+			username: updatedUser.username,
+			name: updatedUser.name,
+			email: updatedUser.email,
+			city: updatedUser.city,
+			country: updatedUser.country,
+			tradingRadius: updatedUser.tradingRadius,
+			inventory: updatedUser.inventory,
+			createdAt: updatedUser.createdAt,
+			updatedAt: updatedUser.updatedAt,
+		};
+
+		res.status(StatusCodes.OK).json(userResponse);
+	} catch (err) {
+		console.error("Error updating user:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Server error. Could not update user.",
+		});
+	}
+};
+
+export { createUser, loginUser, getUser, updateUser };
+

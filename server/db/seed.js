@@ -20,6 +20,7 @@ const adminUser = {
 	_id: new mongoose.Types.ObjectId("123456789012345678901234"),
 	username: "Admin",
 	name: "Admin Name",
+	email: "admin@example.com",
 	password: hashedPassword,
 	city: "Vancouver",
 	country: "Canada",
@@ -62,6 +63,7 @@ hashedPassword = await hash("password", HASH_ROUNDS);
 const execUser = {
 	username: "Exec",
 	name: "Exec Name",
+	email: "exec@example.com",
 	password: hashedPassword,
 	city: "Toronto",
 	country: "Canada"
