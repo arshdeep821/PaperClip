@@ -1,17 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
-	const response = await fetch('http://localhost:3001/items');
-	const data = await response.json();
-	return data;
-});
+const BACKEND_URL = "http://localhost:3001";
 
 const initialState = {
 	products: [],
 	status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
 	error: null
 }
+
+export const fetchProducts = createAsyncThunk('products/fetchProducts', async (userId) => {
+	const response = await fetch(`${BACKEND_URL}/items/${userId}`);
+	const data = await response.json();
+	return data;
+});
+
+
 
 export const productsSlice = createSlice({
 	name: "products",
