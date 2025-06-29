@@ -168,7 +168,7 @@ const getProducts = async (req, res) => {
         const { id } = req.params;
 
         if (!id) {
-            res.status(StatusCodes.BAD_REQUEST).json({error: "Please provide user ID"})
+            res.status(StatusCodes.BAD_REQUEST).json({ error: "Please provide user ID" })
         }
 
         const items = await Item.find({ owner: { $ne: id } })
@@ -182,4 +182,55 @@ const getProducts = async (req, res) => {
     }
 };
 
-export { createItem, deleteItem, updateItem, getProducts };
+const searchProducts = async (req, res) => {
+    try {
+        const { query } = req.query;
+
+        if (!query || query.trim() === "") {
+            return res.status(400).json({ error: "Search query is required." });
+        }
+
+        const terms = query.trim().split(/\s+/);
+
+        // Build the $and array of OR conditions for each term
+        const andConditions = terms.map((term) => ({
+            $or: [
+                { name: { $regex: term, $options: "i" } },
+                { description: { $regex: term, $options: "i" } },
+                { condition: { $regex: term, $options: "i" } },
+                { "owner.username": { $regex: term, $options: "i" } },
+                { "category.name": { $regex: term, $options: "i" } },
+            ],
+        }));
+
+        const items = await Item.aggregate([
+            {
+                $lookup: {
+                    from: "Users",
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "owner",
+                },
+            },
+            {
+                $lookup: {
+                    from: "Categories",
+                    localField: "category",
+                    foreignField: "_id",
+                    as: "category",
+                },
+            },
+            { $unwind: "$owner" },
+            { $unwind: "$category" },
+            { $match: { $and: andConditions } },
+        ]);
+
+        res.status(200).json(items);
+
+    } catch (error) {
+        console.error("Error searching products:", error);
+        res.status(500).json({ error: "Internal server error." });
+    }
+};
+
+export { createItem, deleteItem, updateItem, getProducts, searchProducts };
