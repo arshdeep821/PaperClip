@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.route("/").post(upload.single('image'), createItem)
-router.route("/search").get(searchProducts);
+router.route("/search/:id").get(searchProducts);
 router.route("/:id").delete(deleteItem).patch(upload.single('image'), updateItem).get(getProducts);
 
 export default router;

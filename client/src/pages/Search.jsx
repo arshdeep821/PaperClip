@@ -10,7 +10,7 @@ function Search() {
     const [searchTerm, setSearchTerm] = useState('');
 
     const searchResults = useSelector((state) => state.search.searchResults)
-    const userId = useSelector((state) => state.user)
+    const userId = useSelector((state) => state.user.id)
 
     useEffect(() => {
         if (searchTerm || searchTerm.trim() !== '') {
@@ -18,10 +18,6 @@ function Search() {
         }
     }, [searchTerm, dispatch])
 
-    console.log(searchResults);
-
-
-    // return <h1>Hello Searh</h1>
     return (
         <div className={styles.searchPage}>
             <Sidebar />

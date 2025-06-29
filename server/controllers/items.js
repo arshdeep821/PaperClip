@@ -5,6 +5,7 @@ import Category from "../models/Category.js";
 import { StatusCodes } from "http-status-codes";
 import fs from "fs"
 import path from "path"
+import mongoose from "mongoose";
 
 const createItem = async (req, res) => {
     try {
@@ -185,6 +186,7 @@ const getProducts = async (req, res) => {
 const searchProducts = async (req, res) => {
     try {
         const { query } = req.query;
+        const { id } = req.params;
 
         if (!query || query.trim() === "") {
             return res.status(400).json({ error: "Search query is required." });
@@ -202,6 +204,17 @@ const searchProducts = async (req, res) => {
                 { "category.name": { $regex: term, $options: "i" } },
             ],
         }));
+
+        if (!mongoose.isValidObjectId(id)) {
+            return res.status(400).json({ error: "Invalid user ID." });
+        }
+
+        const userObjectId = new mongoose.Types.ObjectId(id);
+
+        // don't want to return items that the user owns
+        andConditions.push({
+            "owner._id": { $ne: userObjectId }
+        });
 
         const items = await Item.aggregate([
             {

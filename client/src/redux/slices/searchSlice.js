@@ -9,7 +9,7 @@ const initialState = {
 }
 
 export const fetchSearch = createAsyncThunk('products/fetchSearch', async ({ userId, query }) => {
-    const response = await fetch(`${BACKEND_URL}/items/search/?query=${encodeURIComponent(query)}`);
+    const response = await fetch(`${BACKEND_URL}/items/search/${userId}/?query=${encodeURIComponent(query)}`);
     const data = await response.json();
     return data;
 });
