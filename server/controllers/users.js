@@ -136,8 +136,7 @@ const updateUser = async (req, res) => {
 			return res.status(404).json({ error: "User not found." });
 		}
 
-		// Check for duplicate username if username is being changed
-		if (username && username !== user.username) {
+		if (username) {
 			const existingUser = await User.findOne({ username });
 			if (existingUser) {
 				return res
@@ -146,8 +145,7 @@ const updateUser = async (req, res) => {
 			}
 		}
 
-		// Check for duplicate email if email is being changed
-		if (email && email !== user.email) {
+		if (email) {
 			const existingUser = await User.findOne({ email });
 			if (existingUser) {
 				return res
@@ -156,7 +154,6 @@ const updateUser = async (req, res) => {
 			}
 		}
 
-		// Prepare update object
 		const updateData = {};
 		if (username) updateData.username = username;
 		if (name) updateData.name = name;
@@ -165,7 +162,6 @@ const updateUser = async (req, res) => {
 		if (country) updateData.country = country;
 		if (tradingRadius) updateData.tradingRadius = tradingRadius;
 
-		// Handle password hashing if password is being updated
 		if (password) {
 			updateData.password = await hash(password, HASH_ROUNDS);
 		}
