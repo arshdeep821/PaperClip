@@ -2,11 +2,7 @@
 	right: 20px;
 	bottom: 20px;
 	position: fixed;
-	display: flex;
-	flex-direction: column-reverse;
-	align-items: center;
 	z-index: 1000;
-	gap: 12px;
 }
 
 .bagIcon {
@@ -20,6 +16,7 @@
 	align-items: center;
 	width: 80px;
 	height: 80px;
+	z-index: 1001;
 }
 
 .bagIcon svg {
@@ -32,48 +29,54 @@
 	transform: scale(1.05);
 }
 
-.itemList {
-	list-style: none;
-	max-height: 300px;
+.inventoryFrame {
+	background-color: rgba(255, 255, 255, 0.9);
+	border: 2px solid #bbbbbb;
+	border-radius: 12px;
+	padding: 16px;
+	width: 320px;
+	max-height: 400px;
+	overflow-y: auto;
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
-	justify-content: center;
-	align-self: center;
-	padding: 0;
-	width: max-content;
-	min-width: 100px;
-	animation: slideUp 0.3s ease-out;
+	position: fixed;
+	right: 20px;
+	bottom: 140px;
+	z-index: 1000;
 }
 
-.smallItem {
+.empty {
 	display: flex;
 	justify-content: center;
-	flex-direction: column;
+	align-items: center;
+	color: #ffffff;
+	font-style: italic;
 }
 
-.smallItem img {
-	width: 80px;
-	height: auto;
+.itemGrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+	width: 100%;
+}
+
+.item:hover {
+	filter: brightness(50%);
+}
+
+.item img {
+	width: 60px;
+	height: 60px;
 	object-fit: contain;
-	border-radius: 50%;
-}
-
-.smallItem:hover {
-	transform: scale(1.05);
-}
-
-.itemName {
-	/* TODO: add styling */
+	border: 1px solid #ffffff;
 }
 
 @keyframes slideUp {
 	from {
 		opacity: 0;
-		transform: translateY(20px);
+		transform: translateY(20px) scale(0.95);
 	}
 	to {
 		opacity: 1;
-		transform: translateY(0);
+		transform: translateY(0) scale(1);
 	}
 }

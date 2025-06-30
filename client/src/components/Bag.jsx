@@ -19,21 +19,24 @@ function Bag() {
 				<BackpackIcon />
 			</div>
 
-			{open && (items.length === 0 ? (
-				<div className={styles.closing}>empty</div>
-			) : (
-				<ul className={styles.itemList}>
-					{items.map((item) => (
-						<li
-							key={item._id}
-							className={styles.smallItem}
-						>
-							<p className={styles.itemName}>{item.name}</p>
-							<img src={`${BACKEND_URL}/static/${item.imagePath}`} alt={item.name} />
-						</li>
-					))}
-				</ul>
-			))}
+			{open && (
+				<div className={styles.inventoryFrame}>
+					{items.length === 0 ? (
+						<div className={styles.empty}>Empty</div>
+					) : (
+						<div className={styles.itemGrid}>
+							{items.map((item) => (
+								<div key={item._id} className={styles.item}>
+									<img
+										src={`${BACKEND_URL}/static/${item.imagePath}`}
+										alt={item.name}
+									/>
+								</div>
+							))}
+						</div>
+					)}
+				</div>
+			)}
 		</div>
 	);
 }
