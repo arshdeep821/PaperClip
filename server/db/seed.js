@@ -100,6 +100,15 @@ const execItems = [
 	}
 ]
 
+hashedPassword = await hash("password", HASH_ROUNDS);
+const dummyUser = {
+	username: "dummy",
+	name: "dummy Name",
+	password: hashedPassword,
+	city: "Calgary",
+	country: "Canada"
+}
+
 const seedDatabase = async () => {
 	try {
 		// Clear existing data
@@ -162,6 +171,8 @@ const seedDatabase = async () => {
 
 		console.log("Created trade between Admin and Exec:", trade._id);
 
+		createdUser = await User.create(dummyUser);
+		console.log("Created Dummy user with ID:", createdUser._id);
 
 		console.log("Database seeded successfully!");
 	} catch (error) {
