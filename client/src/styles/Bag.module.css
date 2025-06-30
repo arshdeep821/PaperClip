@@ -59,7 +59,15 @@
 	width: 100%;
 }
 
+.item {
+	cursor: pointer;
+}
+
 .item:hover {
+	filter: brightness(50%);
+}
+
+.item.selected {
 	filter: brightness(50%);
 }
 
@@ -68,6 +76,24 @@
 	height: 60px;
 	object-fit: contain;
 	border: 1px solid #ffffff;
+}
+
+.checkmark {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 10;
+	filter: brightness(200%);
+}
+
+.checkmark svg {
+	color: green;
+	font-size: 32px;
 }
 
 @keyframes slideUp {

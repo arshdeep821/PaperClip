@@ -22,7 +22,7 @@ const ViewProducts = () => {
 	const [itemIdx, setItemIdx] = useState(0);
 
 	useEffect(() => {
-		// if (status === 'idle') { 
+		// if (status === 'idle') {
 		dispatch(fetchProducts(userId))
 		// }
 	}, [dispatch])
@@ -78,7 +78,7 @@ const ViewProducts = () => {
 				handleRightButton={handleRightButton}
 			/>
 
-			<Bag />
+			<Bag currentProduct={products[itemIdx]}/>
 		</div>
 	);
 };
