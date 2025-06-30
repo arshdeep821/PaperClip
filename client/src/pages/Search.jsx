@@ -77,7 +77,7 @@ function Search() {
                         </>
                     ) : (
                         <p className={styles.promptMessage}>
-                            Enter a search term to find products and users
+                            Enter a search term to find products or users
                         </p>
                     )}
                 </div>
