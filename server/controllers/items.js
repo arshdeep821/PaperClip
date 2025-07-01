@@ -254,7 +254,12 @@ const searchProducts = async (req, res) => {
                 { _id: { $ne: userObjectId } },
                 ...userConditions
             ]
-        }).select("-password -inventory"); // Optionally hide sensitive fields
+        })
+            .select("-password")
+            .populate({
+                path: "inventory",
+                populate: { path: "category" }
+            });
 
         res.status(200).json({ items, users });
 
