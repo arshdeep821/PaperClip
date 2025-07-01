@@ -5,9 +5,9 @@
     "passes": 1,
     "pending": 0,
     "failures": 0,
-    "start": "2025-07-01T02:06:53.659Z",
-    "end": "2025-07-01T02:06:53.665Z",
-    "duration": 6,
+    "start": "2025-07-01T02:24:31.126Z",
+    "end": "2025-07-01T02:24:31.127Z",
+    "duration": 1,
     "testsRegistered": 1,
     "passPercent": 100,
     "pendingPercent": 0,
@@ -18,7 +18,7 @@
   },
   "results": [
     {
-      "uuid": "b2ef10e6-afbe-43b1-98e9-85177f1076c0",
+      "uuid": "da62fcc8-808c-4019-b020-1587de29fac7",
       "title": "",
       "fullFile": "/Users/prestonlai/team28/server/test/sanity.test.js",
       "file": "/test/sanity.test.js",
@@ -27,7 +27,7 @@
       "tests": [],
       "suites": [
         {
-          "uuid": "9a00b6ec-0dfe-41ab-a20f-593655bc3c49",
+          "uuid": "ab2fb8ee-be00-4849-aee0-281d80bae7a8",
           "title": "Sanity Check",
           "fullFile": "/Users/prestonlai/team28/server/test/sanity.test.js",
           "file": "/test/sanity.test.js",
@@ -38,7 +38,7 @@
               "title": "should pass a basic truthy test",
               "fullTitle": "Sanity Check should pass a basic truthy test",
               "timedOut": false,
-              "duration": 1,
+              "duration": 0,
               "state": "passed",
               "speed": "fast",
               "pass": true,
@@ -47,20 +47,20 @@
               "context": null,
               "code": "expect(true).to.be.true;",
               "err": {},
-              "uuid": "92186c5c-ea5f-489f-b935-5d4fa9586d57",
-              "parentUUID": "9a00b6ec-0dfe-41ab-a20f-593655bc3c49",
+              "uuid": "c54087cd-a9ed-4e06-963d-49fd01b20f00",
+              "parentUUID": "ab2fb8ee-be00-4849-aee0-281d80bae7a8",
               "isHook": false,
               "skipped": false
             }
           ],
           "suites": [],
           "passes": [
-            "92186c5c-ea5f-489f-b935-5d4fa9586d57"
+            "c54087cd-a9ed-4e06-963d-49fd01b20f00"
           ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 1,
+          "duration": 0,
           "root": false,
           "rootEmpty": false,
           "_timeout": 2000
