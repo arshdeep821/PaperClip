@@ -1,14 +1,14 @@
 {
   "stats": {
     "suites": 2,
-    "tests": 2,
-    "passes": 2,
+    "tests": 3,
+    "passes": 3,
     "pending": 0,
     "failures": 0,
-    "start": "2025-07-01T06:38:19.125Z",
-    "end": "2025-07-01T06:38:19.262Z",
-    "duration": 137,
-    "testsRegistered": 2,
+    "start": "2025-07-01T20:59:50.866Z",
+    "end": "2025-07-01T20:59:51.089Z",
+    "duration": 223,
+    "testsRegistered": 3,
     "passPercent": 100,
     "pendingPercent": 0,
     "other": 0,
@@ -18,7 +18,7 @@
   },
   "results": [
     {
-      "uuid": "db13bbdd-d1a1-4c4e-a904-ab4aa8c9ad39",
+      "uuid": "352b4129-ab35-4c81-9ddf-a4b38545c882",
       "title": "",
       "fullFile": "",
       "file": "",
@@ -27,7 +27,7 @@
       "tests": [],
       "suites": [
         {
-          "uuid": "9dee6c52-b601-47e9-b2db-dd19a5f91a5c",
+          "uuid": "cc5b5383-4063-434f-a9b3-42219f01625d",
           "title": "Sanity Check",
           "fullFile": "/Users/prestonlai/team28/server/test/sanity.test.js",
           "file": "/test/sanity.test.js",
@@ -47,15 +47,15 @@
               "context": null,
               "code": "expect(true).to.be.true;",
               "err": {},
-              "uuid": "73b88cd1-6bdd-418a-ae5a-8c5a3c734b9b",
-              "parentUUID": "9dee6c52-b601-47e9-b2db-dd19a5f91a5c",
+              "uuid": "3ee930fe-a7ee-4da1-91ec-e4df5733dd80",
+              "parentUUID": "cc5b5383-4063-434f-a9b3-42219f01625d",
               "isHook": false,
               "skipped": false
             }
           ],
           "suites": [],
           "passes": [
-            "73b88cd1-6bdd-418a-ae5a-8c5a3c734b9b"
+            "3ee930fe-a7ee-4da1-91ec-e4df5733dd80"
           ],
           "failures": [],
           "pending": [],
@@ -66,7 +66,7 @@
           "_timeout": 2000
         },
         {
-          "uuid": "ccfa9304-2afa-433d-b472-31ed889f77b4",
+          "uuid": "fd3510dd-a59e-4aa0-8808-29c32b7a4521",
           "title": "User API Endpoints",
           "fullFile": "/Users/prestonlai/team28/server/test/user.test.js",
           "file": "/test/user.test.js",
@@ -77,7 +77,7 @@
               "title": "should create a new user",
               "fullTitle": "User API Endpoints should create a new user",
               "timedOut": false,
-              "duration": 112,
+              "duration": 132,
               "state": "passed",
               "speed": "slow",
               "pass": true,
@@ -86,20 +86,39 @@
               "context": null,
               "code": "const res = await request(baseURL)\n\t.post('/users')\n\t.send(testUser);\nconsole.log('Create user response:', res.status, res.body);\nexpect(res.status).to.equal(201);\nexpect(res.body).to.have.property('_id');\nexpect(res.body.username).to.equal(testUser.username);\nexpect(res.body.email).to.equal(testUser.email);",
               "err": {},
-              "uuid": "806e9ee5-4fd5-47a6-bf28-833706e03a73",
-              "parentUUID": "ccfa9304-2afa-433d-b472-31ed889f77b4",
+              "uuid": "0c8794cf-1864-49bf-b6c1-12c1534d4c4f",
+              "parentUUID": "fd3510dd-a59e-4aa0-8808-29c32b7a4521",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should login the user",
+              "fullTitle": "User API Endpoints should login the user",
+              "timedOut": false,
+              "duration": 72,
+              "state": "passed",
+              "speed": "medium",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const res = await request(baseURL)\n\t.post('/users/login')\n\t.send({ username: testUser.username, password: testUser.password });\nconsole.log('Login user response:', res.status, res.body);\nexpect(res.status).to.equal(200);\nexpect(res.body).to.have.property('username');",
+              "err": {},
+              "uuid": "c52532d5-dbe4-46a9-8ec4-1db7d5a41226",
+              "parentUUID": "fd3510dd-a59e-4aa0-8808-29c32b7a4521",
               "isHook": false,
               "skipped": false
             }
           ],
           "suites": [],
           "passes": [
-            "806e9ee5-4fd5-47a6-bf28-833706e03a73"
+            "0c8794cf-1864-49bf-b6c1-12c1534d4c4f",
+            "c52532d5-dbe4-46a9-8ec4-1db7d5a41226"
           ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 112,
+          "duration": 204,
           "root": false,
           "rootEmpty": false,
           "_timeout": 2000

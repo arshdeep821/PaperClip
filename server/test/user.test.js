@@ -3,10 +3,11 @@ import { expect } from 'chai';
 
 describe('User API Endpoints', function() {
 	const baseURL = 'http://localhost:3001';
+	const unique = Date.now();
 	let testUser = {
-		username: 'testuser_' + Date.now(),
+		username: 'testuser_' + unique,
 		name: 'Test User',
-		email: 'testuser_' + Date.now() + '@example.com',
+		email: 'testuser_' + unique + '@example.com',
 		password: 'password123',
 		city: 'Test City',
 		country: 'Test Country'
@@ -23,12 +24,12 @@ describe('User API Endpoints', function() {
 		expect(res.body.email).to.equal(testUser.email);
 	});
 
-	// it('should login the user', async function() {
-	// 	const res = await request(baseURL)
-	// 		.post('/users/login')
-	// 		.send({ email: testUser.email, password: testUser.password });
-	// 	console.log('Login user response:', res.status, res.body);
-	// 	expect(res.status).to.equal(200);
-	// 	expect(res.body).to.have.property('token');
-	// });
+	it('should login the user', async function() {
+		const res = await request(baseURL)
+			.post('/users/login')
+			.send({ username: testUser.username, password: testUser.password });
+		console.log('Login user response:', res.status, res.body);
+		expect(res.status).to.equal(200);
+		expect(res.body).to.have.property('username');
+	});
 });
