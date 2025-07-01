@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import Category from "../models/Category.js";
 import { StatusCodes } from "http-status-codes";
 import { hash, compare } from "bcrypt";
 
@@ -52,6 +53,7 @@ const createUser = async (req, res) => {
 			city: newUser.city,
 			country: newUser.country,
 			tradingRadius: newUser.tradingRadius,
+			userPreferences: newUser.userPreferences,
 			inventory: newUser.inventory,
 			createdAt: newUser.createdAt,
 		};
@@ -99,6 +101,7 @@ const loginUser = async (req, res) => {
 			city: user.city,
 			country: user.country,
 			tradingRadius: user.tradingRadius,
+			userPreferences: user.userPreferences,
 			inventory: user.inventory,
 			createdAt: user.createdAt,
 		};
@@ -196,4 +199,66 @@ const updateUser = async (req, res) => {
 	}
 };
 
-export { createUser, loginUser, getUser, updateUser };
+const updateUserPreferences = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { userPreferences } = req.body;
+
+		if (!Array.isArray(userPreferences)) {
+			return res
+				.status(400)
+				.json({ error: "userPreferences must be an array." });
+		}
+
+		const validatedPreferences = [];
+
+		for (const pref of userPreferences) {
+			if (
+				!pref ||
+				typeof pref !== "object" ||
+				typeof pref.category !== "string" ||
+				typeof pref.description !== "string"
+			) {
+				return res.status(StatusCodes.BAD_REQUEST).json({
+					error: "Each preference must have a 'category' ObjectId string and a 'description'.",
+				});
+			}
+
+			const category = await Category.findById(pref.category);
+			if (!category) {
+				return res.status(StatusCodes.BAD_REQUEST).json({
+					error: `Category with id ${pref.category} does not exist.`,
+				});
+			}
+
+			validatedPreferences.push({
+				category: category._id,
+				description: pref.description,
+			});
+		}
+
+		const user = await User.findById(id);
+		if (!user) {
+			return res
+				.status(StatusCodes.NOT_FOUND)
+				.json({ error: "User not found." });
+		}
+
+		user.userPreferences = validatedPreferences;
+		await user.save();
+
+		await user.populate("userPreferences.category");
+
+		res.status(StatusCodes.OK).json({
+			message: "User preferences updated.",
+			user,
+		});
+	} catch (err) {
+		console.error("Error updating user preferences:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Server error. Could not update users preferences.",
+		});
+	}
+};
+
+export { createUser, loginUser, getUser, updateUser, updateUserPreferences };
