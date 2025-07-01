@@ -183,6 +183,20 @@ const getProducts = async (req, res) => {
     }
 };
 
+const getAllproducts = async (req, res) => {
+	try {
+		const allItems = await Item.find({})
+			.populate("category") // populate the full category object
+
+		res.status(StatusCodes.OK).json(allItems);
+	} catch (error) {
+		console.error("Error fetching all items:", error);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Failed to fetch all items.",
+		});
+	}
+};
+
 const searchProducts = async (req, res) => {
     try {
         const { query } = req.query;
@@ -269,4 +283,5 @@ const searchProducts = async (req, res) => {
     }
 };
 
-export { createItem, deleteItem, updateItem, getProducts, searchProducts };
+export { createItem, deleteItem, updateItem, getProducts, searchProducts, getAllproducts };
+
