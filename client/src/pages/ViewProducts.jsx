@@ -9,9 +9,10 @@ import TopOptionButtons from "../components/TopOptionButtons";
 import BottomOptionButtons from "../components/BottomOptionButtons";
 import Bag from "../components/Bag";
 import { fetchProducts } from "../redux/slices/productsSlice";
+import { useLocation } from "react-router-dom";
 
 const ViewProducts = () => {
-	const products = useSelector((state) => state.products.products);
+	let products = useSelector((state) => state.products.products);
 	const status = useSelector((state) => state.products.status)
 	const error = useSelector((state) => state.products.error)
 	const userId = useSelector((state) => state.user.id)
@@ -43,6 +44,12 @@ const ViewProducts = () => {
 		window.addEventListener("keydown", handleKeyDown);
 		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, []);
+
+	const { state } = useLocation();
+
+	if (state && state.item) {
+		products = [state.item, ...products.filter((product) => product._id !== state.item._id)]
+	}
 
 	const handleLeftButton = () => {
 		setItemIdx((currIdx) => (currIdx > 0 ? currIdx - 1 : NUM_PRODUCTS - 1));

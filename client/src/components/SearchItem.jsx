@@ -1,10 +1,17 @@
 import styles from "../styles/SearchItem.module.css";
+import { useNavigate } from "react-router-dom";
 
 const BACKEND_URL = "http://localhost:3001";
 
 const SearchItem = ({ item }) => {
+    const navigate = useNavigate()
+
+    const handleClick = (item) => {
+        navigate("/products", { state: { item }})
+    }
+
     return (
-        <div className={styles.card}>
+        <div className={styles.card} onClick={() => handleClick(item)}>
             {item.imagePath && (
                 <>
                     <div className={styles.imageWrapper}>
