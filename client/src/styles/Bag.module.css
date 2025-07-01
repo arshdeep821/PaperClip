@@ -37,6 +37,7 @@
 	width: 320px;
 	max-height: 400px;
 	overflow-y: auto;
+	overflow-y: visible;
 	display: flex;
 	flex-direction: column;
 	position: fixed;
@@ -57,10 +58,12 @@
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
 	width: 100%;
+	padding-top: 24px;
 }
 
 .item {
 	cursor: pointer;
+	position: relative;
 }
 
 .item:hover {
@@ -75,7 +78,6 @@
 	width: 60px;
 	height: 60px;
 	object-fit: contain;
-	border: 1px solid #ffffff;
 }
 
 .checkmark {
@@ -94,6 +96,37 @@
 .checkmark svg {
 	color: green;
 	font-size: 32px;
+}
+
+.tooltip {
+	position: absolute;
+	bottom: 105%;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: #000000;
+	color: white;
+	padding: 6px 12px;
+	border-radius: 4px;
+	font-size: 12px;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.3s ease, visibility 0.3s ease;
+	overflow: visible;
+	pointer-events: none;
+	white-space: nowrap;
+	z-index: 1002;
+}
+
+.item:hover .tooltip {
+	opacity: 0.9;
+	visibility: visible;
+}
+
+.inventoryFrame .instruction {
+	position: absolute;
+	bottom: 105%;
+	left: 30%;
+	font-style: italic;
 }
 
 @keyframes slideUp {

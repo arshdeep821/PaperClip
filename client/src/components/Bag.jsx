@@ -55,11 +55,13 @@ function Bag({ currentProduct }) {
 												<CheckCircleIcon />
 											</div>
 										)}
+										<span className={styles.tooltip}>{item.name}</span>
 									</div>
 								);
 							})}
 						</div>
 					)}
+					<span className={styles.instruction}>Select items to offer</span>
 				</div>
 			)}
 		</div>
