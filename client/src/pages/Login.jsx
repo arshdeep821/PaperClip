@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import styles from "../styles/Login.module.css";
 import PaperClipLogo from "../assets/PaperClip.png";
 
-import { setUser } from "../redux/slices/userSlice";
+import { loginUser } from "../redux/slices/userSlice";
 import { useDispatch } from "react-redux";
-
-const BACKEND_URL = "http://localhost:3001";
 
 function Login() {
 	const dispatch = useDispatch();
+	const { loading, error } = useSelector((state) => state.user);
 	const [formData, setFormData] = useState({
 		username: "",
 		password: "",
@@ -25,26 +25,16 @@ function Login() {
 		e.preventDefault();
 
 		try {
-			const response = await fetch(`${BACKEND_URL}/users/login`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
+			await dispatch(
+				loginUser({
 					username: formData.username,
 					password: formData.password,
-				}),
-			});
-
-			if (!response.ok) {
-				alert("An error trying to login");
-			}
-
-			const userData = await response.json();
-			dispatch(setUser(userData));
+				})
+			).unwrap();
 
 			navigate("/home");
-			alert("Successfully Logged In");
 		} catch (error) {
-			console.error("Error:", error);
+			alert(error.message || "An error occurred while trying to login");
 		}
 	};
 
@@ -64,6 +54,7 @@ function Login() {
 					<h1>PaperClip</h1>
 				</div>
 				<h2>Welcome Back</h2>
+				{error && <div className={styles.error}>{error}</div>}
 				<form onSubmit={(e) => handleSubmit(e)}>
 					<div className={styles.formSection}>
 						<label htmlFor="username">Username</label>
@@ -89,8 +80,12 @@ function Login() {
 							required
 						/>
 					</div>
-					<button type="submit" className={styles.loginButton}>
-						Login
+					<button
+						type="submit"
+						className={styles.loginButton}
+						disabled={loading}
+					>
+						{loading ? "Logging in..." : "Login"}
 					</button>
 				</form>
 				<div className={styles.createAccount}>
