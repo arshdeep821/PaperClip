@@ -238,7 +238,25 @@ const searchProducts = async (req, res) => {
             { $match: { $and: andConditions } },
         ]);
 
-        res.status(200).json(items);
+        // Build user search conditions
+        const userConditions = terms.map((term) => ({
+            $or: [
+                { username: { $regex: term, $options: "i" } },
+                { name: { $regex: term, $options: "i" } },
+                { city: { $regex: term, $options: "i" } },
+                { country: { $regex: term, $options: "i" } },
+            ],
+        }));
+
+        // Exclude current user from user results
+        const users = await User.find({
+            $and: [
+                { _id: { $ne: userObjectId } },
+                ...userConditions
+            ]
+        }).select("-password -inventory"); // Optionally hide sensitive fields
+
+        res.status(200).json({ items, users });
 
     } catch (error) {
         console.error("Error searching products:", error);
