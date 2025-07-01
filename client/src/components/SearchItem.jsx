@@ -1,13 +1,15 @@
 import styles from "../styles/SearchItem.module.css";
 
+const BACKEND_URL = "http://localhost:3001";
+
 const SearchItem = ({ item }) => {
     return (
         <div className={styles.card}>
-            {item.image && (
+            {item.imagePath && (
                 <>
                     <div className={styles.imageWrapper}>
                         <img
-                            src={item.image}
+                            src={`${BACKEND_URL}/static/${item.imagePath}`}
                             alt={item.name}
                         />
                     </div>
@@ -19,7 +21,7 @@ const SearchItem = ({ item }) => {
                             {item.description}
                         </div>
                         <div className={styles.category}>
-                            {item.category}
+                            {item.category.name} - {item.condition}
                         </div>
                     </div>
                 </>

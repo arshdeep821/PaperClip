@@ -1,20 +1,22 @@
 import Sidebar from "../components/Sidebar";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import SearchItem from "../components/SearchItem";
 import styles from "../styles/Search.module.css";
+import { fetchSearch } from "../redux/slices/searchSlice";
 
 function Search() {
+    const dispatch = useDispatch()
     const [searchTerm, setSearchTerm] = useState('');
-    const products = useSelector(state => state.products.products)
 
-    const searchResults = products.filter(product =>
-        searchTerm.trim() !== '' && (
-            product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            product.category.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-    );
+    const searchResults = useSelector((state) => state.search.searchResults)
+    const userId = useSelector((state) => state.user.id)
+
+    useEffect(() => {
+        if (searchTerm || searchTerm.trim() !== '') {
+            dispatch(fetchSearch({ userId, query: searchTerm }))
+        }
+    }, [searchTerm, dispatch])
 
     return (
         <div className={styles.searchPage}>
@@ -42,7 +44,7 @@ function Search() {
                                 </h2>
                                 <div className={styles.resultsContainer}>
                                     {searchResults.map(product => (
-                                        <SearchItem key={product.id} item={product} />
+                                        <SearchItem key={product._id} item={product} />
                                     ))}
                                 </div>
                             </>
