@@ -7,8 +7,15 @@ const HASH_ROUNDS = 10;
 
 const createUser = async (req, res) => {
 	try {
-		const { username, name, password, email, city, country, tradingRadius } =
-			req.body;
+		const {
+			username,
+			name,
+			password,
+			email,
+			city,
+			country,
+			tradingRadius,
+		} = req.body;
 
 		if (!username || !name || !password || !email || !city || !country) {
 			return res.status(400).json({
@@ -110,8 +117,8 @@ const getUser = async (req, res) => {
 		const { id } = req.params;
 
 		const user = await User.findById(id)
-			.populate("inventory") // Populate inventory items
-			.select("-password"); // Exclude password from response
+			.populate("inventory")
+			.select("-password");
 
 		if (!user) {
 			return res.status(404).json({ error: "User not found." });
@@ -124,11 +131,11 @@ const getUser = async (req, res) => {
 	}
 };
 
-// added updateUser
 const updateUser = async (req, res) => {
 	try {
 		const { id } = req.params;
-		const { username, password, tradingRadius, name, email, city, country } = req.body;
+		const { username, tradingRadius, name, email, city, country } =
+			req.body;
 
 		const user = await User.findById(id);
 
@@ -136,7 +143,7 @@ const updateUser = async (req, res) => {
 			return res.status(404).json({ error: "User not found." });
 		}
 
-		if (username) {
+		if (username && username !== user.username) {
 			const existingUser = await User.findOne({ username });
 			if (existingUser) {
 				return res
@@ -145,7 +152,7 @@ const updateUser = async (req, res) => {
 			}
 		}
 
-		if (email) {
+		if (email && email !== user.email) {
 			const existingUser = await User.findOne({ email });
 			if (existingUser) {
 				return res
@@ -162,15 +169,10 @@ const updateUser = async (req, res) => {
 		if (country) updateData.country = country;
 		if (tradingRadius) updateData.tradingRadius = tradingRadius;
 
-		if (password) {
-			updateData.password = await hash(password, HASH_ROUNDS);
-		}
-
-		const updatedUser = await User.findByIdAndUpdate(
-			id,
-			updateData,
-			{ new: true, runValidators: true }
-		).select("-password");
+		const updatedUser = await User.findByIdAndUpdate(id, updateData, {
+			new: true,
+			runValidators: true,
+		}).select("-password");
 
 		const userResponse = {
 			_id: updatedUser._id,
@@ -195,4 +197,3 @@ const updateUser = async (req, res) => {
 };
 
 export { createUser, loginUser, getUser, updateUser };
-

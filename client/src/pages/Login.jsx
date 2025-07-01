@@ -25,13 +25,14 @@ function Login() {
 		e.preventDefault();
 
 		try {
-			await dispatch(loginUser({
-				username: formData.username,
-				password: formData.password,
-			})).unwrap();
+			await dispatch(
+				loginUser({
+					username: formData.username,
+					password: formData.password,
+				})
+			).unwrap();
 
 			navigate("/home");
-			alert("Successfully Logged In");
 		} catch (error) {
 			alert(error.message || "An error occurred while trying to login");
 		}
@@ -79,7 +80,11 @@ function Login() {
 							required
 						/>
 					</div>
-					<button type="submit" className={styles.loginButton} disabled={loading}>
+					<button
+						type="submit"
+						className={styles.loginButton}
+						disabled={loading}
+					>
 						{loading ? "Logging in..." : "Login"}
 					</button>
 				</form>

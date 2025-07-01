@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateUser } from "../redux/slices/userSlice";
 import styles from "../styles/Profile.module.css";
@@ -13,6 +13,7 @@ function Profile() {
 	const user = useSelector((state) => state.user);
 	const [isEditing, setIsEditing] = useState(false);
 	const [editData, setEditData] = useState({
+		username: user.username || "",
 		name: user.name || "",
 		email: user.email || "",
 		city: user.city || "",
@@ -23,6 +24,7 @@ function Profile() {
 	const handleEdit = () => {
 		setIsEditing(true);
 		setEditData({
+			username: user.username || "",
 			name: user.name || "",
 			email: user.email || "",
 			city: user.city || "",
@@ -33,7 +35,9 @@ function Profile() {
 
 	const handleSave = async () => {
 		try {
-			await dispatch(updateUser({ userId: user.id, userData: editData })).unwrap();
+			await dispatch(
+				updateUser({ userId: user.id, userData: editData })
+			).unwrap();
 			setIsEditing(false);
 		} catch (error) {
 			console.error("Failed to update profile:", error);
@@ -45,9 +49,9 @@ function Profile() {
 	};
 
 	const handleInputChange = (field, value) => {
-		setEditData(prev => ({
+		setEditData((prev) => ({
 			...prev,
-			[field]: value
+			[field]: value,
 		}));
 	};
 
@@ -58,99 +62,182 @@ function Profile() {
 				<h1 className={styles.headerTitle}>Profile</h1>
 			</div>
 			<div className={styles.profilePictureSection}>
-				<img src={corgiImage} alt="Profile Picture" className={styles.profilePicture} />
+				<img
+					src={corgiImage}
+					alt="Profile Picture"
+					className={styles.profilePicture}
+				/>
 			</div>
 			<div className={styles.profileContainer}>
 				<section className={styles.section}>
 					<div className={styles.sectionHeader}>
-						<h2 className={styles.sectionTitle}>Private Information</h2>
+						<h2 className={styles.sectionTitle}>
+							Private Information
+						</h2>
 						{!isEditing ? (
-							<button className={styles.editButton} onClick={handleEdit}>Edit Details</button>
+							<button
+								className={styles.editButton}
+								onClick={handleEdit}
+							>
+								Edit Details
+							</button>
 						) : (
 							<div>
-								<button className={styles.editButton} onClick={handleSave}>Save</button>
-								<button className={styles.editButton} onClick={handleCancel}>Cancel</button>
+								<button
+									className={styles.editButton}
+									onClick={handleSave}
+								>
+									Save
+								</button>
+								<button
+									className={styles.editButton}
+									onClick={handleCancel}
+								>
+									Cancel
+								</button>
 							</div>
 						)}
 					</div>
 					<fieldset className={styles.fieldset}>
-						<legend className={styles.legend}>Account Details</legend>
+						<legend className={styles.legend}>
+							Account Details
+						</legend>
 						<div className={styles.inputGroup}>
-							<label className={styles.label} htmlFor="username">Username:</label>
-							<div className={styles.staticText}>{user.username}</div>
+							<label className={styles.label} htmlFor="username">
+								Username:
+							</label>
+							{isEditing ? (
+								<input
+									type="text"
+									id="username"
+									value={editData.username}
+									onChange={(e) =>
+										handleInputChange(
+											"username",
+											e.target.value
+										)
+									}
+									className={styles.input}
+								/>
+							) : (
+								<div className={styles.staticText}>
+									{user.username}
+								</div>
+							)}
 						</div>
 						<div className={styles.inputGroup}>
-							<label className={styles.label} htmlFor="password">Password:</label>
-							<div className={styles.staticText}>••••••••</div>
-						</div>
-						<div className={styles.inputGroup}>
-							<label className={styles.label} htmlFor="name">Name:</label>
+							<label className={styles.label} htmlFor="name">
+								Name:
+							</label>
 							{isEditing ? (
 								<input
 									type="text"
 									id="name"
 									value={editData.name}
-									onChange={(e) => handleInputChange("name", e.target.value)}
+									onChange={(e) =>
+										handleInputChange(
+											"name",
+											e.target.value
+										)
+									}
 									className={styles.input}
 								/>
 							) : (
-								<div className={styles.staticText}>{user.name}</div>
+								<div className={styles.staticText}>
+									{user.name}
+								</div>
 							)}
 						</div>
 						<div className={styles.inputGroup}>
-							<label className={styles.label} htmlFor="email">Email:</label>
+							<label className={styles.label} htmlFor="email">
+								Email:
+							</label>
 							{isEditing ? (
 								<input
 									type="email"
 									id="email"
 									value={editData.email}
-									onChange={(e) => handleInputChange("email", e.target.value)}
+									onChange={(e) =>
+										handleInputChange(
+											"email",
+											e.target.value
+										)
+									}
 									className={styles.input}
 								/>
 							) : (
-								<div className={styles.staticText}>{user.email}</div>
+								<div className={styles.staticText}>
+									{user.email}
+								</div>
 							)}
 						</div>
 						<div className={styles.inputGroup}>
-							<label className={styles.label} htmlFor="city">City:</label>
+							<label className={styles.label} htmlFor="city">
+								City:
+							</label>
 							{isEditing ? (
 								<input
 									type="text"
 									id="city"
 									value={editData.city}
-									onChange={(e) => handleInputChange("city", e.target.value)}
+									onChange={(e) =>
+										handleInputChange(
+											"city",
+											e.target.value
+										)
+									}
 									className={styles.input}
 								/>
 							) : (
-								<div className={styles.staticText}>{user.city}</div>
+								<div className={styles.staticText}>
+									{user.city}
+								</div>
 							)}
 						</div>
 						<div className={styles.inputGroup}>
-							<label className={styles.label} htmlFor="country">Country:</label>
+							<label className={styles.label} htmlFor="country">
+								Country:
+							</label>
 							{isEditing ? (
 								<input
 									type="text"
 									id="country"
 									value={editData.country}
-									onChange={(e) => handleInputChange("country", e.target.value)}
+									onChange={(e) =>
+										handleInputChange(
+											"country",
+											e.target.value
+										)
+									}
 									className={styles.input}
 								/>
 							) : (
-								<div className={styles.staticText}>{user.country}</div>
+								<div className={styles.staticText}>
+									{user.country}
+								</div>
 							)}
 						</div>
 						<div className={styles.inputGroup}>
-							<label className={styles.label} htmlFor="radius">Radius:</label>
+							<label className={styles.label} htmlFor="radius">
+								Trading Radius:
+							</label>
 							{isEditing ? (
 								<input
 									type="number"
 									id="radius"
 									value={editData.tradingRadius}
-									onChange={(e) => handleInputChange("tradingRadius", parseInt(e.target.value))}
+									onChange={(e) =>
+										handleInputChange(
+											"tradingRadius",
+											parseInt(e.target.value)
+										)
+									}
 									className={styles.input}
 								/>
 							) : (
-								<div className={styles.staticText}>{user.tradingRadius}km</div>
+								<div className={styles.staticText}>
+									{user.tradingRadius}km
+								</div>
 							)}
 						</div>
 					</fieldset>
@@ -158,13 +245,19 @@ function Profile() {
 
 				<section className={styles.section}>
 					<div className={styles.sectionHeader}>
-						<h2 className={styles.sectionTitle}>Public Information</h2>
-						<button className={styles.editButton}>Edit Details</button>
+						<h2 className={styles.sectionTitle}>
+							Public Information
+						</h2>
+						<button className={styles.editButton}>
+							Edit Details
+						</button>
 					</div>
 					<fieldset className={styles.fieldset}>
 						<legend className={styles.legend}>Wanted Items</legend>
 						<div className={styles.inputGroup}>
-							<div className={styles.staticText}>Computers, Laptops, Smartphones</div>
+							<div className={styles.staticText}>
+								Computers, Laptops, Smartphones
+							</div>
 						</div>
 					</fieldset>
 
@@ -179,9 +272,18 @@ function Profile() {
 										alt="Hustler Achievement"
 									/>
 									<figcaption>
-										<div className={styles.achievementTitle}>The Hustler</div>
-										<div className={styles.achievementDescription}>
-											Logged in and made at least 1 trade every day for 7 consecutive days
+										<div
+											className={styles.achievementTitle}
+										>
+											The Hustler
+										</div>
+										<div
+											className={
+												styles.achievementDescription
+											}
+										>
+											Logged in and made at least 1 trade
+											every day for 7 consecutive days
 										</div>
 									</figcaption>
 								</figure>
@@ -194,8 +296,16 @@ function Profile() {
 										alt="From Nothing Achievement"
 									/>
 									<figcaption>
-										<div className={styles.achievementTitle}>From Nothing</div>
-										<div className={styles.achievementDescription}>
+										<div
+											className={styles.achievementTitle}
+										>
+											From Nothing
+										</div>
+										<div
+											className={
+												styles.achievementDescription
+											}
+										>
 											Yay! you completed your first trade
 										</div>
 									</figcaption>
@@ -209,8 +319,16 @@ function Profile() {
 										alt="Closed the Deal Achievement"
 									/>
 									<figcaption>
-										<div className={styles.achievementTitle}>Closed the Deal</div>
-										<div className={styles.achievementDescription}>
+										<div
+											className={styles.achievementTitle}
+										>
+											Closed the Deal
+										</div>
+										<div
+											className={
+												styles.achievementDescription
+											}
+										>
 											Traded up to a house!
 										</div>
 									</figcaption>

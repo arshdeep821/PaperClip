@@ -47,7 +47,6 @@ const Signup = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		// Check if passwords match
 		if (formData.password1 !== formData.password2) {
 			alert("Passwords do not match!");
 			return;
@@ -69,7 +68,12 @@ const Signup = () => {
 
 			if (!response.ok) {
 				const errorData = await response.json();
-				alert(`Error: ${errorData.error || "An error occurred trying to make your account"}`);
+				alert(
+					`Error: ${
+						errorData.error ||
+						"An error occurred trying to make your account"
+					}`
+				);
 				return;
 			}
 

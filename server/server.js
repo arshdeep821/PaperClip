@@ -40,13 +40,6 @@ const port = 3001;
 
 const start = async () => {
 	try {
-		// await connectDB("mongodb://mongo:27017/database"); // old connection
-        // // localhost for local development, mongo for Docker
-        // // const mongoUrl = process.env.NODE_ENV === 'production'
-        // //  ? "mongodb://mongo:27017/database"
-        // //  : "mongodb://localhost:27017/database";
-
-        // await connectDB(mongoUrl);
 		await connectDB("mongodb://mongo:27017/database");
 		console.log("Connected to MongoDB");
 
