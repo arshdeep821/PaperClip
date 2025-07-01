@@ -14,6 +14,7 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 import ViewOffers from "./pages/ViewOffers";
 import Search from "./pages/Search";
+import Users from "./pages/Users";
 import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
 					<Route path="/signup" element={<Signup />} />
 					<Route path="/home" element={<Home />} />
 					<Route path="/search" element={<Search />} />
+					<Route path="/users/:username" element={<Users />} />
 					<Route path="/*" element={<NotFoundPage />} />
 				</Routes>
 			</Router>
