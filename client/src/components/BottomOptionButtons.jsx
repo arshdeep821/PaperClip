@@ -13,36 +13,35 @@ function BottomOptionButtons({ handleLeftButton, handleRightButton }) {
 
 	const product = useSelector((state) => state.trade?.product);
 	const table = useSelector((state) => state.trade?.table);
+	const user = useSelector((state) => state.user);
 
 	const handleSubmitTrade = async () => {
 		if (!product) {
-			// TODO
+			console.log("not a valid trade");
 		}
-		console.log(product);
-		console.log(table);
-		// TODO: trade API
-		//const tradeData = {
-		//	user1: product.,
-		//	user2:,
-		//	items1:,
-		//	items2:,
-		//};
-		//
-		//      try {
-		//          const response = await fetch(`${BACKEND_URL}/trades/${editItem._id}`, {
-		//              method: "POST",
-		//              body: tradeData,
-		//          });
-		//
-		//          const result = await response.json();
-		//
-		//          if (!response.ok) {
-		//              console.error("Server error:", result.error);
-		//          }
-		//
-		//      } catch (err) {
-		//          console.error("Trade error:", err);
-		//      }
+		try {
+			const response = await fetch(`${BACKEND_URL}/trades/`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					user1:	product.owner._id,
+					user2:	user.id,
+					items1:	[product._id],
+					items2:	table.map((item) => item._id),
+				}),
+			});
+
+			const result = await response.json();
+
+			if (!response.ok) {
+				console.error("Server error:", result.error);
+			}
+
+		} catch (err) {
+			console.error("Trade error:", err);
+		}
 	}
 
 	const handleNewTrade = () => {
