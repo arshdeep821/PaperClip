@@ -5,12 +5,12 @@ describe('User API Endpoints', function() {
 	const baseURL = 'http://localhost:3001';
 	const unique = Date.now();
 	let testUser = {
-		username: 'testuser_' + unique,
-		name: 'Test User',
-		email: 'testuser_' + unique + '@example.com',
+		username: 'test' + unique,
+		name: 'Test',
+		email: 'test' + unique + '@example.com',
 		password: 'password123',
-		city: 'Test City',
-		country: 'Test Country'
+		city: 'vancouver',
+		country: 'canada'
 	};
 
 	it('should create a new user', async function() {
@@ -31,5 +31,29 @@ describe('User API Endpoints', function() {
 		console.log('Login user response:', res.status, res.body);
 		expect(res.status).to.equal(200);
 		expect(res.body).to.have.property('username');
+	});
+
+	it('should fail with missing password', async function() {
+		const res = await request(baseURL)
+			.post('/users/login')
+			.send({ username: testUser.username });
+		expect(res.status).to.equal(400);
+		expect(res.body).to.have.property('error');
+	});
+
+	it('should fail with invalid username', async function() {
+		const res = await request(baseURL)
+			.post('/users/login')
+			.send({ username: 'nonexistentuser', password: 'password123' });
+		expect(res.status).to.equal(401);
+		expect(res.body).to.have.property('error');
+	});
+
+	it('should fail with invalid password', async function() {
+		const res = await request(baseURL)
+			.post('/users/login')
+			.send({ username: testUser.username, password: 'wrongpassword' });
+		expect(res.status).to.equal(401);
+		expect(res.body).to.have.property('error');
 	});
 });
