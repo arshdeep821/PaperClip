@@ -3,24 +3,29 @@ import BackpackIcon from '@mui/icons-material/Backpack';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { putOnTable, takeOffTable } from "../redux/slices/tradeSlice";
 
 const BACKEND_URL = "http://localhost:3001";
 
-function Bag({ currentProduct }) {
+function Bag() {
+	const dispatch = useDispatch();
+
 	const [open, setOpen] = useState(false);
 	const items = useSelector((state) => state.user.inventory || []);
-
-	const [selectedItems, setSelectedItems] = useState([]);
+	const selectedItems = useSelector((state) => state.trade.table || []);
 
 	const handleItemSelection = (item) => {
-		setSelectedItems((prevSelectedItems) => {
-			if (prevSelectedItems.some((selection) => selection._id === item._id)) {
-				return prevSelectedItems.filter((e) => e !== item);
-			} else {
-				return [...prevSelectedItems, item];
-			}
-		});
+		const isSelected = selectedItems.some((selection) => selection._id === item._id);
+		// item is already selected -> remove from bag
+		if (isSelected) {
+			console.log("removed item:", item._id);
+			setTimeout(() => dispatch(takeOffTable(item._id)), 0);
+		// add item to bag
+		} else {
+			console.log("added item:", item._id);
+			setTimeout(() => dispatch(putOnTable(item)), 0);
+		}
 	};
 
 	return (

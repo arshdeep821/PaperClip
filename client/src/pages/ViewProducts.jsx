@@ -10,6 +10,7 @@ import BottomOptionButtons from "../components/BottomOptionButtons";
 import Bag from "../components/Bag";
 import { fetchProducts } from "../redux/slices/productsSlice";
 import { useLocation } from "react-router-dom";
+import { setProduct } from "../redux/slices/tradeSlice";
 
 const ViewProducts = () => {
 	let products = useSelector((state) => state.products.products);
@@ -24,9 +25,16 @@ const ViewProducts = () => {
 
 	useEffect(() => {
 		// if (status === 'idle') {
-		dispatch(fetchProducts(userId))
+		dispatch(fetchProducts(userId));
 		// }
-	}, [dispatch])
+	}, [dispatch, userId])
+
+	// set the current product for trading once products are available
+	useEffect(() => {
+		if (status === "succeeded" && products.length > 0) {
+			dispatch(setProduct(products[itemIdx]));
+		}
+	}, [dispatch, status, products, itemIdx]);
 
 	useEffect(() => {
 		const handleKeyDown = (e) => {
@@ -83,6 +91,7 @@ const ViewProducts = () => {
 			<BottomOptionButtons
 				handleLeftButton={handleLeftButton}
 				handleRightButton={handleRightButton}
+				product={products[itemIdx]}
 			/>
 
 			<Bag currentProduct={products[itemIdx]}/>
