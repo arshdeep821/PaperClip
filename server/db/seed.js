@@ -106,6 +106,7 @@ hashedPassword = await hash("password", HASH_ROUNDS);
 const dummyUser = {
 	username: "dummy",
 	name: "dummy Name",
+	email: "dummy@example.com",
 	password: hashedPassword,
 	city: "Calgary",
 	country: "Canada"
