@@ -79,6 +79,106 @@ describe('Trade API Endpoints', function() {
 		tradeId = res.body._id;
 	});
 
+	it('should fail to create trade with missing user1', async function() {
+		const res = await request(baseURL)
+			.post('/trades')
+			.send({
+				user2: user2._id,
+				items1: [item1._id],
+				items2: [item2._id]
+			});
+		expect(res.status).to.equal(400);
+		expect(res.body).to.have.property('error');
+	});
+
+	it('should fail to create trade with missing user2', async function() {
+		const res = await request(baseURL)
+			.post('/trades')
+			.send({
+				user1: user1._id,
+				items1: [item1._id],
+				items2: [item2._id]
+			});
+		expect(res.status).to.equal(400);
+		expect(res.body).to.have.property('error');
+	});
+
+	it('should fail to create trade with missing items1', async function() {
+		const res = await request(baseURL)
+			.post('/trades')
+			.send({
+				user1: user1._id,
+				user2: user2._id,
+				items2: [item2._id]
+			});
+		expect(res.status).to.equal(400);
+		expect(res.body).to.have.property('error');
+	});
+
+	it('should fail to create trade with missing items2', async function() {
+		const res = await request(baseURL)
+			.post('/trades')
+			.send({
+				user1: user1._id,
+				user2: user2._id,
+				items1: [item1._id]
+			});
+		expect(res.status).to.equal(400);
+		expect(res.body).to.have.property('error');
+	});
+
+	it('should fail to create trade with empty items1 array', async function() {
+		const res = await request(baseURL)
+			.post('/trades')
+			.send({
+				user1: user1._id,
+				user2: user2._id,
+				items1: [],
+				items2: [item2._id]
+			});
+		expect(res.status).to.equal(400);
+		expect(res.body).to.have.property('error');
+	});
+
+	it('should fail to create trade with empty items2 array', async function() {
+		const res = await request(baseURL)
+			.post('/trades')
+			.send({
+				user1: user1._id,
+				user2: user2._id,
+				items1: [item1._id],
+				items2: []
+			});
+		expect(res.status).to.equal(400);
+		expect(res.body).to.have.property('error');
+	});
+
+	it('should fail to create trade with non-array items1', async function() {
+		const res = await request(baseURL)
+			.post('/trades')
+			.send({
+				user1: user1._id,
+				user2: user2._id,
+				items1: item1._id,
+				items2: [item2._id]
+			});
+		expect(res.status).to.equal(400);
+		expect(res.body).to.have.property('error');
+	});
+
+	it('should fail to create trade with non-array items2', async function() {
+		const res = await request(baseURL)
+			.post('/trades')
+			.send({
+				user1: user1._id,
+				user2: user2._id,
+				items1: [item1._id],
+				items2: item2._id
+			});
+		expect(res.status).to.equal(400);
+		expect(res.body).to.have.property('error');
+	});
+
 	it('should get trades by user1 id', async function() {
 		const res = await request(baseURL)
 			.get(`/trades/${user1._id}`);
@@ -87,5 +187,38 @@ describe('Trade API Endpoints', function() {
 		if (res.body.length > 0) {
 			expect(res.body[0]).to.have.property('_id');
 		}
+	});
+
+	it('should fail to get trades with missing user id', async function() {
+		const res = await request(baseURL)
+			.get('/trades/');
+		expect(res.status).to.equal(404);
+	});
+
+	it('should handle empty trades list for user', async function() {
+		const unique = Date.now();
+		const newUserRes = await request(baseURL)
+			.post('/users')
+			.send({
+				username: 'newuser_' + unique,
+				name: 'New User',
+				email: 'newuser_' + unique + '@example.com',
+				password: 'password123',
+				city: 'Test City',
+				country: 'Test Country'
+			});
+		const newUser = newUserRes.body;
+
+		const res = await request(baseURL)
+			.get(`/trades/${newUser._id}`);
+		expect(res.status).to.equal(200);
+		expect(res.body).to.be.an('array');
+		expect(res.body.length).to.equal(0);
+	});
+
+	it('should fail to get trades with invalid user id format', async function() {
+		const res = await request(baseURL)
+			.get('/trades/invalidid123');
+		expect(res.status).to.equal(500);
 	});
 });
