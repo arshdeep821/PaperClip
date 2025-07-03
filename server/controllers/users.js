@@ -78,9 +78,14 @@ const loginUser = async (req, res) => {
 		}
 
 		const user = await User.findOne({ username })
-			.populate("inventory")
-			.populate("userPreferences.category");
-
+			.populate("userPreferences.category")
+			.populate({
+				path: "inventory",
+				populate: {
+					path: "category", // deep populate category inside each item
+				},
+			});
+    
 		if (!user) {
 			return res.status(StatusCodes.UNAUTHORIZED).json({
 				error: "Invalid username.",
