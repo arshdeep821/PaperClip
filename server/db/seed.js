@@ -133,10 +133,17 @@ const seedDatabase = async () => {
 		const furnitureCategory = createdCategories.find(
 			(c) => c.name === "Furniture"
 		);
+		const sportsCategory = createdCategories.find(
+			(c) => c.name === "Sports"
+		);
 		createdUser.userPreferences = [
 			{
 				category: furnitureCategory._id,
 				description: "I want stools and couches",
+			},
+			{
+				category: sportsCategory._id,
+				description: "basketballs",
 			},
 		];
 		console.log("Added preferences to user with ID:", createdUser._id);

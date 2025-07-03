@@ -77,7 +77,10 @@ const loginUser = async (req, res) => {
 			});
 		}
 
-		const user = await User.findOne({ username }).populate("inventory");
+		const user = await User.findOne({ username })
+			.populate("inventory")
+			.populate("userPreferences.category");
+
 		if (!user) {
 			return res.status(StatusCodes.UNAUTHORIZED).json({
 				error: "Invalid username.",
@@ -121,6 +124,7 @@ const getUser = async (req, res) => {
 
 		const user = await User.findById(id)
 			.populate("inventory")
+			.populate("userPreferences.category")
 			.select("-password");
 
 		if (!user) {
@@ -175,7 +179,9 @@ const updateUser = async (req, res) => {
 		const updatedUser = await User.findByIdAndUpdate(id, updateData, {
 			new: true,
 			runValidators: true,
-		}).select("-password");
+		})
+			.select("-password")
+			.populate("userPreferences.category");
 
 		const userResponse = {
 			_id: updatedUser._id,
@@ -186,6 +192,7 @@ const updateUser = async (req, res) => {
 			country: updatedUser.country,
 			tradingRadius: updatedUser.tradingRadius,
 			inventory: updatedUser.inventory,
+			userPreferences: updatedUser.userPreferences,
 			createdAt: updatedUser.createdAt,
 			updatedAt: updatedUser.updatedAt,
 		};
@@ -248,10 +255,12 @@ const updateUserPreferences = async (req, res) => {
 		await user.save();
 
 		await user.populate("userPreferences.category");
+		const userObj = user.toObject();
+		delete userObj.password;
 
 		res.status(StatusCodes.OK).json({
 			message: "User preferences updated.",
-			user,
+			user: userObj,
 		});
 	} catch (err) {
 		console.error("Error updating user preferences:", err);
