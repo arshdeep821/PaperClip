@@ -1,0 +1,90 @@
+.wrapper {
+	margin: 0 auto;
+	padding: 20px;
+	background: white;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+	margin-top: 20px;
+}
+
+.title {
+	font-size: 1.2rem;
+	font-weight: 600;
+	margin-bottom: 20px;
+	color: #333;
+}
+
+.titleRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 20px;
+}
+
+.button {
+	background-color: #007bff;
+	color: white;
+	border: none;
+	padding: 8px 16px;
+	border-radius: 6px;
+	font-size: 0.9rem;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.button:hover {
+	background-color: #0056b3;
+}
+
+.preferenceList {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.category {
+	font-weight: 600;
+	color: #333;
+	margin-bottom: 4px;
+}
+
+.description {
+	color: #555;
+	font-size: 0.95rem;
+}
+
+.categoryInput,
+.descriptionInput {
+	width: 100%;
+	padding: 8px 10px;
+	font-size: 0.95rem;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+.preferenceItem {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 12px;
+	border: 1px solid #f0f0f0;
+	border-radius: 6px;
+	background-color: #fcfcfc;
+}
+
+.buttonRow {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.editRow {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.deleteIcon {
+	cursor: pointer;
+	color: black;
+}
