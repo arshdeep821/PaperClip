@@ -16,6 +16,4 @@ POST http://localhost:8001/recommend:
 
 Some things that need to be worked on to make this model more functional, or need to be changed on the main server and/or client side to facilitate using this model. All of these changes need to be applied prior to using the model.
 
--   Need to update the user model on most the main server and client side. A user's preferences (what types of products they want to see on their feed) should allow them to select n different categories, and giving each of them its own description. For example a user in their profile should be able to set their preferences to the Technology Category where they want new iphones and used macbook pros, but seperately they should also be able to set that they want Clothes, specfically vintage leather jackets.
-
 -   Need to create a new endpoint for the reccomendation model for PUT /model, in this endpoint the main server tells the model server to update the model with the new product(s) that has been added by a user. This will retrain the reccomendation model with the new product(s).
