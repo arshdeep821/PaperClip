@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { expect } from 'chai';
 
+// added these tests
 describe('User API Endpoints', function() {
 	const baseURL = 'http://localhost:3001';
 	const unique = Date.now();
