@@ -20,7 +20,7 @@ const ViewProducts = () => {
 
 	const dispatch = useDispatch();
 	console.log(products);
-	//const NUM_PRODUCTS = products.length || 0;
+	const NUM_PRODUCTS = products.length || 0;
 
 	const [itemIdx, setItemIdx] = useState(0);
 
