@@ -18,7 +18,7 @@ export const offersSlice = createSlice({
 	initialState,
 	reducers: {
 		rejectOffer: (state, action) => {
-			//state.offers = state.table.filter((item) => item._id !== action.payload);
+			state.offers = state.offers.filter((trade) => trade._id !== action.payload);
 		},
 	},
 	extraReducers: (builder) => {
@@ -37,5 +37,7 @@ export const offersSlice = createSlice({
 			});
 	}
 });
+
+export const { rejectOffer } = offersSlice.actions;
 
 export default offersSlice.reducer;
