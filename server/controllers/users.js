@@ -15,12 +15,23 @@ const createUser = async (req, res) => {
 			email,
 			city,
 			country,
+			lat,
+			lon,
 			tradingRadius,
 		} = req.body;
 
-		if (!username || !name || !password || !email || !city || !country) {
+		if (
+			!username ||
+			!name ||
+			!password ||
+			!email ||
+			!city ||
+			!country ||
+			!lat ||
+			!lon
+		) {
 			return res.status(400).json({
-				error: "Username, name, password, email, city, and country are required.",
+				error: "Username, name, password, email, city, country, lat, and lon are required.",
 			});
 		}
 
@@ -40,6 +51,8 @@ const createUser = async (req, res) => {
 			email,
 			city,
 			country,
+			lat,
+			lon,
 			tradingRadius: tradingRadius || DEFAULT_USER_RADIUS,
 		});
 
@@ -52,6 +65,8 @@ const createUser = async (req, res) => {
 			email: newUser.email,
 			city: newUser.city,
 			country: newUser.country,
+			lat: newUser.lat,
+			lon: newUser.lon,
 			tradingRadius: newUser.tradingRadius,
 			userPreferences: newUser.userPreferences,
 			inventory: newUser.inventory,
@@ -85,7 +100,7 @@ const loginUser = async (req, res) => {
 					path: "category", // deep populate category inside each item
 				},
 			});
-    
+
 		if (!user) {
 			return res.status(StatusCodes.UNAUTHORIZED).json({
 				error: "Invalid username.",
@@ -108,6 +123,8 @@ const loginUser = async (req, res) => {
 			email: user.email,
 			city: user.city,
 			country: user.country,
+			lat: user.lat,
+			lon: user.lon,
 			tradingRadius: user.tradingRadius,
 			userPreferences: user.userPreferences,
 			inventory: user.inventory,
@@ -195,6 +212,8 @@ const updateUser = async (req, res) => {
 			email: updatedUser.email,
 			city: updatedUser.city,
 			country: updatedUser.country,
+			lat: updatedUser.lat,
+			lon: updatedUser.lon,
 			tradingRadius: updatedUser.tradingRadius,
 			inventory: updatedUser.inventory,
 			userPreferences: updatedUser.userPreferences,

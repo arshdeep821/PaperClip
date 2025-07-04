@@ -24,6 +24,8 @@ const adminUser = {
 	password: hashedPassword,
 	city: "Vancouver",
 	country: "Canada",
+	lat: 49.2827,
+	lon: -123.1207,
 };
 
 const adminItems = [
@@ -65,8 +67,10 @@ const execUser = {
 	name: "Exec Name",
 	email: "exec@example.com",
 	password: hashedPassword,
-	city: "Toronto",
+	city: "Vancouver",
 	country: "Canada",
+	lat: 49.2827,
+	lon: -123.1207,
 };
 
 const execItems = [
@@ -108,8 +112,10 @@ const dummyUser = {
 	name: "dummy Name",
 	email: "dummyemail@gmail.com",
 	password: hashedPassword,
-	city: "Calgary",
+	city: "Toronto",
 	country: "Canada",
+	lat: 43.651,
+	lon: -79.347,
 };
 
 const seedDatabase = async () => {
