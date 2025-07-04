@@ -70,7 +70,6 @@ const getTradesByUserId = async (req, res) => {
 const updateTradeStatus = async (req, res) => {
     try {
         const { tradeId } = req.params;
-
         const { status } = req.body;
 
 		const validStatuses = ["pending", "accepted", "rejected", "cancelled"];
@@ -84,8 +83,6 @@ const updateTradeStatus = async (req, res) => {
         if (!trade) {
             return res.status(StatusCodes.NOT_FOUND).json({ error: "Trade not found." });
         }
-
-
 
 		trade.status = status;
 

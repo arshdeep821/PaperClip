@@ -34,7 +34,6 @@ function ViewOffers() {
 				);
 			}
 		};
-
 		window.addEventListener("keydown", handleKeyDown);
 		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, [NUM_OFFERS]);
