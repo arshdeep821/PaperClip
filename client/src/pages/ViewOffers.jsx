@@ -61,7 +61,7 @@ function ViewOffers() {
 
 			<div className={styles.mainContent}>
 				{
-					(!offers || offers.length === 0) ?
+					(!offers[offerIdx] || offers.length === 0) ?
 						<h1>No Current Offers</h1> :
 						<OfferBox
 							otherUser={{
