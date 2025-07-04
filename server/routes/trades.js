@@ -4,7 +4,7 @@ import { createTrade, executeTrade, getTradesByUser1Id, getTradesByUser2Id, upda
 
 router.route("/").post(createTrade);
 router.route("/execute").patch(executeTrade);
-router.route("/:userId").get(getTradesByUserId);
+router.route("/:userId").get(getTradesByUser1Id);
 router.route("/user2/:id").get(getTradesByUser2Id);
 router.route("/:tradeId").patch(updateTradeStatus);
 

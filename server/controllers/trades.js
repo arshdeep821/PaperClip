@@ -212,4 +212,4 @@ const executeTrade = async (req, res) => {
 	}
 };
 
-export { createTrade, getTradesByUserId, getTradesByUser2Id, updateTradeStatus, executeTrade };
+export { createTrade, getTradesByUser1Id, getTradesByUser2Id, updateTradeStatus, executeTrade };
