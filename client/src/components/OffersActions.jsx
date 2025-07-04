@@ -12,10 +12,7 @@ const BACKEND_URL = "http://localhost:3001";
 
 function OffersActions({ handleLeftButton, handleRightButton, currentOfferId }) {
 	const dispatch = useDispatch();
-	const offers = useSelector((state) => state.offers.offers);
 
-	// TODO:
-	// change trade status to rejected
 	const handleReject = async () => {
 		if (!currentOfferId) {
 			return; // TODO: handle case with no offer
@@ -41,7 +38,7 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOfferId }) 
 			dispatch(rejectOffer(currentOfferId));
 
         } catch (err) {
-            console.error("Rejecting offer error:", err);
+            console.error("Reject offer error:", err);
         }
 	};
 
@@ -55,7 +52,7 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOfferId }) 
 	// swap items
 	// remove the traded items from current trades
 	// change trade status to accepted
-	const handleAccept = () => {
+	const handleAccept = async () => {
 	};
 
 	return (
