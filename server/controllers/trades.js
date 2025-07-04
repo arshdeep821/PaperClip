@@ -85,6 +85,8 @@ const updateTradeStatus = async (req, res) => {
             return res.status(StatusCodes.NOT_FOUND).json({ error: "Trade not found." });
         }
 
+
+
 		trade.status = status;
 
         await trade.save();
@@ -99,4 +101,3 @@ const updateTradeStatus = async (req, res) => {
 };
 
 export { createTrade, getTradesByUserId, updateTradeStatus };
-
