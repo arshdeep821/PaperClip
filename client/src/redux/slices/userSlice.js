@@ -11,6 +11,7 @@ const initialState = {
 	country: null,
 	tradingRadius: null,
 	inventory: [],
+	userPreferences: [],
 	createdAt: null,
 	status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
 	error: null,
@@ -70,6 +71,30 @@ export const updateUser = createAsyncThunk(
 	}
 );
 
+export const updateUserPreferences = createAsyncThunk(
+	"user/updateUserPreferences",
+	async ({ userId, newUserPreferences }) => {
+		const response = await fetch(
+			`${BACKEND_URL}/users/${userId}/preferences`,
+			{
+				method: "PATCH",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(newUserPreferences),
+			}
+		);
+
+		if (!response.ok) {
+			const errorData = await response.json();
+			throw new Error(
+				errorData.error || "Failed to update user preferences"
+			);
+		}
+
+		const data = await response.json();
+		return data.user;
+	}
+);
+
 export const uploadItem = createAsyncThunk("items/uploadItem", async (data) => {
 	const response = await fetch(`${BACKEND_URL}/items`, {
 		method: "POST",
@@ -106,6 +131,7 @@ export const userSlice = createSlice({
 				country,
 				tradingRadius,
 				inventory,
+				userPreferences,
 				createdAt,
 			} = action.payload;
 
@@ -117,6 +143,7 @@ export const userSlice = createSlice({
 			state.country = country;
 			state.tradingRadius = tradingRadius;
 			state.inventory = inventory;
+			state.userPreferences = userPreferences;
 			state.createdAt = createdAt;
 		},
 		logout: (state) => {
@@ -129,6 +156,7 @@ export const userSlice = createSlice({
 			state.country = null;
 			state.tradingRadius = null;
 			state.inventory = null;
+			state.userPreferences = null;
 			state.createdAt = null;
 			state.error = null;
 		},
@@ -211,6 +239,7 @@ export const userSlice = createSlice({
 					country,
 					tradingRadius,
 					inventory,
+					userPreferences,
 					createdAt,
 				} = action.payload;
 
@@ -224,6 +253,7 @@ export const userSlice = createSlice({
 				state.tradingRadius = tradingRadius;
 				state.inventory = inventory;
 				state.createdAt = createdAt;
+				state.userPreferences = userPreferences;
 				state.loading = false;
 				state.error = null;
 			})
@@ -245,10 +275,34 @@ export const userSlice = createSlice({
 				state.country = action.payload.country;
 				state.tradingRadius = action.payload.tradingRadius;
 				state.inventory = action.payload.inventory;
+				state.userPreferences = action.payload.userPreferences;
 				state.createdAt = action.payload.createdAt;
 				state.error = null;
 			})
 			.addCase(updateUser.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = action.error.message;
+			})
+
+			.addCase(updateUserPreferences.pending, (state) => {
+				state.status = "updating_user_preferences";
+			})
+			.addCase(updateUserPreferences.fulfilled, (state, action) => {
+				state.status = "updated_preferences";
+				state.isLoggedIn = true;
+				state.id = action.payload._id;
+				state.username = action.payload.username;
+				state.name = action.payload.name;
+				state.email = action.payload.email;
+				state.city = action.payload.city;
+				state.country = action.payload.country;
+				state.tradingRadius = action.payload.tradingRadius;
+				state.inventory = action.payload.inventory;
+				state.userPreferences = action.payload.userPreferences;
+				state.createdAt = action.payload.createdAt;
+				state.error = null;
+			})
+			.addCase(updateUserPreferences.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = action.error.message;
 			});

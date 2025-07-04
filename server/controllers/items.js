@@ -7,6 +7,8 @@ import fs from "fs"
 import path from "path"
 import mongoose from "mongoose";
 
+import { refreshModel } from "../util/recommender.js";
+
 const createItem = async (req, res) => {
     try {
 
@@ -56,6 +58,8 @@ const createItem = async (req, res) => {
         // const imageFile = fs.readFileSync(`./public/${imagePath}`)
         // const base64Image = `data:image/jpeg;base64,${imageFile.toString('base64')}`;
 
+		refreshModel();
+
         const newItemWithCategory = await Item.findById(newItem._id).populate("category");
 
         // create new object that will be returned
@@ -97,6 +101,8 @@ const deleteItem = async (req, res) => {
 
         // delete item
         await Item.findByIdAndDelete(id);
+
+		refreshModel();
 
         res.status(StatusCodes.OK).json({ message: "Item deleted successfully." });
     } catch (err) {
@@ -151,6 +157,8 @@ const updateItem = async (req, res) => {
         }
 
         await item.save();
+
+		refreshModel();
 
         // const imageFile = fs.readFileSync(item.imagePath);
         // const base64Image = `data:image/jpeg;base64,${imageFile.toString("base64")}`;

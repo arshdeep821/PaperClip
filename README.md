@@ -6,9 +6,9 @@ Team Members:
 - Preston Lai
 
 ## Project Description
-Our app is called PaperClip, it is a trading web-app inspired by the story of someone who traded a paperclip into a house. Our app is for people who have items sitting at home that they don’t want, and want to see if it’ll have value to someone else in exchange for other items rather than money.
+Our app is called PaperClip, it is a trading web-app inspired by the story of someone who traded a paperclip into a house. Our app is for people who have items sitting at home that they don't want, and want to see if it'll have value to someone else in exchange for other items rather than money.
 
-This app will help people trade items with each other in a fast and simple way, making it easier to find trades for items that users (might) want, in addition to the app game-ifying the process with features that encourage the continuous ‘trading up’ of items.
+This app will help people trade items with each other in a fast and simple way, making it easier to find trades for items that users (might) want, in addition to the app game-ifying the process with features that encourage the continuous 'trading up' of items.
 
 ## Milestone 1
 
@@ -42,9 +42,9 @@ This app will help people trade items with each other in a fast and simple way, 
 2. How we made progress towards some of our minimal goals
 
 - "User's can create accounts and login logout" -> Got pages for logging in and creating account
-- "Users can scroll through a smooth UI to browse other users’ items" -> Got a products page where users can scroll through items
+- "Users can scroll through a smooth UI to browse other users' items" -> Got a products page where users can scroll through items
 - "Users can send, accept, reject, and negotiate" -> There is front end functionality for a user being able to accept an offer
-- "Users can chat/message other users once they’ve accepted a trade" -> Implemented a chat front end button
+- "Users can chat/message other users once they've accepted a trade" -> Implemented a chat front end button
 
 ## Project Setup and Running Instructions
 
@@ -104,3 +104,32 @@ npm run dev
 
 Running application: `docker-compose up --build`
 Running application with only server and client logs: `docker-compose up --build -d && docker-compose logs -f server client`
+
+## Milestone 3: Test Suite
+
+To run the backend unit tests and view the results:
+
+### Running the Tests
+
+**With Docker Compose:**
+```bash
+docker-compose up --build
+docker-compose exec server npm test
+```
+
+**Or, if you have Node.js installed locally:**
+```bash
+cd server
+npm install
+npm test or npm run test
+```
+
+### Viewing the Test Results
+
+After running the tests, an HTML report will be generated at:
+
+```
+server/mochawesome-report/mochawesome.html
+```
+
+Open this file in your web browser to see a summary of all passing and failing tests, with details for each test case.

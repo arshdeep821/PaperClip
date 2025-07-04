@@ -16,8 +16,10 @@ function BottomOptionButtons({ handleLeftButton, handleRightButton }) {
 	const user = useSelector((state) => state.user);
 
 	const handleSubmitTrade = async () => {
-		if (!product) {
+		if (!product || !table || table.length === 0 || !user) {
 			console.log("not a valid trade");
+			alert("Please select a product to trade");
+			return;
 		}
 		try {
 			const response = await fetch(`${BACKEND_URL}/trades/`, {
@@ -39,6 +41,7 @@ function BottomOptionButtons({ handleLeftButton, handleRightButton }) {
 				console.error("Server error:", result.error);
 			}
 
+			alert("Trade submitted successfully");
 		} catch (err) {
 			console.error("Trade error:", err);
 		}

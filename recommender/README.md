@@ -11,11 +11,3 @@ POST http://localhost:8001/recommend:
 -   Inputs: Expects 'categories' and 'descriptions' in the request body, both lists of strings. Each category should match/relate to the description at the same index. Formatted this way to allow users to have multiple areas of interest. For example a user in their profile should be able to set their preferences to the Technology Category where they want new iphones and used macbook pros, but seperately they should also be able to set that they want Clothes, specfically vintage leather jackets.
 
 -   Outputs: Will output 1 list in the response, 'ids', which represents the object IDs of the products to reccomend to the user, in order of what matches the input to the request (their preferences). The output is sorted from best reccomendation to worst, and currently outputs for all existing products.
-
-### TODO
-
-Some things that need to be worked on to make this model more functional, or need to be changed on the main server and/or client side to facilitate using this model. All of these changes need to be applied prior to using the model.
-
--   Need to update the user model on most the main server and client side. A user's preferences (what types of products they want to see on their feed) should allow them to select n different categories, and giving each of them its own description. For example a user in their profile should be able to set their preferences to the Technology Category where they want new iphones and used macbook pros, but seperately they should also be able to set that they want Clothes, specfically vintage leather jackets.
-
--   Need to create a new endpoint for the reccomendation model for PUT /model, in this endpoint the main server tells the model server to update the model with the new product(s) that has been added by a user. This will retrain the reccomendation model with the new product(s).
