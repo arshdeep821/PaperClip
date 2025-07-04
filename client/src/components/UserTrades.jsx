@@ -63,9 +63,7 @@ const UserTrades = () => {
                                     <span className={styles.userLabel}>You</span>
                                     <span className={styles.tradeArrow}>⇄</span>
                                     <span className={styles.otherUser}>
-                                        {trade.user1._id === currentUser.id
-                                            ? trade.user2.username
-                                            : trade.user1.username}
+                                        {trade.user1.username}
                                     </span>
                                 </div>
                                 <div className={`${styles.status} ${getStatusColor(trade.status)}`}>
