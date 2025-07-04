@@ -16,7 +16,11 @@ export const fetchOffers = createAsyncThunk("offers/fetchOffers", async (userId)
 export const offersSlice = createSlice({
 	name: "offers",
 	initialState,
-	reducers: {},
+	reducers: {
+		rejectOffer: (state, action) => {
+			//state.offers = state.table.filter((item) => item._id !== action.payload);
+		},
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(fetchOffers.pending, (state) => {

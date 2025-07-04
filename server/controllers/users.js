@@ -85,7 +85,7 @@ const loginUser = async (req, res) => {
 					path: "category", // deep populate category inside each item
 				},
 			});
-    
+
 		if (!user) {
 			return res.status(StatusCodes.UNAUTHORIZED).json({
 				error: "Invalid username.",
