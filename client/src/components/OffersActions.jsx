@@ -5,15 +5,44 @@ import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import CheckIcon from '@mui/icons-material/Check';
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { rejectOffer } from "../redux/slices/offersSlice";
 
-function OffersActions({ handleLeftButton, handleRightButton, currentTrade }) {
+const BACKEND_URL = "http://localhost:3001";
+
+function OffersActions({ handleLeftButton, handleRightButton, currentOfferId }) {
+	const dispatch = useDispatch();
 	const offers = useSelector((state) => state.offers.offers);
 
 	// TODO:
-	// remove offer from offersSlice
-	// remove offer from backend
-	const handleReject = () => {
+	// change trade status to rejected
+	const handleReject = async () => {
+		if (!currentOfferId) {
+			return; // TODO: handle case with no offer
+		}
+
+		try {
+			const response = await fetch(`${BACKEND_URL}/trades/${currentOfferId}`, {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					status: "rejected"
+				}),
+			});
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                console.error("Server error rejecting offer:", result.error);
+            }
+
+			dispatch(rejectOffer(currentOfferId));
+
+        } catch (err) {
+            console.error("Rejecting offer error:", err);
+        }
 	};
 
 	// TODO:
@@ -22,7 +51,10 @@ function OffersActions({ handleLeftButton, handleRightButton, currentTrade }) {
 	};
 
 	// TODO:
-	//
+	// remove offer from offersSlice
+	// swap items
+	// remove the traded items from current trades
+	// change trade status to accepted
 	const handleAccept = () => {
 	};
 

@@ -51,10 +51,6 @@ function ViewOffers() {
 		return <h1>Loading...</h1>
 	}
 
-	if (!offers || offers.length === 0) {
-
-	}
-
 	return (
 		<div className={styles.offersPage}>
 			<Sidebar />
@@ -84,12 +80,7 @@ function ViewOffers() {
 				<OffersActions
 					handleLeftButton={handleLeftButton}
 					handleRightButton={handleRightButton}
-					currentTrade={{
-						user1: offers[offerIdx].user1,
-						user2: offers[offerIdx].user2,
-						items1: offers[offerIdx].items1,
-						items2: offers[offerIdx].items2,
-					}}
+					currentOfferId={!offers[offerIdx] ? undefined : offers[offerIdx]._id}
 				/>
 			</div>
 		</div>
