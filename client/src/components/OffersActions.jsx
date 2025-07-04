@@ -5,13 +5,14 @@ import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import CheckIcon from '@mui/icons-material/Check';
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useDispatch, useSelector } from "react-redux";
-import { rejectOffer } from "../redux/slices/offersSlice";
+import { useDispatch } from "react-redux";
+import { acceptOffer, rejectOffer } from "../redux/slices/offersSlice";
 
 const BACKEND_URL = "http://localhost:3001";
 
-function OffersActions({ handleLeftButton, handleRightButton, currentOfferId }) {
+function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
 	const dispatch = useDispatch();
+	const currentOfferId = currentOffer?._id;
 
 	const handleReject = async () => {
 		if (!currentOfferId) {
@@ -48,11 +49,63 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOfferId }) 
 	};
 
 	// TODO:
-	// remove offer from offersSlice
-	// swap items
-	// remove the traded items from current trades
-	// change trade status to accepted
 	const handleAccept = async () => {
+		if (!currentOfferId) {
+			return; // TODO: handle case with no offer
+		}
+
+		try {
+			// ----- swap items owners -----
+			const swapPromises = [
+				...currentOffer.items1.map((item) => {
+					return fetch(`${BACKEND_URL}/items/${item._id}/changeOwner`, {
+						method: "PATCH",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							user: currentOffer.user2._id
+						}),
+					})
+				}),
+				...currentOffer.items2.map((item) => {
+					return fetch(`${BACKEND_URL}/items/${item._id}/changeOwner`, {
+						method: "PATCH",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							user: currentOffer.user1._id
+						}),
+					})
+				})
+			];
+
+			await Promise.all(swapPromises);
+
+			// ----- update trade status to "accepted" -----
+			const statusResponse = await fetch(`${BACKEND_URL}/trades/${currentOfferId}`, {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					status: "accepted"
+				}),
+			});
+
+            const statusResult = await statusResponse.json();
+
+            if (!statusResponse.ok) {
+                console.error("Server error accepting offer:", statusResult.error);
+            }
+
+			dispatch(acceptOffer(currentOfferId));
+			// ---------------------------------------------
+
+        } catch (err) {
+            console.error("Accept offer error:", err);
+        }
 	};
 
 	return (

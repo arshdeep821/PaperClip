@@ -80,7 +80,7 @@ function ViewOffers() {
 				<OffersActions
 					handleLeftButton={handleLeftButton}
 					handleRightButton={handleRightButton}
-					currentOfferId={!offers[offerIdx] ? undefined : offers[offerIdx]._id}
+					currentOffer={offers[offerIdx] || undefined}
 				/>
 			</div>
 		</div>
