@@ -293,6 +293,7 @@ const searchProducts = async (req, res) => {
 
 const changeOwner = async (req, res) => {
     try {
+		// ----- changes items.owner -----
         const { id } = req.params;
 
         const { user } = req.body;
