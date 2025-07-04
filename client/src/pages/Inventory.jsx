@@ -80,16 +80,9 @@ const Inventory = () => {
                 dispatch(deleteItem(itemId))
             }));
 
-<<<<<<< Updated upstream
             selectedItems.map((itemId) => {
                 dispatch(removeItem(itemId))
             })
-=======
-
-            // selectedItems.map((itemId) => {
-            //     dispatch(removeItem(itemId))
-            // })
->>>>>>> Stashed changes
 
             setSelectedItems([]);
             setDeleteMode(false);
