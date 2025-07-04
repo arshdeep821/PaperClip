@@ -162,7 +162,7 @@ const updateItem = async (req, res) => {
             error: "Server error. Could not update item.",
         });
     }
-}
+};
 
 const getProducts = async (req, res) => {
     try {

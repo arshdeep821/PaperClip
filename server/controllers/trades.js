@@ -1,5 +1,5 @@
-import Trade from "../models/Trade.js"
 import { StatusCodes } from "http-status-codes";
+import Trade from "../models/Trade.js"
 
 // Controller to create a new trade between two users
 const createTrade = async (req, res) => {
@@ -40,17 +40,17 @@ const createTrade = async (req, res) => {
 
 const getTradesByUserId = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { userId } = req.params;
 
         // Basic validation
-        if (!id) {
+        if (!userId) {
             return res.status(StatusCodes.BAD_REQUEST).json({
                 error: "userId is required."
             });
         }
 
         // Find all trades where the user is either user1 or user2
-        const trades = await Trade.find({ user1: id })
+        const trades = await Trade.find({ user1: userId })
             .populate('user1')
             .populate('user2')
             .populate('items1')
@@ -65,7 +65,38 @@ const getTradesByUserId = async (req, res) => {
             error: "Server error. Could not fetch trades."
         });
     }
-}
+};
 
-export { createTrade, getTradesByUserId };
+const updateTradeStatus = async (req, res) => {
+    try {
+        const { tradeId } = req.params;
+
+        const { status } = req.body;
+
+		const validStatuses = ["pending", "accepted", "rejected", "cancelled"];
+		if (status && !validStatuses.includes(status)) {
+			return res.status(StatusCodes.BAD_REQUEST).json({
+				error: `Invalid status. Must be one of: ${validStatuses}`,
+			});
+		}
+
+        const trade = await Trade.findById(tradeId);
+        if (!trade) {
+            return res.status(StatusCodes.NOT_FOUND).json({ error: "Trade not found." });
+        }
+
+		trade.status = status;
+
+        await trade.save();
+
+        res.status(StatusCodes.OK).json({ ...trade.toObject() });
+    } catch (err) {
+        console.error("Error updating trade:", err);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: "Server error. Could not update trade.",
+        });
+    }
+};
+
+export { createTrade, getTradesByUserId, updateTradeStatus };
 
