@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateUser } from "../redux/slices/userSlice";
 import styles from "../styles/Profile.module.css";
 import Sidebar from "../components/Sidebar";
+import UserPreferences from "../components/UserPreferences";
 import corgiImage from "../assets/corgi.jpg";
 import hustlerIcon from "../assets/hustlericon.png";
 import paperClipIcon from "../assets/PaperClip.png";
@@ -248,18 +249,9 @@ function Profile() {
 						<h2 className={styles.sectionTitle}>
 							Public Information
 						</h2>
-						<button className={styles.editButton}>
-							Edit Details
-						</button>
 					</div>
-					<fieldset className={styles.fieldset}>
-						<legend className={styles.legend}>Wanted Items</legend>
-						<div className={styles.inputGroup}>
-							<div className={styles.staticText}>
-								Computers, Laptops, Smartphones
-							</div>
-						</div>
-					</fieldset>
+
+					<UserPreferences />
 
 					<fieldset className={styles.fieldset}>
 						<legend className={styles.legend}>Achievements</legend>

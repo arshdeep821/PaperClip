@@ -15,6 +15,19 @@ products_path = os.path.join(BASE_DIR, '..', 'products.pkl')
 
 embeddings_model = spacy.load("en_core_web_md")
 
+knn = None
+preprocessor = None
+products = None
+
+def load_model():
+    global knn, preprocessor, products
+    with open(model_path, "rb") as f:
+        knn = pickle.load(f)
+    with open(products_path, "rb") as f:
+        products = pickle.load(f)
+    with open(preprocessor_path, "rb") as f:
+        preprocessor = pickle.load(f)
+
 def make_model_initial():
 	products = get_all_products()
 
