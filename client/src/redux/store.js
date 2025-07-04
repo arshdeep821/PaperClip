@@ -4,6 +4,7 @@ import offersReducer from "./slices/offersSlice";
 import userReducer from "./slices/userSlice";
 import searchReducer from "./slices/searchSlice";
 import tradeReducer from "./slices/tradeSlice";
+import userTradesReducer from "./slices/userTradesSlice";
 
 export const store = configureStore({
 	reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
 		user: userReducer,
 		search: searchReducer,
 		trade: tradeReducer,
+		userTrades: userTradesReducer,
 	},
 });
 

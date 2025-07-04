@@ -1,0 +1,127 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserTrades } from "../redux/slices/userTradesSlice";
+import styles from "../styles/UserTrades.module.css";
+
+const UserTrades = () => {
+    const BACKEND_URL = "http://localhost:3001";
+
+    const dispatch = useDispatch();
+    const { userTrades, status } = useSelector((state) => state.userTrades);
+    const currentUser = useSelector((state) => state.user);
+
+    useEffect(() => {
+        if (currentUser.id) {
+            dispatch(fetchUserTrades(currentUser.id));
+        }
+    }, [dispatch, currentUser.id]);
+
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'pending':
+                return styles.pending;
+            case 'accepted':
+                return styles.accepted;
+            case 'rejected':
+                return styles.rejected;
+            case 'cancelled':
+                return styles.cancelled;
+            default:
+                return styles.pending;
+        }
+    };
+
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    };
+
+    if (status === 'loading') {
+        return <div className={styles.loading}>Loading trades...</div>;
+    }
+
+    if (status === 'failed') {
+        return <div className={styles.error}>Failed to load trades</div>;
+    }
+
+    return (
+        <div className={styles.userTradesContainer}>
+            <h3>Your Trades</h3>
+            {userTrades.length === 0 ? (
+                <p className={styles.noTrades}>No trades found</p>
+            ) : (
+                <div className={styles.tradesList}>
+                    {userTrades.map((trade) => (
+                        <div key={trade._id} className={styles.tradeCard}>
+                            <div className={styles.tradeHeader}>
+                                <div className={styles.tradeUsers}>
+                                    <span className={styles.userLabel}>You</span>
+                                    <span className={styles.tradeArrow}>⇄</span>
+                                    <span className={styles.otherUser}>
+                                        {trade.user1.username}
+                                    </span>
+                                </div>
+                                <div className={`${styles.status} ${getStatusColor(trade.status)}`}>
+                                    {trade.status.charAt(0).toUpperCase() + trade.status.slice(1)}
+                                </div>
+                            </div>
+
+                            <div className={styles.tradeItems}>
+                                <div className={styles.itemsSection}>
+                                    <h4>Your Items:</h4>
+                                    <div className={styles.itemsList}>
+                                        {trade.items2.map((item) => (
+                                            <div key={item._id} className={styles.item}>
+                                                <img
+                                                    src={`${BACKEND_URL}/static/${item.imagePath}`}
+                                                    alt={item.name}
+                                                    className={styles.itemImage}
+                                                />
+                                                <div className={styles.itemDetails}>
+                                                    <span className={styles.itemName}>{item.name}</span>
+                                                    <span className={styles.itemCondition}>{item.condition}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className={styles.itemsSection}>
+                                    <h4>Their Items:</h4>
+                                    <div className={styles.itemsList}>
+                                        {trade.items1.map((item) => (
+                                            <div key={item._id} className={styles.item}>
+                                                <img
+                                                    src={`${BACKEND_URL}/static/${item.imagePath}`}
+                                                    alt={item.name}
+                                                    className={styles.itemImage}
+                                                />
+                                                <div className={styles.itemDetails}>
+                                                    <span className={styles.itemName}>{item.name}</span>
+                                                    <span className={styles.itemCondition}>{item.condition}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className={styles.tradeFooter}>
+                                <span className={styles.tradeDate}>
+                                    Created: {formatDate(trade.createdAt)}
+                                </span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default UserTrades; 
