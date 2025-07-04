@@ -25,7 +25,7 @@ const ViewProducts = () => {
 
 	useEffect(() => {
 		dispatch(getRecommendedProducts(userId));
-	}, [dispatch, userId, userStatus]);
+	}, [dispatch, userId]);
 
 	// set the current product for trading once products are available
 	useEffect(() => {
