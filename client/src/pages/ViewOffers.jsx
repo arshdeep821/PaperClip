@@ -11,7 +11,7 @@ import OffersActions from "../components/OffersActions";
 function ViewOffers() {
 	const dispatch = useDispatch()
 
-	const offers = useSelector((state) => state.offers.offers);
+	const offers = useSelector((state) => state.offers.offers).filter((offer) => offer.status === "pending");
 	const userId = useSelector((state) => state.user.id)
 	const status = useSelector((state) => state.offers.status)
 
