@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -8,6 +8,7 @@ import InventoryItem from "../components/InventoryItem";
 import Sidebar from "../components/Sidebar";
 import UploadItemForm from "../components/UploadItemForm";
 import EditItemForm from "../components/EditItemForm";
+import UserTrades from "../components/UserTrades";
 import { removeItem, updateItem, deleteItem } from "../redux/slices/userSlice";
 
 const BACKEND_URL = "http://localhost:3001";
@@ -19,9 +20,9 @@ const Inventory = () => {
     const [editItem, setEditItem] = useState(null);
     const [deleteMode, setDeleteMode] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
+    const [showTrades, setShowTrades] = useState(false);
 
     const dispatch = useDispatch();
-
 
     const handleEditSubmit = async (formData) => {
         const data = new FormData()
@@ -37,9 +38,9 @@ const Inventory = () => {
             data.append("category", categoryId);
         }
 
-		if (formData.category) {
-			data.append("condition", formData.condition);
-		}
+        if (formData.category) {
+            data.append("condition", formData.condition);
+        }
 
         try {
 
@@ -59,7 +60,7 @@ const Inventory = () => {
                 "name": formData.name,
                 "description": formData.description,
                 "category": formData.category,
-				"condition": formData.condition,
+                "condition": formData.condition,
             }));
 
         } catch (err) {
@@ -76,29 +77,20 @@ const Inventory = () => {
 
         try {
             await Promise.all(selectedItems.map(async (itemId) => {
-                // const res = await fetch(`${BACKEND_URL}/items/${itemId}`, {
-                //     method: "DELETE",
-                // });
-
-                // if (!res.ok) {
-                //     console.error(`Failed to delete item with ID: ${itemId}`);
-                // }
-
                 dispatch(deleteItem(itemId))
-
             }));
-
 
             selectedItems.map((itemId) => {
                 dispatch(removeItem(itemId))
             })
 
             setSelectedItems([]);
-			setDeleteMode(false);
+            setDeleteMode(false);
         } catch (error) {
             console.error("Error deleting items:", error);
         }
     };
+
     return (
         <div className={styles.inventoryPage}>
             <Sidebar />
@@ -107,11 +99,18 @@ const Inventory = () => {
                     variant="contained"
                     startIcon={<AddIcon />}
                     onClick={() => setShowForm(true)}
+                    disabled={showTrades}
                 >
                     Upload Item
                 </Button>
+                <Button
+                    variant={showTrades ? "contained" : "outlined"}
+                    onClick={() => setShowTrades(!showTrades)}
+                    style={{ marginLeft: '10px' }}
+                >
+                    {showTrades ? "View Inventory" : "View Trades"}
+                </Button>
             </div>
-
 
             {showForm && (
                 <UploadItemForm
@@ -128,55 +127,57 @@ const Inventory = () => {
                 />
             )}
 
-            <div className={styles.inventoryListWrapper}>
+            {showTrades ? (
+                <UserTrades />
+            ) : (
+                <div className={styles.inventoryListWrapper}>
+                    <div className={styles.inventoryHeader}>
+                        <h2>Inventory</h2>
 
-                <div className={styles.inventoryHeader}>
-                    <h2>Inventory</h2>
+                        {deleteMode && (
+                            <button
+                                className={styles.deleteConfirm}
+                                onClick={handleDelete}
+                            >
+                                Confirm Delete
+                            </button>
+                        )}
 
-                    {deleteMode && (
-                        <button
-                            className={styles.deleteConfirm}
-                            onClick={handleDelete}
-                        >
-                            Confirm Delete
-                        </button>
+                        <div className={styles.deleteButtonWrapper}>
+                            <Button
+                                variant="contained"
+                                startIcon={<DeleteIcon />}
+                                className={`${styles.itemButton} ${styles.deleteButton}`}
+                                onClick={() => setDeleteMode((prev) => !prev)}
+                            >
+                                {deleteMode ? "Cancel Delete" : "Delete Item(s)"}
+                            </Button>
+                        </div>
+                    </div>
+
+                    {items.length === 0 ? (
+                        <p>No items in inventory</p>
+                    ) : (
+                        <div className={styles.inventoryGrid}>
+                            {items.map((item) => (
+                                <InventoryItem
+                                    key={item._id}
+                                    item={item}
+                                    onEdit={(item) => setEditItem(item)}
+                                    deleteMode={deleteMode}
+                                    onSelect={(id) => {
+                                        setSelectedItems((prev) =>
+                                            prev.includes(id)
+                                                ? prev.filter((itemId) => itemId !== id)
+                                                : [...prev, id]
+                                        );
+                                    }}
+                                />
+                            ))}
+                        </div>
                     )}
-
-                    <div className={styles.deleteButtonWrapper}>
-                        <Button
-                            variant="contained"
-                            startIcon={<DeleteIcon />}
-                            className={`${styles.itemButton} ${styles.deleteButton}`}
-                            onClick={() => setDeleteMode((prev) => !prev)}
-                        >
-                            {deleteMode ? "Cancel Delete" : "Delete Item(s)"}
-                        </Button>
-                    </div>
                 </div>
-
-                {items.length === 0 ? (
-                    <p>No items in inventory</p>
-                ) : (
-                    <div className={styles.inventoryGrid}>
-                        {items.map((item) => (
-                            <InventoryItem
-                                key={item._id}
-                                item={item}
-                                onEdit={(item) => setEditItem(item)}
-                                deleteMode={deleteMode}
-                                onSelect={(id) => {
-                                    setSelectedItems((prev) =>
-                                        prev.includes(id)
-                                            ? prev.filter((itemId) => itemId !== id)
-                                            : [...prev, id]
-                                    );
-                                }}
-
-                            />
-                        ))}
-                    </div>
-                )}
-            </div>
+            )}
         </div>
     );
 };

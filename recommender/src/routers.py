@@ -6,14 +6,17 @@ from typing import List
 
 router = APIRouter()
 
+class UserPreference(BaseModel):
+	category: str
+	description: str
+
 class RecommendationRequest(BaseModel):
-	categories: List[str]
-	descriptions: List[str]
+	userPreferences: List[UserPreference]
 
 @router.post("/recommend")
 def recommend(req: RecommendationRequest):
 	try:
-		return get_recommendations(req.categories, req.descriptions)
+		return get_recommendations(req.userPreferences)
 	except Exception as e:
 		raise HTTPException(status_code=500, detail=str(e))
 

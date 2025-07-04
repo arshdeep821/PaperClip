@@ -52,6 +52,13 @@ const Signup = () => {
 			return;
 		}
 
+		const selectedCity = cities.find(
+			(c) => c.name.toLowerCase() === formData.city.toLowerCase()
+		);
+
+		const lat = selectedCity?.latitude || null;
+		const lon = selectedCity?.longitude || null;
+
 		try {
 			const response = await fetch(`${BACKEND_URL}/users`, {
 				method: "POST",
@@ -63,6 +70,8 @@ const Signup = () => {
 					password: formData.password1,
 					country: formData.country,
 					city: formData.city,
+					lat,
+					lon,
 				}),
 			});
 
