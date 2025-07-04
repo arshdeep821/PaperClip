@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import Category from "../models/Category.js";
 import { StatusCodes } from "http-status-codes";
 import { hash, compare } from "bcrypt";
+import { getRecommendationsForUser } from "../util/recommender.js";
 
 const DEFAULT_USER_RADIUS = 10;
 const HASH_ROUNDS = 10;
@@ -294,4 +295,38 @@ const updateUserPreferences = async (req, res) => {
 	}
 };
 
-export { createUser, loginUser, getUser, updateUser, updateUserPreferences };
+const getRecommendationByUserID = async (req, res) => {
+	try {
+		const { id } = req.params;
+
+		const user = await User.findById(id)
+			.populate("userPreferences.category")
+			.select("-password");
+
+		if (!user) {
+			return res
+				.status(StatusCodes.NOT_FOUND)
+				.json({ error: "User not found." });
+		}
+
+		const recommendedProducts = await getRecommendationsForUser(user);
+
+		res.status(StatusCodes.OK).json({
+			data: recommendedProducts,
+		});
+	} catch (err) {
+		console.error("Error recommending things:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: `Server error. Could not recommend: ${err}`,
+		});
+	}
+};
+
+export {
+	createUser,
+	loginUser,
+	getUser,
+	updateUser,
+	updateUserPreferences,
+	getRecommendationByUserID,
+};

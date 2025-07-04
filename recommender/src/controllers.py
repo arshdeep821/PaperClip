@@ -1,8 +1,5 @@
-import os
-import pickle
 import numpy as np
 import spacy
-import pandas as pd
 import src.model as model
 
 embeddings_model = spacy.load("en_core_web_md")
@@ -11,7 +8,6 @@ def embed(text):
 	return embeddings_model(text).vector
 
 def prepare_input(category, description):
-	print(category)
 	text = category + ", " + description
 
 	text_embedding = embed(text).reshape(1, -1)
