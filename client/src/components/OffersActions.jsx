@@ -7,6 +7,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useDispatch } from "react-redux";
 import { acceptOffer, rejectOffer } from "../redux/slices/offersSlice";
+import { addItem, removeItem } from "../redux/slices/userSlice";
 
 const BACKEND_URL = "http://localhost:3001";
 
@@ -83,6 +84,10 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
 
 			await Promise.all(swapPromises);
 
+			// ----- add/remove traded items from user's inventory in redux -----
+			currentOffer.items1.forEach((item) => dispatch(removeItem(item._id)));
+			currentOffer.items2.forEach((item) => dispatch(addItem(item)));
+
 			// ----- update trade status to "accepted" -----
 			const statusResponse = await fetch(`${BACKEND_URL}/trades/${currentOfferId}`, {
 				method: "PATCH",
@@ -101,7 +106,6 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
             }
 
 			dispatch(acceptOffer(currentOfferId));
-			// ---------------------------------------------
 
         } catch (err) {
             console.error("Accept offer error:", err);
