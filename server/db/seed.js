@@ -62,6 +62,7 @@ const adminItems = [
 
 hashedPassword = await hash("password", HASH_ROUNDS);
 const execUser = {
+	_id: new mongoose.Types.ObjectId("123456789012345678901235"),
 	username: "Exec",
 	name: "Exec Name",
 	email: "exec@example.com",

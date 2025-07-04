@@ -3,6 +3,8 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import session from "express-session";
+import http from "http";
+import { Server } from "socket.io";
 
 import connectDB from "./db/connect.js";
 import seedDatabase from "./db/seed.js";
@@ -12,8 +14,13 @@ import UserRouter from "./routes/users.js";
 import CategoryRouter from "./routes/categories.js";
 import ItemRouter from "./routes/items.js";
 import TradeRouter from "./routes/trades.js";
+import MessageRouter from "./routes/messages.js";
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+	cors: { origin: "http://localhost:5173", methods: ["GET", "POST"] }
+});
 
 app.use(cors());
 app.use(express.json());
@@ -35,6 +42,25 @@ app.use("/users", UserRouter);
 app.use("/categories", CategoryRouter);
 app.use("/items", ItemRouter);
 app.use("/trades", TradeRouter);
+app.use("/messages", MessageRouter);
+
+// Socket.IO logic
+io.on("connection", (socket) => {
+	console.log("A user connected:", socket.id);
+
+	socket.on("send_message", (data) => {
+		// data: { to, from, message, timestamp }
+		io.to(data.to).emit("receive_message", data);
+	});
+
+	socket.on("join", (userId) => {
+		socket.join(userId); // Each user joins their own room
+	});
+
+	socket.on("disconnect", () => {
+		console.log("User disconnected:", socket.id);
+	});
+});
 
 const port = 3001;
 
@@ -45,7 +71,7 @@ const start = async () => {
 
 		await seedDatabase();
 
-		app.listen(port, () => {
+		server.listen(port, () => {
 			console.log(`Server is listening on port ${port}`);
 		});
 	} catch (err) {

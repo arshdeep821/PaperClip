@@ -16,6 +16,7 @@ import ViewOffers from "./pages/ViewOffers";
 import Search from "./pages/Search";
 import Users from "./pages/Users";
 import NotFoundPage from "./pages/NotFoundPage";
+import Messages from "./components/messages";
 
 function App() {
 	return (
@@ -35,6 +36,7 @@ function App() {
 					<Route path="/home" element={<Home />} />
 					<Route path="/search" element={<Search />} />
 					<Route path="/users/:username" element={<Users />} />
+					<Route path="/chats" element={<Messages />} />
 					<Route path="/*" element={<NotFoundPage />} />
 				</Routes>
 			</Router>
