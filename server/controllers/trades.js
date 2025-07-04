@@ -38,7 +38,7 @@ const createTrade = async (req, res) => {
     }
 };
 
-const getTradesByUserId = async (req, res) => {
+const getTradesByUser1Id = async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -49,7 +49,7 @@ const getTradesByUserId = async (req, res) => {
             });
         }
 
-        // Find all trades where the user is either user1 or user2
+        // Find all trades where the user is either user1
         const trades = await Trade.find({ user1: id })
             .populate('user1')
             .populate('user2')
@@ -67,5 +67,34 @@ const getTradesByUserId = async (req, res) => {
     }
 }
 
-export { createTrade, getTradesByUserId };
+const getTradesByUser2Id = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Basic validation
+        if (!id) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                error: "userId is required."
+            });
+        }
+
+        // Find all trades where the user is either user1
+        const trades = await Trade.find({ user2: id })
+            .populate('user1')
+            .populate('user2')
+            .populate('items1')
+            .populate('items2')
+            .sort({ createdAt: -1 }); // sort by newest first
+
+        res.status(StatusCodes.OK).json(trades);
+
+    } catch (err) {
+        console.error("Error fetching trades:", err);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: "Server error. Could not fetch trades."
+        });
+    }
+}
+
+export { createTrade, getTradesByUser1Id, getTradesByUser2Id };
 
