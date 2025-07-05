@@ -55,6 +55,7 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
 	};
 
 	// TODO:
+	// change status of all other trades involving items in an accepted trade to "canceled"
 	const handleAccept = async () => {
 		if (!currentOfferId) {
 			return; // TODO: handle case with no offer
@@ -79,10 +80,6 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
 				items2Id: currentOffer.items2.map((item) => item._id),
 			};
 
-			console.log("current offer:", currentOffer);
-			console.log("trade body:", tradeBody);
-
-
 			const tradeResponse = await fetch(`${BACKEND_URL}/trades/execute`, {
 				method: "PATCH",
 				headers: {
@@ -96,33 +93,6 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
             if (!tradeResponse.ok) {
                 console.error("Server error accepting offer:", tradeResult.error);
             }
-
-			//const swapPromises = [
-			//	...currentOffer.items1.map((item) => {
-			//		return fetch(`${BACKEND_URL}/items/${item._id}/changeOwner`, {
-			//			method: "PATCH",
-			//			headers: {
-			//				"Content-Type": "application/json",
-			//			},
-			//			body: JSON.stringify({
-			//				user: currentOffer.user2._id
-			//			}),
-			//		})
-			//	}),
-			//	...currentOffer.items2.map((item) => {
-			//		return fetch(`${BACKEND_URL}/items/${item._id}/changeOwner`, {
-			//			method: "PATCH",
-			//			headers: {
-			//				"Content-Type": "application/json",
-			//			},
-			//			body: JSON.stringify({
-			//				user: currentOffer.user1._id
-			//			}),
-			//		})
-			//	})
-			//];
-			//
-			//await Promise.all(swapPromises);
 
 			// ----- add/remove traded items from user's inventory in redux -----
 			currentOffer.items1.forEach((item) => dispatch(removeItem(item._id)));

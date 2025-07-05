@@ -170,17 +170,9 @@ const executeTrade = async (req, res) => {
 			return res.status(StatusCodes.BAD_REQUEST).json({ error: "user2 is not the owner of all items2" });
 		}
 
-		console.log("user1 inventory:", user1.inventory);
-		console.log("user2 inventory:", user2.inventory);
-		console.log("items1.id:", items1Id);
-		console.log("items2.id:", items2Id);
-
 		// swaps items from user.inventory
 		user1.inventory = user1.inventory.filter((itemId) => !items1Id.includes(itemId.toString()));
 		user2.inventory = user2.inventory.filter((itemId) => !items2Id.includes(itemId.toString()));
-
-		console.log("user1 inventory after filter:", user1.inventory);
-		console.log("user2 inventory after filter:", user2.inventory);
 
 		user1.inventory.push(...items2Id);
 		user2.inventory.push(...items1Id);
