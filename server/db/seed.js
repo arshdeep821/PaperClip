@@ -139,19 +139,20 @@ const seedDatabase = async () => {
 		const furnitureCategory = createdCategories.find(
 			(c) => c.name === "Furniture"
 		);
-		const sportsCategory = createdCategories.find(
-			(c) => c.name === "Sports"
+		const electronicsCategory = createdCategories.find(
+			(c) => c.name === "Electronics"
 		);
 		createdUser.userPreferences = [
 			{
 				category: furnitureCategory._id,
-				description: "I want stools and couches",
+				description: "stools and couches",
 			},
 			{
-				category: sportsCategory._id,
-				description: "basketballs",
+				category: electronicsCategory._id,
+				description: "computers, laptops, macs, or macbooks",
 			},
 		];
+
 		console.log("Added preferences to user with ID:", createdUser._id);
 		await createdUser.save();
 
@@ -175,13 +176,17 @@ const seedDatabase = async () => {
 		console.log("Created Exec user with ID:", createdUser._id);
 
 		// Add Exec users preferences
-		const electronicsCategory = createdCategories.find(
-			(c) => c.name === "Electronics"
+		const sportsCategory = createdCategories.find(
+			(c) => c.name === "Sports"
 		);
 		createdUser.userPreferences = [
 			{
 				category: electronicsCategory._id,
-				description: "I want iPhones and tech gadgets",
+				description: "iPhones and tech gadgets",
+			},
+			{
+				category: sportsCategory._id,
+				description: "basketballs",
 			},
 		];
 		console.log("Added preferences to user with ID:", createdUser._id);
