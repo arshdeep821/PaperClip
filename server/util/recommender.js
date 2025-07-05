@@ -28,12 +28,14 @@ export const getRecommendationsForUser = async (user) => {
 
 	const recommendedIds = await getRecommendationsFromModel(userPreferences);
 
-	const recommendedProducts = await Item.find({
-		_id: { $in: recommendedIds },
-	}).populate({
-		path: "owner",
-		select: "-password",
-	});
+	const recommendedProducts = await Promise.all(
+		recommendedIds.map(async (id) => {
+			return await Item.findById(id).populate({
+				path: "owner",
+				select: "-password",
+			});
+		})
+	);
 
 	const locFilteredProducts = await removeProductsOutsideRadius(
 		recommendedProducts,
