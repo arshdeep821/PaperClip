@@ -34,7 +34,6 @@ function ViewOffers() {
 				);
 			}
 		};
-
 		window.addEventListener("keydown", handleKeyDown);
 		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, [NUM_OFFERS]);
@@ -51,10 +50,6 @@ function ViewOffers() {
 		return <h1>Loading...</h1>
 	}
 
-	if (!offers || offers.length === 0) {
-
-	}
-
 	return (
 		<div className={styles.offersPage}>
 			<Sidebar />
@@ -65,7 +60,7 @@ function ViewOffers() {
 
 			<div className={styles.mainContent}>
 				{
-					(!offers || offers.length === 0) ?
+					(!offers[offerIdx] || offers.length === 0) ?
 						<h1>No Current Offers</h1> :
 						<OfferBox
 							otherUser={{
@@ -84,12 +79,7 @@ function ViewOffers() {
 				<OffersActions
 					handleLeftButton={handleLeftButton}
 					handleRightButton={handleRightButton}
-					currentTrade={{
-						user1: offers[offerIdx].user1,
-						user2: offers[offerIdx].user2,
-						items1: offers[offerIdx].items1,
-						items2: offers[offerIdx].items2,
-					}}
+					currentOffer={offers[offerIdx] || undefined}
 				/>
 			</div>
 		</div>

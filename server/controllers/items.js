@@ -170,7 +170,7 @@ const updateItem = async (req, res) => {
             error: "Server error. Could not update item.",
         });
     }
-}
+};
 
 const getProducts = async (req, res) => {
     try {
@@ -291,5 +291,36 @@ const searchProducts = async (req, res) => {
     }
 };
 
-export { createItem, deleteItem, updateItem, getProducts, searchProducts, getAllproducts };
+const changeOwner = async (req, res) => {
+    try {
+		// ----- changes items.owner -----
+        const { id } = req.params;
+
+        const { user } = req.body;
+
+        const item = await Item.findById(id);
+        if (!item) {
+            return res.status(StatusCodes.NOT_FOUND).json({ error: "Item not found." });
+        }
+
+        if (user) {
+            const existingUser = await User.findById(user);
+            if (!existingUser) {
+                return res.status(StatusCodes.NOT_FOUND).json({ error: "User not found." });
+            }
+            item.owner = user;
+        }
+
+        await item.save();
+
+        res.status(StatusCodes.OK).json({ ...item.toObject() });
+    } catch (err) {
+        console.error("Error updating item owner:", err);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: "Server error. Could not update the item's owner.",
+        });
+    }
+};
+
+export { createItem, deleteItem, updateItem, getProducts, searchProducts, getAllproducts, changeOwner };
 
