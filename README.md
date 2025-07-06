@@ -111,6 +111,10 @@ Running the application: `docker compose up --build` or `docker-compose up --bui
 
 The app runs on http://localhost:5173/
 
+### Some Important Things to Know when using this application
+- If you create a new account please go to the profile page and set a user preference before doing anything else as this is required for this Milestone
+- Otherwise you can login with the preset accounts (username: Admin, password: password) (username: Exec, password: password)
+
 ### Changes since Milestone 2
 
 All data is pulled from the backend (products page, offers page, search page, profile page, inventory page).
