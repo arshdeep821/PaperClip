@@ -109,11 +109,11 @@ Running application with only server and client logs: `docker-compose up --build
 
 Running the application: `docker compose up --build` or `docker-compose up --build`
 
+The app runs on http://localhost:5173/
+
 ### Some Important Things to Know when using this application
 - If you create a new account please go to the profile page and set a user preference before doing anything else as this is required for this Milestone
 - Otherwise you can login with the preset accounts (username: Admin, password: password) (username: Exec, password: password)
-
-The app runs on http://localhost:5173/
 
 ### Changes since Milestone 2
 
