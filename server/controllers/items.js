@@ -7,6 +7,8 @@ import fs from "fs"
 import path from "path"
 import mongoose from "mongoose";
 
+import { refreshModel } from "../util/recommender.js";
+
 const createItem = async (req, res) => {
     try {
 
@@ -56,6 +58,8 @@ const createItem = async (req, res) => {
         // const imageFile = fs.readFileSync(`./public/${imagePath}`)
         // const base64Image = `data:image/jpeg;base64,${imageFile.toString('base64')}`;
 
+		refreshModel();
+
         const newItemWithCategory = await Item.findById(newItem._id).populate("category");
 
         // create new object that will be returned
@@ -97,6 +101,8 @@ const deleteItem = async (req, res) => {
 
         // delete item
         await Item.findByIdAndDelete(id);
+
+		refreshModel();
 
         res.status(StatusCodes.OK).json({ message: "Item deleted successfully." });
     } catch (err) {
@@ -152,6 +158,8 @@ const updateItem = async (req, res) => {
 
         await item.save();
 
+		refreshModel();
+
         // const imageFile = fs.readFileSync(item.imagePath);
         // const base64Image = `data:image/jpeg;base64,${imageFile.toString("base64")}`;
 
@@ -162,7 +170,7 @@ const updateItem = async (req, res) => {
             error: "Server error. Could not update item.",
         });
     }
-}
+};
 
 const getProducts = async (req, res) => {
     try {
@@ -283,5 +291,36 @@ const searchProducts = async (req, res) => {
     }
 };
 
-export { createItem, deleteItem, updateItem, getProducts, searchProducts, getAllproducts };
+const changeOwner = async (req, res) => {
+    try {
+		// ----- changes items.owner -----
+        const { id } = req.params;
+
+        const { user } = req.body;
+
+        const item = await Item.findById(id);
+        if (!item) {
+            return res.status(StatusCodes.NOT_FOUND).json({ error: "Item not found." });
+        }
+
+        if (user) {
+            const existingUser = await User.findById(user);
+            if (!existingUser) {
+                return res.status(StatusCodes.NOT_FOUND).json({ error: "User not found." });
+            }
+            item.owner = user;
+        }
+
+        await item.save();
+
+        res.status(StatusCodes.OK).json({ ...item.toObject() });
+    } catch (err) {
+        console.error("Error updating item owner:", err);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: "Server error. Could not update the item's owner.",
+        });
+    }
+};
+
+export { createItem, deleteItem, updateItem, getProducts, searchProducts, getAllproducts, changeOwner };
 

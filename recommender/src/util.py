@@ -1,6 +1,6 @@
 import requests
 
-BACKEND_API_URL = "http://host.docker.internal:3001"
+BACKEND_API_URL = "http://server:3001"
 
 def get_all_products():
 	try:

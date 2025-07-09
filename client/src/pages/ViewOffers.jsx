@@ -1,7 +1,7 @@
 import styles from "../styles/ViewOffers.module.css";
 
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchOffers } from "../redux/slices/offersSlice";
 import OfferBox from "../components/OfferBox";
 import Sidebar from "../components/Sidebar";
@@ -11,23 +11,43 @@ import OffersActions from "../components/OffersActions";
 function ViewOffers() {
 	const dispatch = useDispatch()
 
-
 	const offers = useSelector((state) => state.offers.offers);
 	const userId = useSelector((state) => state.user.id)
 	const status = useSelector((state) => state.offers.status)
 
+	const NUM_OFFERS = offers.length || 0;
+	const [offerIdx, setOfferIdx] = useState(0);
 
 	useEffect(() => {
 		dispatch(fetchOffers(userId))
-	}, [])
+	}, [dispatch, userId])
 
+	useEffect(() => {
+		const handleKeyDown = (e) => {
+			if (e.key === "ArrowRight") {
+				setOfferIdx((currIdx) =>
+					currIdx < NUM_OFFERS - 1 ? currIdx + 1 : 0
+				);
+			} else if (e.key === "ArrowLeft") {
+				setOfferIdx((currIdx) =>
+					currIdx > 0 ? currIdx - 1 : NUM_OFFERS - 1
+				);
+			}
+		};
+		window.addEventListener("keydown", handleKeyDown);
+		return () => window.removeEventListener("keydown", handleKeyDown);
+	}, [NUM_OFFERS]);
+
+	const handleLeftButton = () => {
+		setOfferIdx((currIdx) => (currIdx > 0 ? currIdx - 1 : NUM_OFFERS - 1));
+	};
+
+	const handleRightButton = () => {
+		setOfferIdx((currIdx) => (currIdx < NUM_OFFERS - 1 ? currIdx + 1 : 0));
+	};
 
 	if (status !== "succeeded") {
 		return <h1>Loading...</h1>
-	}
-
-	if (!offers || offers.length === 0) {
-
 	}
 
 	return (
@@ -40,14 +60,27 @@ function ViewOffers() {
 
 			<div className={styles.mainContent}>
 				{
-					(!offers || offers.length === 0) ?
+					(!offers[offerIdx] || offers.length === 0) ?
 						<h1>No Current Offers</h1> :
-						<OfferBox otherUser={{ user: offers[0].user2, items: offers[0].items2 }} currUser={{ user: offers[0].user1, items: offers[0].items1 }} />
+						<OfferBox
+							otherUser={{
+								user: offers[offerIdx].user2,
+								items: offers[offerIdx].items2
+							}}
+							currUser={{
+								user: offers[offerIdx].user1,
+								items: offers[offerIdx].items1
+							}}
+						/>
 				}
 			</div>
 
 			<div className={styles.bottom}>
-				<OffersActions />
+				<OffersActions
+					handleLeftButton={handleLeftButton}
+					handleRightButton={handleRightButton}
+					currentOffer={offers[offerIdx] || undefined}
+				/>
 			</div>
 		</div>
 	);

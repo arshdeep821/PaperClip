@@ -1,6 +1,8 @@
 import User from "../models/User.js";
+import Category from "../models/Category.js";
 import { StatusCodes } from "http-status-codes";
 import { hash, compare } from "bcrypt";
+import { getRecommendationsForUser } from "../util/recommender.js";
 
 const DEFAULT_USER_RADIUS = 10;
 const HASH_ROUNDS = 10;
@@ -14,12 +16,23 @@ const createUser = async (req, res) => {
 			email,
 			city,
 			country,
+			lat,
+			lon,
 			tradingRadius,
 		} = req.body;
 
-		if (!username || !name || !password || !email || !city || !country) {
+		if (
+			!username ||
+			!name ||
+			!password ||
+			!email ||
+			!city ||
+			!country ||
+			!lat ||
+			!lon
+		) {
 			return res.status(400).json({
-				error: "Username, name, password, email, city, and country are required.",
+				error: "Username, name, password, email, city, country, lat, and lon are required.",
 			});
 		}
 
@@ -39,6 +52,8 @@ const createUser = async (req, res) => {
 			email,
 			city,
 			country,
+			lat,
+			lon,
 			tradingRadius: tradingRadius || DEFAULT_USER_RADIUS,
 		});
 
@@ -51,7 +66,10 @@ const createUser = async (req, res) => {
 			email: newUser.email,
 			city: newUser.city,
 			country: newUser.country,
+			lat: newUser.lat,
+			lon: newUser.lon,
 			tradingRadius: newUser.tradingRadius,
+			userPreferences: newUser.userPreferences,
 			inventory: newUser.inventory,
 			createdAt: newUser.createdAt,
 		};
@@ -76,13 +94,14 @@ const loginUser = async (req, res) => {
 		}
 
 		const user = await User.findOne({ username })
+			.populate("userPreferences.category")
 			.populate({
 				path: "inventory",
 				populate: {
 					path: "category", // deep populate category inside each item
 				},
 			});
-			
+
 		if (!user) {
 			return res.status(StatusCodes.UNAUTHORIZED).json({
 				error: "Invalid username.",
@@ -105,7 +124,10 @@ const loginUser = async (req, res) => {
 			email: user.email,
 			city: user.city,
 			country: user.country,
+			lat: user.lat,
+			lon: user.lon,
 			tradingRadius: user.tradingRadius,
+			userPreferences: user.userPreferences,
 			inventory: user.inventory,
 			createdAt: user.createdAt,
 		};
@@ -125,6 +147,7 @@ const getUser = async (req, res) => {
 
 		const user = await User.findById(id)
 			.populate("inventory")
+			.populate("userPreferences.category")
 			.select("-password");
 
 		if (!user) {
@@ -179,7 +202,9 @@ const updateUser = async (req, res) => {
 		const updatedUser = await User.findByIdAndUpdate(id, updateData, {
 			new: true,
 			runValidators: true,
-		}).select("-password");
+		})
+			.select("-password")
+			.populate("userPreferences.category");
 
 		const userResponse = {
 			_id: updatedUser._id,
@@ -188,8 +213,11 @@ const updateUser = async (req, res) => {
 			email: updatedUser.email,
 			city: updatedUser.city,
 			country: updatedUser.country,
+			lat: updatedUser.lat,
+			lon: updatedUser.lon,
 			tradingRadius: updatedUser.tradingRadius,
 			inventory: updatedUser.inventory,
+			userPreferences: updatedUser.userPreferences,
 			createdAt: updatedUser.createdAt,
 			updatedAt: updatedUser.updatedAt,
 		};
@@ -203,4 +231,102 @@ const updateUser = async (req, res) => {
 	}
 };
 
-export { createUser, loginUser, getUser, updateUser };
+const updateUserPreferences = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { userPreferences } = req.body;
+
+		if (!Array.isArray(userPreferences)) {
+			return res
+				.status(400)
+				.json({ error: "userPreferences must be an array." });
+		}
+
+		const validatedPreferences = [];
+
+		for (const pref of userPreferences) {
+			if (
+				!pref ||
+				typeof pref !== "object" ||
+				typeof pref.category !== "string" ||
+				typeof pref.description !== "string"
+			) {
+				return res.status(StatusCodes.BAD_REQUEST).json({
+					error: "Each preference must have a 'category' ObjectId string and a 'description'.",
+				});
+			}
+
+			const category = await Category.findById(pref.category);
+			if (!category) {
+				return res.status(StatusCodes.BAD_REQUEST).json({
+					error: `Category with id ${pref.category} does not exist.`,
+				});
+			}
+
+			validatedPreferences.push({
+				category: category._id,
+				description: pref.description,
+			});
+		}
+
+		const user = await User.findById(id);
+		if (!user) {
+			return res
+				.status(StatusCodes.NOT_FOUND)
+				.json({ error: "User not found." });
+		}
+
+		user.userPreferences = validatedPreferences;
+		await user.save();
+
+		await user.populate("userPreferences.category");
+		const userObj = user.toObject();
+		delete userObj.password;
+
+		res.status(StatusCodes.OK).json({
+			message: "User preferences updated.",
+			user: userObj,
+		});
+	} catch (err) {
+		console.error("Error updating user preferences:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Server error. Could not update users preferences.",
+		});
+	}
+};
+
+const getRecommendationByUserID = async (req, res) => {
+	try {
+		const { id } = req.params;
+
+		const user = await User.findById(id)
+			.populate("userPreferences.category")
+			.select("-password");
+
+		if (!user) {
+			return res
+				.status(StatusCodes.NOT_FOUND)
+				.json({ error: "User not found." });
+		}
+
+		const recommendedProducts = await getRecommendationsForUser(user);
+
+		res.status(StatusCodes.OK).json({
+			data: recommendedProducts,
+		});
+	} catch (err) {
+		console.error("Error recommending things:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: `Server error. Could not recommend: ${err}`,
+		});
+	}
+};
+
+export {
+	createUser,
+	loginUser,
+	getUser,
+	updateUser,
+	updateUserPreferences,
+	getRecommendationByUserID,
+};

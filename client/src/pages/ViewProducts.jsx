@@ -8,26 +8,24 @@ import Sidebar from "../components/Sidebar";
 import TopOptionButtons from "../components/TopOptionButtons";
 import BottomOptionButtons from "../components/BottomOptionButtons";
 import Bag from "../components/Bag";
-import { fetchProducts } from "../redux/slices/productsSlice";
+import { getRecommendedProducts } from "../redux/slices/productsSlice";
 import { useLocation } from "react-router-dom";
 import { setProduct } from "../redux/slices/tradeSlice";
 
 const ViewProducts = () => {
 	let products = useSelector((state) => state.products.products);
-	const status = useSelector((state) => state.products.status)
-	const error = useSelector((state) => state.products.error)
-	const userId = useSelector((state) => state.user.id)
+	const status = useSelector((state) => state.products.status);
+	const error = useSelector((state) => state.products.error);
+	const userId = useSelector((state) => state.user.id);
 
-	const dispatch = useDispatch()
+	const dispatch = useDispatch();
 	const NUM_PRODUCTS = products.length || 0;
 
 	const [itemIdx, setItemIdx] = useState(0);
 
 	useEffect(() => {
-		// if (status === 'idle') {
-		dispatch(fetchProducts(userId));
-		// }
-	}, [dispatch, userId])
+		dispatch(getRecommendedProducts(userId));
+	}, [dispatch, userId]);
 
 	// set the current product for trading once products are available
 	useEffect(() => {
@@ -56,7 +54,10 @@ const ViewProducts = () => {
 	const { state } = useLocation();
 
 	if (state && state.item) {
-		products = [state.item, ...products.filter((product) => product._id !== state.item._id)]
+		products = [
+			state.item,
+			...products.filter((product) => product._id !== state.item._id),
+		];
 	}
 
 	const handleLeftButton = () => {
@@ -67,13 +68,12 @@ const ViewProducts = () => {
 		setItemIdx((currIdx) => (currIdx < NUM_PRODUCTS - 1 ? currIdx + 1 : 0));
 	};
 
-
-	if (!products || products.length === 0 || status === 'loading') {
-		return <h1>Loading ...</h1>
+	if (!products || products.length === 0 || status === "loading") {
+		return <h1>Loading ...</h1>;
 	}
 
-	if (status == 'failed') {
-		return <h1>Error loading products {error}</h1>
+	if (status == "failed") {
+		return <h1>Error loading products {error}</h1>;
 	}
 
 	return (
@@ -94,7 +94,7 @@ const ViewProducts = () => {
 				product={products[itemIdx]}
 			/>
 
-			<Bag currentProduct={products[itemIdx]}/>
+			<Bag currentProduct={products[itemIdx]} />
 		</div>
 	);
 };

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import User from "../models/User.js";
 import Category from "../models/Category.js";
 import Item from "../models/Item.js";
-import Trade from "../models/Trade.js"
+import Trade from "../models/Trade.js";
 import { hash } from "bcrypt";
 
 const categories = [
@@ -11,7 +11,6 @@ const categories = [
 	{ name: "Clothing" },
 	{ name: "Books" },
 	{ name: "Furniture" },
-
 ];
 
 const HASH_ROUNDS = 10;
@@ -25,6 +24,8 @@ const adminUser = {
 	password: hashedPassword,
 	city: "Vancouver",
 	country: "Canada",
+	lat: 49.2827,
+	lon: -123.1207,
 };
 
 const adminItems = [
@@ -38,7 +39,7 @@ const adminItems = [
 		name: "Basketball",
 		description: "Spalding NBA Basketball",
 		condition: "Used",
-		imagePath: "Basketball.png"
+		imagePath: "Basketball.png",
 	},
 	{
 		name: "Stephen Curry Shirt",
@@ -50,14 +51,14 @@ const adminItems = [
 		name: "Harry Potter And the Sorcerers stone",
 		description: "Original copy of harry potter and the sorcerers stone",
 		condition: "Damaged",
-		imagePath: "Harry-Potter.png"
+		imagePath: "Harry-Potter.png",
 	},
 	{
 		name: "Comfy Chair",
 		description: "Old chair that can seat 1 person",
 		condition: "Damaged",
-		imagePath: "Chair.png"
-	}
+		imagePath: "Chair.png",
+	},
 ];
 
 hashedPassword = await hash("password", HASH_ROUNDS);
@@ -67,23 +68,26 @@ const execUser = {
 	name: "Exec Name",
 	email: "exec@example.com",
 	password: hashedPassword,
-	city: "Toronto",
-	country: "Canada"
-}
+	city: "Vancouver",
+	country: "Canada",
+	lat: 49.2827,
+	lon: -123.1207,
+};
 
 const execItems = [
 	{
 		name: "Macbook Pro",
 		description: "Apple Macbook Pro (16 inch, 2024)",
 		condition: "Used",
-		imagePath: "Macbook.png"
+		imagePath: "Macbook.png",
 	},
 	{
 		name: "Soccer Ball",
 		description: "Premier League 24-25 - Nike",
 		condition: "New",
-		imagePath: "Soccerball.png"
-	}, {
+		imagePath: "Soccerball.png",
+	},
+	{
 		name: "Naruto Shirt",
 		description: "Naruto Shippuden Kakashi Hatake Shirt",
 		condition: "New",
@@ -93,30 +97,32 @@ const execItems = [
 		name: "Shadow and Bone",
 		description: "Two Copies of Shadow and Bone Book",
 		condition: "Used",
-		imagePath: "ShadowAndBone.png"
+		imagePath: "ShadowAndBone.png",
 	},
 	{
 		name: "Metal Stool",
 		description: "Sturdy Metal Stool",
 		condition: "Used",
-		imagePath: "Stool.png"
-	}
-]
+		imagePath: "Stool.png",
+	},
+];
 
 hashedPassword = await hash("password", HASH_ROUNDS);
 const dummyUser = {
 	username: "dummy",
 	name: "dummy Name",
-	email: "dummy@example.com",
+	email: "dummyemail@gmail.com",
 	password: hashedPassword,
-	city: "Calgary",
-	country: "Canada"
-}
+	city: "Toronto",
+	country: "Canada",
+	lat: 43.651,
+	lon: -79.347,
+};
 
 const seedDatabase = async () => {
 	try {
 		// Clear existing data
-		await Trade.deleteMany({})
+		await Trade.deleteMany({});
 		await User.deleteMany({});
 		await Category.deleteMany({});
 		await Item.deleteMany({});
@@ -129,6 +135,27 @@ const seedDatabase = async () => {
 		// Create single user with specific ID
 		let createdUser = await User.create(adminUser);
 		console.log("Created Admin user with ID:", createdUser._id);
+
+		// Add Admin users preferences
+		const furnitureCategory = createdCategories.find(
+			(c) => c.name === "Furniture"
+		);
+		const electronicsCategory = createdCategories.find(
+			(c) => c.name === "Electronics"
+		);
+		createdUser.userPreferences = [
+			{
+				category: furnitureCategory._id,
+				description: "stools and couches",
+			},
+			{
+				category: electronicsCategory._id,
+				description: "computers, laptops, macs, or macbooks",
+			},
+		];
+
+		console.log("Added preferences to user with ID:", createdUser._id);
+		await createdUser.save();
 
 		// Create items with references to the single user
 		let itemsWithRefs = adminItems.map((item, index) => ({
@@ -146,8 +173,25 @@ const seedDatabase = async () => {
 		});
 		console.log("Updated Admin user inventory");
 
-		createdUser = await User.create(execUser)
+		createdUser = await User.create(execUser);
 		console.log("Created Exec user with ID:", createdUser._id);
+
+		// Add Exec users preferences
+		const sportsCategory = createdCategories.find(
+			(c) => c.name === "Sports"
+		);
+		createdUser.userPreferences = [
+			{
+				category: electronicsCategory._id,
+				description: "iPhones and tech gadgets",
+			},
+			{
+				category: sportsCategory._id,
+				description: "basketballs",
+			},
+		];
+		console.log("Added preferences to user with ID:", createdUser._id);
+		await createdUser.save();
 
 		itemsWithRefs = execItems.map((item, index) => ({
 			...item,
@@ -163,14 +207,21 @@ const seedDatabase = async () => {
 		});
 		console.log("Updated Exec user inventory");
 
-		const admin = await User.findOne({ username: "Admin" }).populate("inventory");
-		const exec = await User.findOne({ username: "Exec" }).populate("inventory");
+		const admin = await User.findOne({ username: "Admin" }).populate(
+			"inventory"
+		);
+		const exec = await User.findOne({ username: "Exec" }).populate(
+			"inventory"
+		);
 
 		const trade = await Trade.create({
 			user1: admin._id,
 			user2: exec._id,
 			items1: [admin.inventory[0]], // first Admin item
-			items2: [exec.inventory[exec.inventory.length - 1], exec.inventory[exec.inventory.length - 2]], // last Exec item
+			items2: [
+				exec.inventory[exec.inventory.length - 1],
+				exec.inventory[exec.inventory.length - 2],
+			], // last Exec item
 		});
 
 		console.log("Created trade between Admin and Exec:", trade._id);
