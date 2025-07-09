@@ -7,6 +7,7 @@ import OfferBox from "../components/OfferBox";
 import Sidebar from "../components/Sidebar";
 import TopOptionButtons from "../components/TopOptionButtons";
 import OffersActions from "../components/OffersActions";
+import RenegPanel from "../components/RenegPanel";
 
 function ViewOffers() {
 	const dispatch = useDispatch()
@@ -82,6 +83,8 @@ function ViewOffers() {
 					currentOffer={offers[offerIdx] || undefined}
 				/>
 			</div>
+
+			<RenegPanel theirId={offers[offerIdx].user2._id} />
 		</div>
 	);
 }
