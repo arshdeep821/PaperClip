@@ -16,7 +16,7 @@ import ViewOffers from "./pages/ViewOffers";
 import Search from "./pages/Search";
 import Users from "./pages/Users";
 import NotFoundPage from "./pages/NotFoundPage";
-import Messages from "./components/messages";
+import Messages from "./pages/Messages";
 
 function App() {
 	return (
