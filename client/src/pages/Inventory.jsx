@@ -71,6 +71,9 @@ const Inventory = () => {
     };
 
     const handleDelete = async () => {
+		if (selectedItems.length === 0) {
+			return;
+		};
         if (!window.confirm("Are you sure you want to delete these products? This action cannot be undone.")) {
             return;
         }
@@ -148,7 +151,10 @@ const Inventory = () => {
                                 variant="contained"
                                 startIcon={<DeleteIcon />}
                                 className={`${styles.itemButton} ${styles.deleteButton}`}
-                                onClick={() => setDeleteMode((prev) => !prev)}
+                                onClick={() => {
+									setDeleteMode((prev) => !prev);
+									setSelectedItems([]);
+								}}
                             >
                                 {deleteMode ? "Cancel Delete" : "Delete Item(s)"}
                             </Button>
