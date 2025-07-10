@@ -2,6 +2,7 @@ import Message from "../models/Message.js"
 import User from "../models/User.js"
 import { StatusCodes } from "http-status-codes";
 
+// get messages between two users
 const getMessage = async (req, res) => {
     try {
         const { user1, user2 } = req.params;
@@ -20,6 +21,7 @@ const getMessage = async (req, res) => {
     }
 }
 
+// create a new message
 const createMessage = async (req, res) => {
     try {
         const { from, to, message } = req.body;
@@ -34,7 +36,8 @@ const createMessage = async (req, res) => {
     }
 }
 
-
+// get conversations for a user
+// conversations for a specific user are the latest messages with other users
 const getConversations = async (req, res) => {
     const { userId } = req.params;
 
