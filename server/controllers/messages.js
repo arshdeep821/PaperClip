@@ -34,64 +34,46 @@ const createMessage = async (req, res) => {
     }
 }
 
+
 const getConversations = async (req, res) => {
-    try {
-        const { userId } = req.params;
-        
-        // Find all messages where the user is either sender or receiver
-        const messages = await Message.find({
-            $or: [{ from: userId }, { to: userId }]
-        }).sort({ timestamp: -1 });
+    const { userId } = req.params;
 
-        // Group messages by conversation partner
-        const conversationsMap = new Map();
-        
-        messages.forEach(msg => {
-            const otherUserId = msg.from === userId ? msg.to : msg.from;
-            
-            if (!conversationsMap.has(otherUserId.toString())) {
-                conversationsMap.set(otherUserId.toString(), {
-                    otherUserId: otherUserId,
-                    lastMessage: msg,
-                    unreadCount: 0
-                });
-            }
-        });
+    // Find all messages where the user is either sender or receiver
+    const messages = await Message.find({
+        $or: [{ from: userId }, { to: userId }]
+    }).sort({ timestamp: -1 });
 
-        // Convert to array and populate user information
-        const conversations = [];
-        for (const [otherUserId, conversation] of conversationsMap) {
-            try {
-                const otherUser = await User.findById(otherUserId).select('username');
-                if (otherUser) {
-                    conversations.push({
-                        otherUser: {
-                            _id: otherUser._id,
-                            username: otherUser.username
-                        },
-                        lastMessage: conversation.lastMessage,
-                        unreadCount: conversation.unreadCount
-                    });
-                }
-            } catch (error) {
-                console.error(`Error fetching user ${otherUserId}:`, error);
-            }
+    // Use a Map to keep only the latest message per conversation
+    const conversationsMap = new Map();
+
+    messages.forEach(msg => {
+        // The other user is the one who is NOT the current user
+        const otherUserId =
+            msg.from.toString() === userId ? msg.to.toString() : msg.from.toString();
+
+        // Don't include self-conversations
+        if (otherUserId === userId) return;
+
+        // Only keep the latest message per conversation
+        if (!conversationsMap.has(otherUserId)) {
+            conversationsMap.set(otherUserId, msg);
         }
+    });
 
-        // Sort by last message timestamp
-        conversations.sort((a, b) => {
-            if (!a.lastMessage) return 1;
-            if (!b.lastMessage) return -1;
-            return new Date(b.lastMessage.timestamp) - new Date(a.lastMessage.timestamp);
-        });
+    // Fetch user info for each conversation
+    const conversations = await Promise.all(
+        Array.from(conversationsMap.entries()).map(async ([otherUserId, lastMessage]) => {
+            const otherUser = await User.findById(otherUserId).select("username");
+            if (!otherUser) return null;
+            return {
+                otherUser: { _id: otherUser._id, username: otherUser.username },
+                lastMessage
+            };
+        })
+    );
 
-        res.json(conversations);
-    } catch (error) {
-        console.error("Error fetching conversations:", error);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            error: "Server error. Could not fetch conversations."
-        });
-    }
-}
+    // Remove any nulls (in case a user was deleted)
+    res.json(conversations.filter(Boolean));
+};
 
 export { getMessage, createMessage, getConversations };

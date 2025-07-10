@@ -41,15 +41,24 @@ function Messages() {
         }
 
         socket.on("receive_message", (msg) => {
-            setMessages((prev) => [...prev, msg]);
-            // Update conversations list to show latest message
+            // Only add to messages if the message is for the currently selected conversation
+            if (
+                selectedConversation &&
+                (
+                    (msg.from === selectedConversation.otherUser._id && msg.to === currentUser.id) ||
+                    (msg.to === selectedConversation.otherUser._id && msg.from === currentUser.id)
+                )
+            ) {
+                setMessages((prev) => [...prev, msg]);
+            }
+            // Always update the sidebar
             updateConversationWithNewMessage(msg);
         });
 
         return () => {
             socket.off("receive_message");
         };
-    }, [currentUser.id]);
+    }, [currentUser.id, selectedConversation]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -137,6 +146,10 @@ function Messages() {
             });
 
             setInput("");
+
+            // Refetch conversations so the new chat appears in the sidebar
+            fetchConversations();
+
         } catch (error) {
             console.error("Error sending message:", error);
         }
