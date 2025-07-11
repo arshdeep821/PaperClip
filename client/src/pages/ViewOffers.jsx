@@ -18,6 +18,7 @@ function ViewOffers() {
 
 	const NUM_OFFERS = offers.length || 0;
 	const [offerIdx, setOfferIdx] = useState(0);
+	const [renegVisible, setRenegVisible] = useState(false);
 
 	useEffect(() => {
 		dispatch(fetchOffers(userId))
@@ -45,6 +46,10 @@ function ViewOffers() {
 
 	const handleRightButton = () => {
 		setOfferIdx((currIdx) => (currIdx < NUM_OFFERS - 1 ? currIdx + 1 : 0));
+	};
+
+	const toggleRenegPanel = () => {
+		setRenegVisible((prev) => !prev);
 	};
 
 	if (status !== "succeeded") {
@@ -81,10 +86,13 @@ function ViewOffers() {
 					handleLeftButton={handleLeftButton}
 					handleRightButton={handleRightButton}
 					currentOffer={offers[offerIdx] || undefined}
+					toggleRenegPanel={toggleRenegPanel}
 				/>
 			</div>
 
-			<RenegPanel theirId={offers[offerIdx].user2._id} />
+			{renegVisible && (
+				<RenegPanel theirId={offers[offerIdx].user2._id} currOffer={offers[offerIdx]} />
+			)}
 		</div>
 	);
 }

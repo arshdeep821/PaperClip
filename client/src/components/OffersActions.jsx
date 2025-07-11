@@ -11,9 +11,13 @@ import { addItem, removeItem } from "../redux/slices/userSlice";
 
 const BACKEND_URL = "http://localhost:3001";
 
-function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
+function OffersActions({ handleLeftButton, handleRightButton, currentOffer, toggleRenegPanel }) {
 	const dispatch = useDispatch();
 	const currentOfferId = currentOffer?._id;
+
+	const handleNewTrade = () => {
+		dispatch(resetTrade());
+	};
 
 	const handleReject = async () => {
 		if (!currentOfferId) {
@@ -52,6 +56,7 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
 	// TODO:
 	// make a reneg side panel
 	const handleReneg = () => {
+		toggleRenegPanel();
 	};
 
 	// TODO:
@@ -129,6 +134,7 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
 		<div className={styles.bottomButtons}>
 			<div className={styles.optionButton} onClick={() => {
 				handleLeftButton();
+				handleNewTrade();
 			}}>
 				<ArrowBackIosIcon fontSize="large" />
 			</div>
@@ -145,6 +151,7 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
 			</div>
 			<div className={styles.optionButton} onClick={() => {
 				handleRightButton();
+				handleNewTrade();
 			}}>
 				<ArrowForwardIosIcon fontSize="large" />
 			</div>
