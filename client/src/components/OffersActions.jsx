@@ -6,6 +6,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { acceptOffer, rejectOffer } from "../redux/slices/offersSlice";
 import { addItem, removeItem } from "../redux/slices/userSlice";
 
@@ -13,6 +14,7 @@ const BACKEND_URL = "http://localhost:3001";
 
 function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const currentOfferId = currentOffer?._id;
 
 	const handleReject = async () => {
@@ -88,7 +90,7 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
 				body: JSON.stringify(tradeBody),
 			});
 
-			const tradeResult = tradeResponse.json();
+			const tradeResult = await tradeResponse.json();
 
             if (!tradeResponse.ok) {
                 console.error("Server error accepting offer:", tradeResult.error);
@@ -119,6 +121,20 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
             }
 
 			dispatch(acceptOffer(currentOfferId));
+
+			// ----- Redirect to chats and start conversation with trading partner -----
+			// Determine which user is the other party in the trade
+			const currentUserId = currentOffer.user1._id; // Assuming user1 is the current user
+			const otherUser = currentOffer.user2;
+			
+			// Navigate to chats with state to start conversation
+			navigate('/chats', {
+				state: {
+					fromAcceptedOffer: true,
+					otherUserId: otherUser._id,
+					otherUsername: otherUser.username
+				}
+			});
 
         } catch (err) {
             console.error("Accept offer error:", err);
