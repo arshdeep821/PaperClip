@@ -5,7 +5,6 @@ import { hash, compare } from "bcrypt";
 import { getRecommendationsForUser } from "../util/recommender.js";
 
 const DEFAULT_USER_RADIUS = 10;
-const HASH_ROUNDS = 10;
 
 const createUser = async (req, res) => {
 	try {
@@ -43,7 +42,10 @@ const createUser = async (req, res) => {
 				.json({ error: "Username already exists." });
 		}
 
-		const hashedPassword = await hash(password, HASH_ROUNDS);
+		const hashedPassword = await hash(
+			password,
+			Math.floor(Math.random() * 10) + 1 // random number between 1 and 10
+		);
 
 		const newUser = new User({
 			username,
