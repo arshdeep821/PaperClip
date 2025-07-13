@@ -76,7 +76,7 @@ const updateTradeStatus = async (req, res) => {
         const { tradeId } = req.params;
         const { status } = req.body;
 
-		const validStatuses = ["pending", "accepted", "rejected", "cancelled"];
+		const validStatuses = ["pending", "accepted", "rejected", "cancelled", "renegotiated"];
 		if (status && !validStatuses.includes(status)) {
 			return res.status(StatusCodes.BAD_REQUEST).json({
 				error: `Invalid status. Must be one of: ${validStatuses}`,

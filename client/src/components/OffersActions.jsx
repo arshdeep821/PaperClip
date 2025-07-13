@@ -11,7 +11,7 @@ import { addItem, removeItem } from "../redux/slices/userSlice";
 
 const BACKEND_URL = "http://localhost:3001";
 
-function OffersActions({ handleLeftButton, handleRightButton, currentOffer, toggleRenegPanel }) {
+function OffersActions({ handleLeftButton, handleRightButton, currentOffer, toggleRenegPanel, renegVisible, handleSubmitReneg }) {
 	const dispatch = useDispatch();
 	const currentOfferId = currentOffer?._id;
 
@@ -62,6 +62,10 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer, togg
 	// TODO:
 	// change status of all other trades involving items in an accepted trade to "canceled"
 	const handleAccept = async () => {
+		if (renegVisible && handleSubmitReneg) {
+			return handleSubmitReneg();
+		}
+
 		if (!currentOfferId) {
 			return; // TODO: handle case with no offer
 		}

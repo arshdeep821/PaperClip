@@ -35,6 +35,15 @@ export const offersSlice = createSlice({
 			// removes the offer from the offers page immediately
 			state.offers = state.offers.filter((trade) => trade._id !== action.payload);
 		},
+		renegOffer: (state, action) => {
+			const trade = state.offers.find((trade) => trade._id === action.payload);
+			if (trade) {
+				trade.status = "renegotiated";
+			}
+
+			// removes the offer from the offers page immediately
+			state.offers = state.offers.filter((trade) => trade._id !== action.payload);
+		}
 	},
 	extraReducers: (builder) => {
 		builder
@@ -53,6 +62,6 @@ export const offersSlice = createSlice({
 	}
 });
 
-export const { rejectOffer, acceptOffer } = offersSlice.actions;
+export const { rejectOffer, acceptOffer, renegOffer } = offersSlice.actions;
 
 export default offersSlice.reducer;
