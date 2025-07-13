@@ -66,7 +66,7 @@ function RenegPanel({ theirId, currOffer }) {
 	return (
 		<div className={styles.renegPanel}>
 			<h3>their items</h3>
-			<TradeFrame items={theirItems} user={"user1"} />
+			<TradeFrame items={theirItems} user={"user1"} currOffer={currOffer} />
 
 			<h3>my items</h3>
 			<TradeFrame items={myItems} user={"user2"} currOffer={currOffer} />

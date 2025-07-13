@@ -21,11 +21,11 @@ function TradeFrame({ items, user, currOffer }) {
 		if (!currOffer) return;
 
 		// items1 and items2 are reversed; TODO: fix our naming
-		currOffer.items2.forEach((item) => handleItemSelection(item, USER1));
-		currOffer.items1.forEach((item) => handleItemSelection(item, USER2));
+		if (user === USER1) currOffer.items2.forEach((item) => handleItemSelection(item));
+		else if (user === USER2) currOffer.items1.forEach((item) => handleItemSelection(item));
 	}, [currOffer]);
 
-	const handleItemSelection = (item, user) => {
+	const handleItemSelection = (item) => {
 		const isSelected = selectedItems.some((selection) => selection._id === item._id);
 		// item is already selected -> remove from trade
 		if (isSelected) {
