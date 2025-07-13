@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import TradeFrame from "./TradeFrame";
 
 const BACKEND_URL = "http://localhost:3001";
+const USER1 = "user1";
+const USER2 = "user2";
 
 function RenegPanel({ theirId, currOffer }) {
 	const myUser = useSelector((state) => state.user);
@@ -32,9 +34,26 @@ function RenegPanel({ theirId, currOffer }) {
 	}, [theirId]);
 
 	const handleSubmitReneg = async () => {
-		if (!table1 || table1.length === 0 || !table2 || table2.length === 0) {
-			console.log("not a valid trade");
-			alert("Please select items for the new trade.");
+		console.log("currOffer:", currOffer);
+		const sameItems = (array1, array2) => (
+			array1.length === array2.length &&
+			array1.every((item1) => array2.some((item2) => item2._id === item1._id))
+		);
+
+		// checks if table1 is the same as currOffer.table1
+		if (sameItems(table1, currOffer.items2) && sameItems(table2, currOffer.items1)) {
+			console.log("the renegotiated offer is the same as the starting one")
+			alert("You are renegotiating a trade with the same starting items!");
+			return;
+		}
+
+		if (!table1 || table1.length === 0) {
+			console.log("not a valid trade: missing/empty table1");
+			alert("Please select the items you would like to trade for.");
+			return;
+		} else if (!table2 || table2.length === 0) {
+			console.log("not a valid trade: missing/empty table2");
+			alert("Please select the items you would like to offer for the new trade.");
 			return;
 		}
 		try {
@@ -44,8 +63,8 @@ function RenegPanel({ theirId, currOffer }) {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					user1:	product.owner._id,
-					user2:	user.id,
+					user1:	theirId,
+					user2:	myUser.id,
 					items1:	table1.map((item) => item._id),
 					items2:	table2.map((item) => item._id),
 				}),
@@ -66,12 +85,12 @@ function RenegPanel({ theirId, currOffer }) {
 	return (
 		<div className={styles.renegPanel}>
 			<h3>their items</h3>
-			<TradeFrame items={theirItems} user={"user1"} currOffer={currOffer} />
+			<TradeFrame items={theirItems} user={USER1} currOffer={currOffer} />
 
 			<h3>my items</h3>
-			<TradeFrame items={myItems} user={"user2"} currOffer={currOffer} />
+			<TradeFrame items={myItems} user={USER2} currOffer={currOffer} />
 
-			<div onClick={handleSubmitReneg}>Confirm Renegotiated Trade</div>
+			<button onClick={handleSubmitReneg}>Confirm Renegotiated Trade</button>
 		</div>
 	);
 }
