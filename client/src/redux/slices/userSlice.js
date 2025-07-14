@@ -118,6 +118,20 @@ export const deleteItem = createAsyncThunk(
 	}
 );
 
+export const deleteUser = createAsyncThunk(
+	"user/deleteUser",
+	async (userId, { rejectWithValue }) => {
+		const response = await fetch(`${BACKEND_URL}/users/${userId}`, {
+			method: "DELETE",
+		});
+		if (!response.ok) {
+			const errorData = await response.json();
+			return rejectWithValue(errorData.error || "Failed to delete user");
+		}
+		return userId;
+	}
+);
+
 export const userSlice = createSlice({
 	name: "user",
 	initialState,
@@ -305,6 +319,28 @@ export const userSlice = createSlice({
 			.addCase(updateUserPreferences.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = action.error.message;
+			})
+			.addCase(deleteUser.pending, (state) => {
+				state.status = "deleting_user";
+			})
+			.addCase(deleteUser.fulfilled, (state) => {
+				state.status = "deleted_user";
+				state.isLoggedIn = false;
+				state.id = null;
+				state.username = null;
+				state.name = null;
+				state.email = null;
+				state.city = null;
+				state.country = null;
+				state.tradingRadius = null;
+				state.inventory = [];
+				state.userPreferences = [];
+				state.createdAt = null;
+				state.error = null;
+			})
+			.addCase(deleteUser.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = action.payload || action.error.message;
 			});
 	},
 });
