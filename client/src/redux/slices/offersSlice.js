@@ -10,7 +10,7 @@ const initialState = {
 export const fetchOffers = createAsyncThunk("offers/fetchOffers", async (userId) => {
 	const res = await fetch(`${BACKEND_URL}/trades/${userId}`)
 	const offers = await res.json()
-	return offers.filter((trade) => trade.status === "pending");
+	return offers.filter((trade) => trade.status === "pending" && trade.user1._id === userId);
 })
 
 export const offersSlice = createSlice({
