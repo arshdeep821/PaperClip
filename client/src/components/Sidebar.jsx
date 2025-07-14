@@ -4,11 +4,11 @@ import Tooltip from "@mui/material/Tooltip";
 
 import ChatIcon from "@mui/icons-material/Chat";
 import AccountBoxRoundedIcon from "@mui/icons-material/AccountBoxRounded";
-import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
 import ExploreIcon from "@mui/icons-material/Explore";
 import PageviewIcon from "@mui/icons-material/Pageview";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HomeFilledIcon from "@mui/icons-material/HomeFilled";
+import BackpackIcon from '@mui/icons-material/Backpack';
 
 function Sidebar() {
 	return (
@@ -44,7 +44,7 @@ function Sidebar() {
 			<div className={styles.iconButton}>
 				<Tooltip title="Inventory" placement="right">
 					<Link to="/inventory" className={styles.link}>
-						<GridViewRoundedIcon fontSize="large" />
+						<BackpackIcon fontSize="large" />
 					</Link>
 				</Tooltip>
 			</div>
