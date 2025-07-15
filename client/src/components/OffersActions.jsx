@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { acceptOffer, rejectOffer } from "../redux/slices/offersSlice";
 import { addItem, removeItem } from "../redux/slices/userSlice";
+import Tooltip from "@mui/material/Tooltip";
 
 const BACKEND_URL = "http://localhost:3001";
 
@@ -38,17 +39,17 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
 				}),
 			});
 
-            const result = await response.json();
+			const result = await response.json();
 
-            if (!response.ok) {
-                console.error("Server error rejecting offer:", result.error);
-            }
+			if (!response.ok) {
+				console.error("Server error rejecting offer:", result.error);
+			}
 
 			dispatch(rejectOffer(currentOfferId));
 
-        } catch (err) {
-            console.error("Reject offer error:", err);
-        }
+		} catch (err) {
+			console.error("Reject offer error:", err);
+		}
 	};
 
 	// TODO:
@@ -92,9 +93,9 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
 
 			const tradeResult = await tradeResponse.json();
 
-            if (!tradeResponse.ok) {
-                console.error("Server error accepting offer:", tradeResult.error);
-            }
+			if (!tradeResponse.ok) {
+				console.error("Server error accepting offer:", tradeResult.error);
+			}
 
 			// ----- add/remove traded items from user's inventory in redux -----
 			currentOffer.items1.forEach((item) => dispatch(removeItem(item._id)));
@@ -114,11 +115,11 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
 				}),
 			});
 
-            const statusResult = await statusResponse.json();
+			const statusResult = await statusResponse.json();
 
-            if (!statusResponse.ok) {
-                console.error("Server error accepting offer:", statusResult.error);
-            }
+			if (!statusResponse.ok) {
+				console.error("Server error accepting offer:", statusResult.error);
+			}
 
 			dispatch(acceptOffer(currentOfferId));
 
@@ -126,7 +127,7 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
 			// Determine which user is the other party in the trade
 			const currentUserId = currentOffer.user1._id; // Assuming user1 is the current user
 			const otherUser = currentOffer.user2;
-			
+
 			// Navigate to chats with state to start conversation
 			navigate('/chats', {
 				state: {
@@ -136,9 +137,9 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
 				}
 			});
 
-        } catch (err) {
-            console.error("Accept offer error:", err);
-        }
+		} catch (err) {
+			console.error("Accept offer error:", err);
+		}
 	};
 
 	return (
@@ -149,15 +150,21 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer }) {
 				<ArrowBackIosIcon fontSize="large" />
 			</div>
 			<div className={styles.actionButtons}>
-				<div className={styles.rejectButton} onClick={handleReject}>
-					<CloseIcon fontSize="large" />
-				</div>
-				<div className={styles.renegButton} onClick={handleReneg}>
-					<QuestionMarkIcon fontSize="large" />
-				</div>
-				<div className={styles.acceptButton} onClick={handleAccept}>
-					<CheckIcon fontSize="large" />
-				</div>
+				<Tooltip title="Reject" arrow>
+					<div className={styles.rejectButton} onClick={handleReject}>
+						<CloseIcon fontSize="large" />
+					</div>
+				</Tooltip>
+				<Tooltip title="Renegotiate" arrow>
+					<div className={styles.renegButton} onClick={handleReneg}>
+						<QuestionMarkIcon fontSize="large" />
+					</div>
+				</Tooltip>
+				<Tooltip title="Accept" arrow>
+					<div className={styles.acceptButton} onClick={handleAccept}>
+						<CheckIcon fontSize="large" />
+					</div>
+				</Tooltip>
 			</div>
 			<div className={styles.optionButton} onClick={() => {
 				handleRightButton();
