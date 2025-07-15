@@ -14,7 +14,7 @@ const ProductItem = ({ item }) => {
 					/>
 					<div className={styles.overlay}>
 						<div className={styles.overlayText}>
-							{item.name}, {item.description},
+							{item.name} - {item.condition}
 						</div>
 						<br />
 						<div className={styles.overlayText}>
@@ -22,7 +22,7 @@ const ProductItem = ({ item }) => {
 						</div>
 						<br />
 						<div className={styles.overlayText}>
-							{item.category.name}
+							@{item.owner.username}
 						</div>
 					</div>
 				</div>
