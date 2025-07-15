@@ -24,7 +24,10 @@ function Messages() {
 
 	// Check if we're coming from an accepted offer
 	useEffect(() => {
-		if (location.state?.fromAcceptedOffer && location.state?.otherUserId) {
+		if (
+			(location.state?.fromAcceptedOffer && location.state?.otherUserId) ||
+			(location.state?.fromUserSearch && location.state?.otherUserId)
+		) {
 			const otherUserId = location.state.otherUserId;
 			const otherUsername = location.state.otherUsername;
 
