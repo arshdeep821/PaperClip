@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import Category from "../models/Category.js";
 import Item from "../models/Item.js";
 import Trade from "../models/Trade.js";
+import Message from "../models/Message.js";
 import { hash } from "bcrypt";
 
 const categories = [
@@ -63,6 +64,7 @@ const adminItems = [
 
 hashedPassword = await hash("password", HASH_ROUNDS);
 const execUser = {
+	_id: new mongoose.Types.ObjectId("123456789012345678901235"),
 	username: "Exec",
 	name: "Exec Name",
 	email: "exec@example.com",
@@ -121,6 +123,7 @@ const dummyUser = {
 const seedDatabase = async () => {
 	try {
 		// Clear existing data
+		await Message.deleteMany({});
 		await Trade.deleteMany({});
 		await User.deleteMany({});
 		await Category.deleteMany({});

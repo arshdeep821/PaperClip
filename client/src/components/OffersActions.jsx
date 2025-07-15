@@ -6,6 +6,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { acceptOffer, rejectOffer, renegOffer } from "../redux/slices/offersSlice";
 import { addItem, removeItem } from "../redux/slices/userSlice";
 import { resetTrade } from "../redux/slices/tradeSlice";
@@ -14,6 +15,7 @@ const BACKEND_URL = "http://localhost:3001";
 
 function OffersActions({ handleLeftButton, handleRightButton, currentOffer, toggleRenegPanel, renegVisible }) {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const currentOfferId = currentOffer?._id;
 	const myUser = useSelector((state) => state.user);
 	const table1 = useSelector((state) => state.trade.table1 || []);
@@ -176,7 +178,7 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer, togg
 				body: JSON.stringify(tradeBody),
 			});
 
-			const tradeResult = tradeResponse.json();
+			const tradeResult = await tradeResponse.json();
 
             if (!tradeResponse.ok) {
                 console.error("Server error accepting offer:", tradeResult.error);
@@ -207,6 +209,20 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer, togg
             }
 
 			dispatch(acceptOffer(currentOfferId));
+
+			// ----- Redirect to chats and start conversation with trading partner -----
+			// Determine which user is the other party in the trade
+			const currentUserId = currentOffer.user1._id; // Assuming user1 is the current user
+			const otherUser = currentOffer.user2;
+			
+			// Navigate to chats with state to start conversation
+			navigate('/chats', {
+				state: {
+					fromAcceptedOffer: true,
+					otherUserId: otherUser._id,
+					otherUsername: otherUser.username
+				}
+			});
 
         } catch (err) {
             console.error("Accept offer error:", err);

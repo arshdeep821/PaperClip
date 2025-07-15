@@ -3,10 +3,10 @@ import styles from "../styles/NavBoxes.module.css";
 
 import ChatIcon from "@mui/icons-material/Chat";
 import AccountBoxRoundedIcon from "@mui/icons-material/AccountBoxRounded";
-import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
 import ExploreIcon from "@mui/icons-material/Explore";
 import PageviewIcon from "@mui/icons-material/Pageview";
 import SettingsIcon from "@mui/icons-material/Settings";
+import BackpackIcon from '@mui/icons-material/Backpack';
 
 function NavBoxes() {
 	return (
@@ -43,7 +43,7 @@ function NavBoxes() {
 				<Link to="/inventory" className={styles.link}>
 					<div className={styles.buttonBox}>
 						<div className={styles.iconButton}>
-							<GridViewRoundedIcon fontSize="large" />
+							<BackpackIcon fontSize="large" />
 						</div>
 						<p className={styles.description}>Your Inventory</p>
 					</div>
