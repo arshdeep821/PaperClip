@@ -9,6 +9,7 @@ import Sidebar from "../components/Sidebar";
 import UploadItemForm from "../components/UploadItemForm";
 import EditItemForm from "../components/EditItemForm";
 import UserTrades from "../components/UserTrades";
+import ItemHistoryPopup from "../components/ItemHistoryPopup";
 import { removeItem, updateItem, deleteItem } from "../redux/slices/userSlice";
 
 const BACKEND_URL = "http://localhost:3001";
@@ -21,6 +22,7 @@ const Inventory = () => {
     const [deleteMode, setDeleteMode] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
     const [showTrades, setShowTrades] = useState(false);
+    const [historyItem, setHistoryItem] = useState(null);
 
     const dispatch = useDispatch();
 
@@ -130,6 +132,13 @@ const Inventory = () => {
                 />
             )}
 
+            {historyItem && (
+                <ItemHistoryPopup
+                    item={historyItem}
+                    onClose={() => setHistoryItem(null)}
+                />
+            )}
+
             {showTrades ? (
                 <UserTrades />
             ) : (
@@ -178,6 +187,7 @@ const Inventory = () => {
                                                 : [...prev, id]
                                         );
                                     }}
+                                    onViewHistory={(item) => setHistoryItem(item)}
                                 />
                             ))}
                         </div>
