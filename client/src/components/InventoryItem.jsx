@@ -4,11 +4,15 @@ import { Checkbox } from "@mui/material";
 
 const BACKEND_URL = "http://localhost:3001";
 
-function InventoryItem({ item, onEdit, deleteMode, onSelect }) {
-	const [deleteStatus, setDeleteStatus] = useState(false);
+function InventoryItem({ item, onEdit, deleteMode, onSelect, onViewHistory }) {
+    const [deleteStatus, setDeleteStatus] = useState(false);
 
     const handleEdit = () => {
         onEdit(item)
+    }
+
+    const handleViewHistory = () => {
+        onViewHistory(item)
     }
 
     return (
@@ -42,6 +46,11 @@ function InventoryItem({ item, onEdit, deleteMode, onSelect }) {
                     onClick={() => handleEdit()}
                 >
                     Edit
+                </button>
+                <button
+                    className={`${styles.itemButton} ${styles.editButton}`}
+                    onClick={() => handleViewHistory()}>
+                    View History
                 </button>
             </div>
         </div>
