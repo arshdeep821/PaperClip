@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
 	product: null,
-	table: [],
+	table1: [],
+	table2: [],
 };
 
 export const tradeSlice = createSlice({
@@ -13,17 +14,37 @@ export const tradeSlice = createSlice({
 			state.product = action.payload;
 		},
 		putOnTable: (state, action) => {
-			const itemExists = state.table.some((item) => item._id === action.payload._id);
-			if (!itemExists) {
-				state.table.push(action.payload);
+			switch (action.payload.user) {
+				case "user1": {
+					const itemExists = state.table1.some((item) => item._id === action.payload.item._id);
+					if (!itemExists) {
+						state.table1.push(action.payload.item);
+					}
+					break;
+				}
+				case "user2": {
+					const itemExists = state.table2.some((item) => item._id === action.payload.item._id);
+					if (!itemExists) {
+						state.table2.push(action.payload.item);
+					}
+					break;
+				}
 			}
 		},
 		takeOffTable: (state, action) => {
-			state.table = state.table.filter((item) => item._id !== action.payload);
+			switch (action.payload.user) {
+				case "user1":
+					state.table1 = state.table1.filter((item) => item._id !== action.payload.itemId);
+					break;
+				case "user2":
+					state.table2 = state.table2.filter((item) => item._id !== action.payload.itemId);
+					break;
+			}
 		},
 		resetTrade: (state) => {
 			state.product = null;
-			state.table = [];
+			state.table1 = [];
+			state.table2 = [];
 		},
 	},
 });

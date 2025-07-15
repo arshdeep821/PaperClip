@@ -12,11 +12,11 @@ function BottomOptionButtons({ handleLeftButton, handleRightButton }) {
 	const dispatch = useDispatch();
 
 	const product = useSelector((state) => state.trade?.product);
-	const table = useSelector((state) => state.trade?.table);
+	const table2 = useSelector((state) => state.trade?.table2 || []);
 	const user = useSelector((state) => state.user);
 
 	const handleSubmitTrade = async () => {
-		if (!product || !table || table.length === 0 || !user) {
+		if (!product || !table2 || table2.length === 0 || !user) {
 			console.log("not a valid trade");
 			alert("Please select a product to trade");
 			return;
@@ -31,7 +31,7 @@ function BottomOptionButtons({ handleLeftButton, handleRightButton }) {
 					user1:	product.owner._id,
 					user2:	user.id,
 					items1:	[product._id],
-					items2:	table.map((item) => item._id),
+					items2:	table2.map((item) => item._id),
 				}),
 			});
 

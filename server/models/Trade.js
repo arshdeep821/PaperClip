@@ -28,7 +28,7 @@ const tradeSchema = new Schema(
 		],
 		status: {
 			type: String,
-			enum: ["pending", "accepted", "rejected", "cancelled"],
+			enum: ["pending", "accepted", "rejected", "cancelled", "renegotiated"],
 			default: "pending",
 		},
 	},
