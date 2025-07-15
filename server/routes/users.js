@@ -8,13 +8,17 @@ import {
 	updateUser,
 	updateUserPreferences,
 	getRecommendationByUserID,
+	deleteUser,
+	updateUserPrivacy,
+	updateUserPassword,
 } from "../controllers/users.js";
 
 router.route("/").post(createUser);
 router.route("/login").post(loginUser);
-router.route("/:id").get(getUser);
-router.route("/:id").put(updateUser);
+router.route("/:id").get(getUser).put(updateUser).delete(deleteUser);
 router.route("/:id/preferences").patch(updateUserPreferences);
+router.route("/:id/privacy").patch(updateUserPrivacy);
 router.route("/:id/recommend").get(getRecommendationByUserID);
+router.route("/:id/password").patch(updateUserPassword);
 
 export default router;

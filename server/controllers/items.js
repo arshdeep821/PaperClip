@@ -260,6 +260,9 @@ const searchProducts = async (req, res) => {
             { $match: { $and: andConditions } },
         ]);
 
+        // Filter out items from private users
+        const filteredItems = items.filter(item => !item.owner.isPrivate);
+
         // Build user search conditions
         const userConditions = terms.map((term) => ({
             $or: [
@@ -270,10 +273,11 @@ const searchProducts = async (req, res) => {
             ],
         }));
 
-        // Exclude current user from user results
+        // Exclude current user and private users from user results
         const users = await User.find({
             $and: [
                 { _id: { $ne: userObjectId } },
+                { isPrivate: false },
                 ...userConditions
             ]
         })
@@ -283,7 +287,7 @@ const searchProducts = async (req, res) => {
                 populate: { path: "category" }
             });
 
-        res.status(200).json({ items, users });
+        res.status(200).json({ items: filteredItems, users });
 
     } catch (error) {
         console.error("Error searching products:", error);

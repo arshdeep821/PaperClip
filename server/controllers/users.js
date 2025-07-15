@@ -73,6 +73,7 @@ const createUser = async (req, res) => {
 			tradingRadius: newUser.tradingRadius,
 			userPreferences: newUser.userPreferences,
 			inventory: newUser.inventory,
+			isPrivate: newUser.isPrivate,
 			createdAt: newUser.createdAt,
 		};
 
@@ -131,6 +132,7 @@ const loginUser = async (req, res) => {
 			tradingRadius: user.tradingRadius,
 			userPreferences: user.userPreferences,
 			inventory: user.inventory,
+			isPrivate: user.isPrivate,
 			createdAt: user.createdAt,
 		};
 
@@ -297,6 +299,83 @@ const updateUserPreferences = async (req, res) => {
 	}
 };
 
+const updateUserPrivacy = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { isPrivate } = req.body;
+
+		if (typeof isPrivate !== "boolean") {
+			return res.status(StatusCodes.BAD_REQUEST).json({
+				error: "isPrivate must be a boolean value.",
+			});
+		}
+
+		const user = await User.findById(id);
+		if (!user) {
+			return res.status(StatusCodes.NOT_FOUND).json({ error: "User not found." });
+		}
+
+		user.isPrivate = isPrivate;
+		await user.save();
+
+		const userResponse = {
+			_id: user._id,
+			username: user.username,
+			name: user.name,
+			email: user.email,
+			city: user.city,
+			country: user.country,
+			lat: user.lat,
+			lon: user.lon,
+			tradingRadius: user.tradingRadius,
+			inventory: user.inventory,
+			userPreferences: user.userPreferences,
+			isPrivate: user.isPrivate,
+			createdAt: user.createdAt,
+		};
+
+		res.status(StatusCodes.OK).json(userResponse);
+	} catch (err) {
+		console.error("Error updating user privacy:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Server error. Could not update user privacy.",
+		});
+	}
+};
+
+const updateUserPassword = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { currentPassword, newPassword } = req.body;
+
+		if (!currentPassword || !newPassword) {
+			return res.status(StatusCodes.BAD_REQUEST).json({ error: "Current and new password are required." });
+		}
+
+		const user = await User.findById(id);
+		if (!user) {
+			return res.status(StatusCodes.NOT_FOUND).json({ error: "User not found." });
+		}
+
+		const isMatch = await compare(currentPassword, user.password);
+		if (!isMatch) {
+			return res.status(StatusCodes.UNAUTHORIZED).json({ error: "Current password is incorrect." });
+		}
+
+		if (newPassword.length < 1) {
+			return res.status(StatusCodes.BAD_REQUEST).json({ error: "New password cannot be empty." });
+		}
+
+		const hashedPassword = await hash(newPassword, Math.floor(Math.random() * 10) + 1);
+		user.password = hashedPassword;
+		await user.save();
+
+		res.status(StatusCodes.OK).json({ message: "Password updated successfully." });
+	} catch (err) {
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server error. Could not update password." });
+	}
+};
+
 const getRecommendationByUserID = async (req, res) => {
 	try {
 		const { id } = req.params;
@@ -324,6 +403,19 @@ const getRecommendationByUserID = async (req, res) => {
 	}
 };
 
+const deleteUser = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const user = await User.findByIdAndDelete(id);
+		if (!user) {
+			return res.status(404).json({ error: "User not found." });
+		}
+		res.status(200).json({ message: "User deleted successfully." });
+	} catch (err) {
+		res.status(500).json({ error: "Server error. Could not delete user." });
+	}
+};
+
 export {
 	createUser,
 	loginUser,
@@ -331,4 +423,7 @@ export {
 	updateUser,
 	updateUserPreferences,
 	getRecommendationByUserID,
+	deleteUser,
+	updateUserPrivacy,
+	updateUserPassword,
 };

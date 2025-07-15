@@ -17,6 +17,7 @@ import Search from "./pages/Search";
 import Users from "./pages/Users";
 import NotFoundPage from "./pages/NotFoundPage";
 import Messages from "./pages/Messages";
+import Settings from "./pages/Settings";
 
 function App() {
 	return (
@@ -37,6 +38,7 @@ function App() {
 					<Route path="/search" element={<Search />} />
 					<Route path="/users/:username" element={<Users />} />
 					<Route path="/chats" element={<Messages />} />
+					<Route path="/settings" element={<Settings />} />
 					<Route path="/*" element={<NotFoundPage />} />
 				</Routes>
 			</Router>

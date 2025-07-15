@@ -95,6 +95,24 @@ export const updateUserPreferences = createAsyncThunk(
 	}
 );
 
+export const updateUserPrivacy = createAsyncThunk(
+	"user/updateUserPrivacy",
+	async ({ userId, isPrivate }, { rejectWithValue }) => {
+		const response = await fetch(`${BACKEND_URL}/users/${userId}/privacy`, {
+			method: "PATCH",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ isPrivate }),
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json();
+			return rejectWithValue(errorData.error || "Failed to update privacy setting");
+		}
+
+		return await response.json();
+	}
+);
+
 export const uploadItem = createAsyncThunk("items/uploadItem", async (data) => {
 	const response = await fetch(`${BACKEND_URL}/items`, {
 		method: "POST",
@@ -115,6 +133,20 @@ export const deleteItem = createAsyncThunk(
 			throw new Error(`Error deleting item with id: ${itemId}`);
 		}
 		return itemId;
+	}
+);
+
+export const deleteUser = createAsyncThunk(
+	"user/deleteUser",
+	async (userId, { rejectWithValue }) => {
+		const response = await fetch(`${BACKEND_URL}/users/${userId}`, {
+			method: "DELETE",
+		});
+		if (!response.ok) {
+			const errorData = await response.json();
+			return rejectWithValue(errorData.error || "Failed to delete user");
+		}
+		return userId;
 	}
 );
 
@@ -305,6 +337,40 @@ export const userSlice = createSlice({
 			.addCase(updateUserPreferences.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = action.error.message;
+			})
+			.addCase(deleteUser.pending, (state) => {
+				state.status = "deleting_user";
+			})
+			.addCase(deleteUser.fulfilled, (state) => {
+				state.status = "deleted_user";
+				state.isLoggedIn = false;
+				state.id = null;
+				state.username = null;
+				state.name = null;
+				state.email = null;
+				state.city = null;
+				state.country = null;
+				state.tradingRadius = null;
+				state.inventory = [];
+				state.userPreferences = [];
+				state.createdAt = null;
+				state.error = null;
+			})
+			.addCase(deleteUser.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = action.payload || action.error.message;
+			})
+			.addCase(updateUserPrivacy.pending, (state) => {
+				state.status = "updating_privacy";
+			})
+			.addCase(updateUserPrivacy.fulfilled, (state, action) => {
+				state.status = "updated_privacy";
+				state.isPrivate = action.payload.isPrivate;
+				state.error = null;
+			})
+			.addCase(updateUserPrivacy.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = action.payload || action.error.message;
 			});
 	},
 });
