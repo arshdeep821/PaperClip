@@ -28,6 +28,11 @@ const Inventory = () => {
     const dispatch = useDispatch();
 
 	useEffect(() => {
+		setSelectedItems([]);
+		setDeleteMode(false);
+	}, [showTrades]);
+
+	useEffect(() => {
 		const fetchInventoryItems = async () => {
 			try {
 				const response = await fetch(`${BACKEND_URL}/users/${userId}`);

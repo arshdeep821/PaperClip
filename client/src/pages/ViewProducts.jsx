@@ -10,7 +10,7 @@ import BottomOptionButtons from "../components/BottomOptionButtons";
 import Bag from "../components/Bag";
 import { getRecommendedProducts } from "../redux/slices/productsSlice";
 import { useLocation } from "react-router-dom";
-import { setProduct } from "../redux/slices/tradeSlice";
+import { resetTrade, setProduct } from "../redux/slices/tradeSlice";
 
 const ViewProducts = () => {
 	let products = useSelector((state) => state.products.products);
@@ -22,6 +22,11 @@ const ViewProducts = () => {
 	const NUM_PRODUCTS = products.length || 0;
 
 	const [itemIdx, setItemIdx] = useState(0);
+
+	// clears any previously selected items on loading the products page
+	useEffect(() => {
+		dispatch(resetTrade());
+	});
 
 	useEffect(() => {
 		dispatch(getRecommendedProducts(userId));
