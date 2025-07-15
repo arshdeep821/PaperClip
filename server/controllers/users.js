@@ -73,6 +73,7 @@ const createUser = async (req, res) => {
 			tradingRadius: newUser.tradingRadius,
 			userPreferences: newUser.userPreferences,
 			inventory: newUser.inventory,
+			isPrivate: newUser.isPrivate,
 			createdAt: newUser.createdAt,
 		};
 
@@ -131,6 +132,7 @@ const loginUser = async (req, res) => {
 			tradingRadius: user.tradingRadius,
 			userPreferences: user.userPreferences,
 			inventory: user.inventory,
+			isPrivate: user.isPrivate,
 			createdAt: user.createdAt,
 		};
 
@@ -297,6 +299,50 @@ const updateUserPreferences = async (req, res) => {
 	}
 };
 
+const updateUserPrivacy = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { isPrivate } = req.body;
+
+		if (typeof isPrivate !== "boolean") {
+			return res.status(StatusCodes.BAD_REQUEST).json({
+				error: "isPrivate must be a boolean value.",
+			});
+		}
+
+		const user = await User.findById(id);
+		if (!user) {
+			return res.status(StatusCodes.NOT_FOUND).json({ error: "User not found." });
+		}
+
+		user.isPrivate = isPrivate;
+		await user.save();
+
+		const userResponse = {
+			_id: user._id,
+			username: user.username,
+			name: user.name,
+			email: user.email,
+			city: user.city,
+			country: user.country,
+			lat: user.lat,
+			lon: user.lon,
+			tradingRadius: user.tradingRadius,
+			inventory: user.inventory,
+			userPreferences: user.userPreferences,
+			isPrivate: user.isPrivate,
+			createdAt: user.createdAt,
+		};
+
+		res.status(StatusCodes.OK).json(userResponse);
+	} catch (err) {
+		console.error("Error updating user privacy:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Server error. Could not update user privacy.",
+		});
+	}
+};
+
 const getRecommendationByUserID = async (req, res) => {
 	try {
 		const { id } = req.params;
@@ -345,4 +391,5 @@ export {
 	updateUserPreferences,
 	getRecommendationByUserID,
 	deleteUser,
+	updateUserPrivacy,
 };

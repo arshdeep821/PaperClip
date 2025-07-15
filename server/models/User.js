@@ -18,6 +18,7 @@ const UserSchema = new Schema(
 		tradingRadius: { type: Number, required: true, default: 10 },
 		inventory: [{ type: Schema.Types.ObjectId, ref: "Item", default: [] }],
 		userPreferences: { type: [userPreferenceSchema], default: [] },
+		isPrivate: { type: Boolean, default: false },
 	},
 	{ timestamps: true, collection: "Users" }
 );

@@ -1,21 +1,60 @@
 import Sidebar from "../components/Sidebar";
 import styles from "../styles/Settings.module.css";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteUser } from "../redux/slices/userSlice";
+import { deleteUser, updateUserPrivacy } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import ChangePasswordModal from "../components/ChangePasswordModal";
 
 function Settings() {
     const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [showPrivacyDropdown, setShowPrivacyDropdown] = useState(false);
+    const [privacySetting, setPrivacySetting] = useState(user.isPrivate ? "private" : "public");
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
 
     const handleDeleteAccount = async () => {
         if (!window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) return;
         try {
             await dispatch(deleteUser(user.id)).unwrap();
             navigate("/login");
-        } catch (err) {
+        } catch {
             alert("Failed to delete account.");
+        }
+    };
+
+    const handlePrivacyChange = async (setting) => {
+        const isPrivate = setting === "private";
+        try {
+            await dispatch(updateUserPrivacy({ userId: user.id, isPrivate })).unwrap();
+            setPrivacySetting(setting);
+            setShowPrivacyDropdown(false);
+        } catch {
+            alert("Failed to update privacy setting.");
+        }
+    };
+
+    const handlePasswordChange = async (formData) => {
+        try {
+            const response = await fetch(`http://localhost:3001/users/${user.id}/password`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    currentPassword: formData.currentPassword,
+                    newPassword: formData.newPassword,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Failed to change password");
+            }
+
+            alert("Password changed successfully!");
+        } catch (error) {
+            alert(error.message || "Failed to change password. Please try again.");
+            throw error;
         }
     };
 
@@ -31,12 +70,40 @@ function Settings() {
                         <h2 className={styles.sectionTitle}>Account Settings</h2>
                     </div>
                     <div className={styles.buttonGroup}>
-                        <button className={styles.settingsButton}>Privacy Settings</button>
+                        <div className={styles.settingItem}>
+                            <button
+                                className={styles.settingsButton}
+                                onClick={() => setShowPrivacyDropdown(!showPrivacyDropdown)}
+                            >
+                                Privacy Settings: {privacySetting}
+                            </button>
+                            {showPrivacyDropdown && (
+                                <div className={styles.dropdown}>
+                                    <button
+                                        className={`${styles.dropdownItem} ${privacySetting === "public" ? styles.active : ""}`}
+                                        onClick={() => handlePrivacyChange("public")}
+                                    >
+                                        Public
+                                    </button>
+                                    <button
+                                        className={`${styles.dropdownItem} ${privacySetting === "private" ? styles.active : ""}`}
+                                        onClick={() => handlePrivacyChange("private")}
+                                    >
+                                        Private
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                         <button className={styles.settingsButton} onClick={handleDeleteAccount}>Delete Account</button>
-                        <button className={styles.settingsButton}>Change Password</button>
+                        <button className={styles.settingsButton} onClick={() => setShowPasswordModal(true)}>Change Password</button>
                     </div>
                 </section>
             </div>
+            <ChangePasswordModal
+                isOpen={showPasswordModal}
+                onClose={() => setShowPasswordModal(false)}
+                onSubmit={handlePasswordChange}
+            />
         </main>
     );
 }

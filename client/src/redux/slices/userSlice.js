@@ -95,6 +95,24 @@ export const updateUserPreferences = createAsyncThunk(
 	}
 );
 
+export const updateUserPrivacy = createAsyncThunk(
+	"user/updateUserPrivacy",
+	async ({ userId, isPrivate }, { rejectWithValue }) => {
+		const response = await fetch(`${BACKEND_URL}/users/${userId}/privacy`, {
+			method: "PATCH",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ isPrivate }),
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json();
+			return rejectWithValue(errorData.error || "Failed to update privacy setting");
+		}
+
+		return await response.json();
+	}
+);
+
 export const uploadItem = createAsyncThunk("items/uploadItem", async (data) => {
 	const response = await fetch(`${BACKEND_URL}/items`, {
 		method: "POST",
@@ -339,6 +357,18 @@ export const userSlice = createSlice({
 				state.error = null;
 			})
 			.addCase(deleteUser.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = action.payload || action.error.message;
+			})
+			.addCase(updateUserPrivacy.pending, (state) => {
+				state.status = "updating_privacy";
+			})
+			.addCase(updateUserPrivacy.fulfilled, (state, action) => {
+				state.status = "updated_privacy";
+				state.isPrivate = action.payload.isPrivate;
+				state.error = null;
+			})
+			.addCase(updateUserPrivacy.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = action.payload || action.error.message;
 			});
