@@ -10,12 +10,13 @@ import UploadItemForm from "../components/UploadItemForm";
 import EditItemForm from "../components/EditItemForm";
 import UserTrades from "../components/UserTrades";
 import ItemHistoryPopup from "../components/ItemHistoryPopup";
-import { removeItem, updateItem, deleteItem } from "../redux/slices/userSlice";
+import { removeItem, updateItem, deleteItem, setInventory } from "../redux/slices/userSlice";
 
 const BACKEND_URL = "http://localhost:3001";
 
 const Inventory = () => {
     const items = useSelector((state) => state.user.inventory || []);
+	const userId = useSelector((state) => state.user.id);
 
     const [showForm, setShowForm] = useState(false);
     const [editItem, setEditItem] = useState(null);
@@ -25,6 +26,21 @@ const Inventory = () => {
     const [historyItem, setHistoryItem] = useState(null);
 
     const dispatch = useDispatch();
+
+	useEffect(() => {
+		const fetchInventoryItems = async () => {
+			try {
+				const response = await fetch(`${BACKEND_URL}/users/${userId}`);
+				const data = await response.json();
+
+				dispatch(setInventory(data.inventory));
+			} catch (err) {
+				console.error(`Error retrieving inventory items for user:`, err);
+			}
+		};
+
+		fetchInventoryItems();
+	}, [userId]);
 
     const handleEditSubmit = async (formData) => {
         const data = new FormData()

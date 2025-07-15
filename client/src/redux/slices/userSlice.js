@@ -183,8 +183,8 @@ export const userSlice = createSlice({
 				item.condition = condition;
 			}
 		},
-		setItems: (state, action) => {
-			state.items = action.payload;
+		setInventory: (state, action) => {
+			state.inventory = action.payload;
 		},
 	},
 	extraReducers: (builder) => {
@@ -316,7 +316,7 @@ export const {
 	addItem,
 	removeItem,
 	updateItem,
-	setItems,
+	setInventory,
 } = userSlice.actions;
 
 export default userSlice.reducer;
