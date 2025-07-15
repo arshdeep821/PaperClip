@@ -343,6 +343,39 @@ const updateUserPrivacy = async (req, res) => {
 	}
 };
 
+const updateUserPassword = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { currentPassword, newPassword } = req.body;
+
+		if (!currentPassword || !newPassword) {
+			return res.status(StatusCodes.BAD_REQUEST).json({ error: "Current and new password are required." });
+		}
+
+		const user = await User.findById(id);
+		if (!user) {
+			return res.status(StatusCodes.NOT_FOUND).json({ error: "User not found." });
+		}
+
+		const isMatch = await compare(currentPassword, user.password);
+		if (!isMatch) {
+			return res.status(StatusCodes.UNAUTHORIZED).json({ error: "Current password is incorrect." });
+		}
+
+		if (newPassword.length < 1) {
+			return res.status(StatusCodes.BAD_REQUEST).json({ error: "New password cannot be empty." });
+		}
+
+		const hashedPassword = await hash(newPassword, Math.floor(Math.random() * 10) + 1);
+		user.password = hashedPassword;
+		await user.save();
+
+		res.status(StatusCodes.OK).json({ message: "Password updated successfully." });
+	} catch (err) {
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server error. Could not update password." });
+	}
+};
+
 const getRecommendationByUserID = async (req, res) => {
 	try {
 		const { id } = req.params;
@@ -392,4 +425,5 @@ export {
 	getRecommendationByUserID,
 	deleteUser,
 	updateUserPrivacy,
+	updateUserPassword,
 };
