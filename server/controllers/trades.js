@@ -220,4 +220,17 @@ const getHistory = async (req, res) => {
     }
 };
 
-export { createTrade, getTradesByUser1Id, getTradesByUser2Id, updateTradeStatus, executeTrade, getHistory };
+const getAllPendingTrades = async (req, res) => {
+	try {
+		const trades = await Trade.find({
+			status: "pending",
+		});
+
+		res.status(StatusCodes.OK).json(trades);
+	} catch (err) {
+		console.error("Error fetching pending trades:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal server error" });
+	}
+};
+
+export { createTrade, getTradesByUser1Id, getTradesByUser2Id, updateTradeStatus, executeTrade, getHistory, getAllPendingTrades };
