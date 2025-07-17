@@ -49,6 +49,7 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer, togg
 			alert("Please select the items you would like to offer for the new trade.");
 			return false;
 		}
+
 		try {
 			const response = await fetch(`${BACKEND_URL}/trades/`, {
 				method: "POST",
@@ -117,11 +118,73 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer, togg
 		toggleRenegPanel();
 	};
 
-	// TODO:
-	// change status of all other trades involving items in an accepted trade to "canceled"
+	const cancelConflictingTrades = async () => {
+		const tradedItemIds = new Set([
+			...currentOffer.items1.map((item) => String(item._id)),
+			...currentOffer.items2.map((item) => String(item._id))
+		]);
+
+		const allTradesResponse = await fetch(`${BACKEND_URL}/trades/`);
+		const allTrades = await allTradesResponse.json();
+
+		if (!allTradesResponse.ok) {
+			console.error("Error fetching pending trades:", allTrades.error);
+			return;
+		}
+
+		const conflictingTrades = allTrades.filter((trade) => {
+			if (trade._id === currentOfferId) return false;
+
+			const itemIds = [
+				...(trade.items1 || []).map((itemId) => String(itemId)),
+				...(trade.items2 || []).map((itemId) => String(itemId)),
+			];
+
+			return itemIds.some((id) => tradedItemIds.has(id));
+		});
+
+		await Promise.all(
+			conflictingTrades.map((trade) =>
+				fetch(`${BACKEND_URL}/trades/${trade._id}`, {
+					method: "PATCH",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						status: "cancelled"
+					}),
+				}).catch((err) =>
+					console.error(`Failed to cancel trade ${trade._id}:`, err)
+				)
+			)
+		);
+	};
+
+	const swapItemOwners = async () => {
+		const tradeBody = {
+			user1Id: currentOffer.user1._id,
+			user2Id: currentOffer.user2._id,
+			items1Id: currentOffer.items1.map((item) => item._id),
+			items2Id: currentOffer.items2.map((item) => item._id),
+		};
+
+		const tradeResponse = await fetch(`${BACKEND_URL}/trades/execute`, {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(tradeBody),
+		});
+
+		const tradeResult = await tradeResponse.json();
+
+		if (!tradeResponse.ok) {
+			console.error("Server error accepting offer:", tradeResult.error);
+		}
+	};
+
 	const handleAccept = async () => {
 		if (renegVisible) {
-			//await handleSubmitReneg();
 			const submitted = await handleSubmitReneg();
 			if (submitted) {
 				try {
@@ -163,34 +226,15 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer, togg
 		}
 
 		try {
+			// ----- change status of all other trades containing the traded items to "cancelled"
+			await cancelConflictingTrades();
+
 			// ----- swap items owners -----
-			const tradeBody = {
-				user1Id: currentOffer.user1._id,
-				user2Id: currentOffer.user2._id,
-				items1Id: currentOffer.items1.map((item) => item._id),
-				items2Id: currentOffer.items2.map((item) => item._id),
-			};
-
-			const tradeResponse = await fetch(`${BACKEND_URL}/trades/execute`, {
-				method: "PATCH",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(tradeBody),
-			});
-
-			const tradeResult = await tradeResponse.json();
-
-			if (!tradeResponse.ok) {
-				console.error("Server error accepting offer:", tradeResult.error);
-			}
+			await swapItemOwners();
 
 			// ----- add/remove traded items from user's inventory in redux -----
 			currentOffer.items1.forEach((item) => dispatch(removeItem(item._id)));
 			currentOffer.items2.forEach((item) => dispatch(addItem(item)));
-
-			// ----- change status to "canceled" or delete all trades with items involved
-
 
 			// ----- update trade status to "accepted" -----
 			const statusResponse = await fetch(`${BACKEND_URL}/trades/${currentOfferId}`, {
@@ -229,11 +273,6 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer, togg
 			console.error("Accept offer error:", err);
 		}
 	};
-
-	//const offers = useSelector((state) => state.offers);
-	//const handleTest = () => {
-	//	console.log(offers);
-	//};
 
 	return (
 		<div className={styles.bottomButtons}>
