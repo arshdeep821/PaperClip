@@ -88,6 +88,7 @@ const updateTradeStatus = async (req, res) => {
 			"rejected",
 			"cancelled",
 			"renegotiated",
+			"successful",
 		];
 
 		if (status && !validStatuses.includes(status)) {
@@ -103,6 +104,13 @@ const updateTradeStatus = async (req, res) => {
 				.json({ error: "Trade not found." });
 		}
 		trade.status = status;
+
+		if (status === "accepted") {
+			trade.tradeConfirmation = {
+				user1Confirmation: false,
+				user2Confirmation: false,
+			};
+		}
 
 		await trade.save();
 
@@ -147,17 +155,35 @@ const getTradesByUserId = async (req, res) => {
 
 const executeTrade = async (req, res) => {
 	try {
-		const { user1Id, user2Id, items1Id, items2Id } = req.body;
+		const { user1Id, user2Id, items1Id, items2Id, tradeId } = req.body;
 
 		if (
 			!user1Id ||
 			!user2Id ||
 			!Array.isArray(items1Id) ||
-			!Array.isArray(items2Id)
+			!Array.isArray(items2Id) ||
+			!tradeId
 		) {
 			return res
 				.status(StatusCodes.BAD_REQUEST)
 				.json({ error: "Invalid request body" });
+		}
+
+		const trade = await Trade.findById(tradeId);
+		if (!trade) {
+			return res
+				.status(StatusCodes.NOT_FOUND)
+				.json({ error: "Trade not found." });
+		}
+		if (trade.status !== "accepted") {
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ error: "Trades current status must be accepted." });
+		}
+		if (!trade.tradeConfirmation || !trade.tradeConfirmation.user1Confirmation || !trade.tradeConfirmation.user2Confirmation) {
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ error: "Both users must confirm the trade swap." });
 		}
 
 		const user1 = await User.findById(user1Id);
@@ -223,7 +249,10 @@ const executeTrade = async (req, res) => {
 			item.owner = user1Id;
 		});
 
+		trade.status = "successful";
+
 		await Promise.all([
+			trade.save(),
 			user1.save(),
 			user2.save(),
 			...items1.map((item) => item.save()),
@@ -277,6 +306,79 @@ const getAllPendingTrades = async (req, res) => {
 	}
 };
 
+const getAllTradesForTwoUsers = async (req, res) => {
+	try {
+		const { id1, id2 } = req.params;
+
+		const trades = await Trade.find({
+			$or: [
+				{ $and: [{ user1: id2, user2: id1 }] },
+				{ $and: [{ user1: id1, user2: id2 }] },
+			],
+		})
+			.populate("user1")
+			.populate("user2")
+			.sort({ createdAt: -1 }); // sort by newest first
+
+		res.status(StatusCodes.OK).json(trades);
+	} catch (err) {
+		console.error("Error fetching trades for these 2 users", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Internal server error, could not fetch these 2 users' trades",
+		});
+	}
+}
+
+const updateTradeConfirmationStatus = async (req, res) => {
+	try {
+		const { tradeId } = req.params;
+		const { userId, updatedUserConfirmation } = req.body;
+
+		const trade = await Trade.findById(tradeId);
+		if (!trade) {
+			return res
+				.status(StatusCodes.NOT_FOUND)
+				.json({ error: "Trade not found." });
+		}
+		if (trade.status !== "accepted") {
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ error: "Trades current status must be accepted." });
+		}
+		if (
+			trade.user1.toString() !== userId &&
+			trade.user2.toString() !== userId
+		) {
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ error: "User is not associated with this trade." });
+		}
+
+		const currTradeConfirmation = trade.tradeConfirmation;
+		if (trade.user1.toString() === userId) {
+			trade.tradeConfirmation = {
+				user1Confirmation: updatedUserConfirmation,
+				user2Confirmation: currTradeConfirmation.user2Confirmation,
+			};
+		} else {
+			trade.tradeConfirmation = {
+				user1Confirmation: currTradeConfirmation.user1Confirmation,
+				user2Confirmation: updatedUserConfirmation,
+			};
+		}
+
+		await trade.save();
+
+		res.status(StatusCodes.OK).json({ ...trade.toObject() });
+	} catch (err) {
+		console.error("Error updating trade:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Server error. Could not update trade.",
+		});
+	}
+};
+
+
 export {
 	createTrade,
 	getTradesByUser1Id,
@@ -285,4 +387,6 @@ export {
 	executeTrade,
 	getHistory,
 	getAllPendingTrades,
+	getAllTradesForTwoUsers,
+	updateTradeConfirmationStatus,
 };

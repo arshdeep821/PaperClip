@@ -1,0 +1,37 @@
+.panelBox {
+	height: 100px;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-top: 1px solid #eee;
+	background: #fff;
+}
+
+.panelText {
+	display: flex;
+	flex-direction: column;
+	width: 60%;
+	height: 100%;
+	align-items: center;
+	justify-content: center;
+}
+
+.panelButtons {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.arrowButton {
+	transition: all 0.3s ease;
+	width: 100px;
+	height: 100px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.arrowButton:hover {
+	background-color: rgb(230, 230, 230);
+}
