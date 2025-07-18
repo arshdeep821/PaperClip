@@ -10,6 +10,7 @@ import {
 	getAllPendingTrades,
 	getAllTradesForTwoUsers,
 	updateTradeConfirmationStatus,
+	getTradeById,
 } from "../controllers/trades.js";
 
 router.route("/").post(createTrade);
@@ -20,6 +21,7 @@ router.route("/:userId").get(getTradesByUser1Id);
 router.route("/user2/:id").get(getTradesByUserId);
 router.route("/:tradeId").patch(updateTradeStatus);
 router.route("/:tradeId/confirmation").patch(updateTradeConfirmationStatus);
+router.route("/one/:tradeId").get(getTradeById);
 router.route("/:id1/:id2").get(getAllTradesForTwoUsers);
 
 export default router;

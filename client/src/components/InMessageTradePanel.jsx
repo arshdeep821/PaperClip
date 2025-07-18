@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "../styles/InMessageTradePanel.module.css";
+import UserTradePopup from "./UserTradePopup"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import Button from "@mui/material/Button";
@@ -26,6 +27,7 @@ const InMessageTradePanel = ({ currentUser, otherUser }) => {
 	const [currUserConfirmation, setCurrUserConfirmation] = useState(null);
 	const [otherUserConfirmation, setOtherUserConfirmation] = useState(null);
 	const [otherUsername, setOtherUsername] = useState("");
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
 
 	const loadTrades = () => {
 		getTradesFor2Users(currentUser, otherUser).then((trades) => {
@@ -218,26 +220,34 @@ const InMessageTradePanel = ({ currentUser, otherUser }) => {
 	}
 
 	return (
-		<div className={styles.panelBox}>
-			<div className={styles.arrowButton} onClick={goToPrevTrade}>
-				<ArrowBackIosNewIcon fontSize="large" />
-			</div>
-			<div className={styles.panelText}>
-				<div style={{ fontWeight: "bold" }}>
-					Your Trades with {otherUsername}:
+		<>
+			<div className={styles.panelBox}>
+				<div className={styles.arrowButton} onClick={goToPrevTrade}>
+					<ArrowBackIosNewIcon fontSize="large" />
 				</div>
-				{middleSectionText}
-				<div className={styles.panelButtons}>
-					{middleSectionButton}
-					<Button variant="outlined">
-						TODO: LEADS TO A POPUP: View Trade
-					</Button>
+				<div className={styles.panelText}>
+					<div style={{ fontWeight: "bold" }}>
+						Your Trades with {otherUsername}:
+					</div>
+					{middleSectionText}
+					<div className={styles.panelButtons}>
+						{middleSectionButton}
+						<Button variant="outlined" onClick={() => setIsPopupOpen(true)}>
+							View Trade
+						</Button>
+					</div>
+				</div>
+				<div className={styles.arrowButton} onClick={goToNextTrade}>
+					<ArrowForwardIosIcon fontSize="large" />
 				</div>
 			</div>
-			<div className={styles.arrowButton} onClick={goToNextTrade}>
-				<ArrowForwardIosIcon fontSize="large" />
-			</div>
-		</div>
+			{isPopupOpen && (
+				<UserTradePopup
+					tradeId={currTrade._id}
+					onClose={() => setIsPopupOpen(false)}
+				/>
+			)}
+		</>
 	);
 };
 

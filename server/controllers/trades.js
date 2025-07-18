@@ -378,6 +378,31 @@ const updateTradeConfirmationStatus = async (req, res) => {
 	}
 };
 
+const getTradeById = async (req, res) => {
+	try {
+		const { tradeId } = req.params;
+
+		const trade = await Trade.findById(tradeId)
+			.populate("user1")
+			.populate("user2")
+			.populate("items1")
+			.populate("items2");
+
+		if (!trade) {
+			return res
+				.status(StatusCodes.NOT_FOUND)
+				.json({ error: "Trade not found." });
+		}
+
+		res.status(StatusCodes.OK).json(trade);
+	} catch (err) {
+		console.error("Error getting trade:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Server error. Could not get trade.",
+		});
+	}
+}
+
 
 export {
 	createTrade,
@@ -389,4 +414,5 @@ export {
 	getAllPendingTrades,
 	getAllTradesForTwoUsers,
 	updateTradeConfirmationStatus,
+	getTradeById,
 };
