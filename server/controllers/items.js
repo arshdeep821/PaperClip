@@ -284,7 +284,10 @@ const searchProducts = async (req, res) => {
             .select("-password")
             .populate({
                 path: "inventory",
-                populate: { path: "category" }
+                populate: [
+                    { path: "category" },
+                    { path: "owner" }
+                ]
             });
 
         res.status(200).json({ items: filteredItems, users });
