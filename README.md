@@ -211,5 +211,6 @@ The app runs on http://localhost:5173/
 | Chat          | Message     | 1,2,3,4,5,6,7,8,9      | None Executed                    | Rendered as text   |
 
 #### Additional Tests - Search Page
-- Inputs such as `.*` or `^.*$` or `(a+)+` is able to MATCH with ALL ITEMS/USERS and returns all users and items and if you return an incomplete regex such as `(a+` then it crashes the entire search page
+- Inputs such as `.*` or `^.*$` or `(a+)+` are able to MATCH with ALL ITEMS/USERS and returns all users and items.
+- If you return an incomplete regex such as `(a+` then it crashes the entire search page
 - By adding a layer of query sanitization to the search logic, inputs like the ones described above do not impact the results returned or crashing the search page
