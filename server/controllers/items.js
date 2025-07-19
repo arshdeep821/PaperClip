@@ -6,6 +6,7 @@ import { StatusCodes } from "http-status-codes";
 import fs from "fs"
 import path from "path"
 import mongoose from "mongoose";
+import { escapeRegex } from "../util/sanitization.js";
 
 import { refreshModel } from "../util/recommender.js";
 
@@ -217,15 +218,21 @@ const searchProducts = async (req, res) => {
         const terms = query.trim().split(/\s+/);
 
         // Build the $and array of OR conditions for each term
-        const andConditions = terms.map((term) => ({
-            $or: [
-                { name: { $regex: term, $options: "i" } },
-                { description: { $regex: term, $options: "i" } },
-                { condition: { $regex: term, $options: "i" } },
-                { "owner.username": { $regex: term, $options: "i" } },
-                { "category.name": { $regex: term, $options: "i" } },
-            ],
-        }));
+        const andConditions = terms.map((term) => {
+            // ESCAPE THE USER INPUT TO PREVENT REGEX INJECTION
+            const escapedTerm = escapeRegex(term);
+            
+            return {
+                $or: [
+                    { name: { $regex: escapedTerm, $options: "i" } },
+                    { description: { $regex: escapedTerm, $options: "i" } },
+                    { condition: { $regex: escapedTerm, $options: "i" } },
+                    { "owner.username": { $regex: escapedTerm, $options: "i" } },
+                    { "category.name": { $regex: escapedTerm, $options: "i" } },
+                ],
+            };
+        });
+
 
         if (!mongoose.isValidObjectId(id)) {
             return res.status(400).json({ error: "Invalid user ID." });
@@ -264,14 +271,20 @@ const searchProducts = async (req, res) => {
         const filteredItems = items.filter(item => !item.owner.isPrivate);
 
         // Build user search conditions
-        const userConditions = terms.map((term) => ({
-            $or: [
-                { username: { $regex: term, $options: "i" } },
-                { name: { $regex: term, $options: "i" } },
-                { city: { $regex: term, $options: "i" } },
-                { country: { $regex: term, $options: "i" } },
-            ],
-        }));
+        const userConditions = terms.map((term) => {
+            // Also escape terms for user search
+            const escapedTerm = escapeRegex(term);
+            
+            return {
+                $or: [
+                    { username: { $regex: escapedTerm, $options: "i" } },
+                    { name: { $regex: escapedTerm, $options: "i" } },
+                    { city: { $regex: escapedTerm, $options: "i" } },
+                    { country: { $regex: escapedTerm, $options: "i" } },
+                ],
+            };
+        });
+
 
         // Exclude current user and private users from user results
         const users = await User.find({
