@@ -6,6 +6,7 @@ import Sidebar from "../components/Sidebar";
 import styles from "../styles/Messages.module.css";
 import SendIcon from "@mui/icons-material/Send";
 import corgiImage from "../assets/corgi.jpg";
+import InMessageTradePanel from "../components/InMessageTradePanel";
 
 const socket = io("http://localhost:3001");
 const BACKEND_URL = "http://localhost:3001";
@@ -326,6 +327,13 @@ function Messages() {
 										))}
 										<div ref={messagesEndRef} />
 									</div>
+
+									<InMessageTradePanel
+										currentUser={currentUser.id}
+										otherUser={
+											selectedConversation?.otherUser._id
+										}
+									/>
 
 									<div className={styles.inputArea}>
 										<input

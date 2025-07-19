@@ -18,6 +18,8 @@ const UserTrades = () => {
 
     const getStatusColor = (status) => {
         switch (status) {
+			case 'successful':
+				return styles.successful;
             case 'pending':
                 return styles.pending;
             case 'accepted':
@@ -124,4 +126,4 @@ const UserTrades = () => {
     );
 };
 
-export default UserTrades; 
+export default UserTrades;

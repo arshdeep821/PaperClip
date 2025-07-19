@@ -1,5 +1,10 @@
 import { Schema, model } from "mongoose";
 
+const tradeConfirmationSchema = new Schema({
+	user1Confirmation: { type: Boolean, default: false, required: true },
+	user2Confirmation: { type: Boolean, default: false, required: true },
+});
+
 const tradeSchema = new Schema(
 	{
 		user1: {
@@ -28,9 +33,17 @@ const tradeSchema = new Schema(
 		],
 		status: {
 			type: String,
-			enum: ["pending", "accepted", "rejected", "cancelled", "renegotiated"],
+			enum: [
+				"pending",
+				"accepted",
+				"rejected",
+				"cancelled",
+				"renegotiated",
+				"successful",
+			],
 			default: "pending",
 		},
+		tradeConfirmation: { type: tradeConfirmationSchema, default: null },
 	},
 	{ timestamps: true, collection: "Trades" }
 );
