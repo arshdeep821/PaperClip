@@ -17,6 +17,12 @@ def prepare_input(category, description):
 	return features
 
 def get_recommendations(userPreferences):
+	if len(userPreferences) == 0:
+		return {
+			"ids": [product["_id"] for product in model.products]
+		}
+
+
 	all_indices = []
 	all_distances = []
 
