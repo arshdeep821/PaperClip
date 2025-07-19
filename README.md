@@ -174,3 +174,43 @@ server/mochawesome-report/mochawesome.html
 ```
 
 Open this file in your web browser to see a summary of all passing and failing tests, with details for each test case.
+
+## Milestone 4:
+
+Running the application: `docker compose up --build` or `docker-compose up --build`
+
+The app runs on http://localhost:5173/
+
+### Some Important Things to Know when using this application
+- If you create a new account please go to the profile page and set a user preference before doing anything else as this is required for this Milestone
+- Otherwise you can login with the preset accounts (username: Admin, password: password) (username: Exec, password: password)
+
+
+### XSS Security Assessment
+
+### Input Field Security Testing Table
+
+#### These are the payloads that were used for each field:
+1. `<script>alert('XSS')</script>`
+2. `<img src=x onerror=alert('XSS')>`
+3. `"><svg/onload=alert('XSS')>`
+4. `';alert('XSS');//`
+5. `<body onload=alert('XSS')>`
+6. `<iframe src="javascript:alert('XSS')"></iframe>`
+7. `<a href="javascript:alert('XSS')">Click me</a>`
+8. `&lt;script&gt;alert('XSS')&lt;/script&gt; (to test for double-encoding issues)`
+9. `<div style="background-image:url(javascript:alert('XSS'))">`
+
+#### Results
+| Input Point   | Field       | Payload                | Result (Executed/Not Executed)   | Notes              |
+|---------------|-------------|------------------------|----------------------------------|--------------------|
+| Login         | Username    | 1,2,3,4,5,6,7,8,9      | None Executed                    | Rendered as text   |
+| Profile Edit  | Name        | 1,2,3,4,5,6,7,8,9      | None Executed                    | Rendered as text   |
+| Upload Item   | Description | 1,2,3,4,5,6,7,8,9      | None Executed                    | Rendered as text   |
+| Search        | Query       | 1,2,3,4,5,6,7,8,9      | None Executed                    | Rendered as text   |
+| Chat          | Message     | 1,2,3,4,5,6,7,8,9      | None Executed                    | Rendered as text   |
+
+#### Additional Tests - Search Page
+- Inputs such as `.*` or `^.*$` or `(a+)+` are able to MATCH with ALL ITEMS/USERS and returns all users and items.
+- If you return an incomplete regex such as `(a+` then it crashes the entire search page
+- By adding a layer of query sanitization to the search logic, inputs like the ones described above do not impact the results returned or crashing the search page
