@@ -185,10 +185,47 @@ The app runs on http://localhost:5173/
 - If you create a new account please go to the profile page and set a user preference before doing anything else as this is required for this Milestone
 - Otherwise you can login with the preset accounts (username: Admin, password: password) (username: Exec, password: password)
 
+### App Summary
+
+PaperClip is a modern web-based trading platform inspired by the viral story of trading a paperclip for a house. Our app enables users to discover, trade, and negotiate items with other users through an intuitive interface, eliminating the need for monetary transactions. What sets PaperClip apart is its gamified approach to trading with features like item recommendations powered by machine learning, real-time messaging between traders, and a comprehensive search system that helps users find their next perfect trade.
+
+### Bug List
+Our bug list is located in the github issues for our team repo
+
+### Standard Goals
+
+- Users can view their own and other users’ profile, that includes their inventory, with the option to make a trade directly through the profile page (rather than the main scrolling page with recommendations) [DONE]
+
+- Users can see an in-depth history of an item (what it has been traded for and by who, creating a line graph of the item's trade history) [DONE]
+
+- Users can earn achievements/badges within the application to display on their profile (to encourage continual trading) for completing activities like completing a line of trades that's 5 and 10 trades long. [DROPPED]
+
+- Users can participate in multi-party trades. For example: Jack has item A and wants item B, Tim has item B and wants item C, Bob has item C and wants item A. With a multi-party trade, the 3 of them would be able to form a ‘trade circle’. [DROPPED]
+
+### Stretch Goals
+
+- Utilizing a pre-built computer vision-esque model to obtain more information about user-added items (to take the provided image, along with its likely short description, to obtain more details for recommendations) [DROPPED]
+
+- Users can search specifically for items (like they would on Google for example), requiring a search engine implementation that outputs items that match or closely match the users search query [DROPPED]
+
+
+### Non-Trivial Elements 
+
+- Machine Learning Reccomendation System: KNN model using Sci-kit Learn with text embedding via Spacy, automatically retrains when products change. Present as it's own service that is orchestrated with docker-compose
+
+- Real-time Messaging System: Chat functionality between users after trade acceptance with real-time updates. You can easily view all trades with a specific user within your chat history and confirm when a swap has been successfully completed.
+
+- Trade Negotiation System: Full trade lifecycle: create, accept, reject, negotiate with state management
+
+- User Preference System: User-defined preferences that feed into ML recommendations
+
+- Advanced Search: Multi-field AND-SEARCH that where you can search items/users and instantly trade with them. Sanitization across all queries
+
+- Session Management: Secure login/logout with session persistence and user state management
+
+- Trade History: Tracking of item trade history records
 
 ### XSS Security Assessment
-
-### Input Field Security Testing Table
 
 #### These are the payloads that were used for each field:
 1. `<script>alert('XSS')</script>`
@@ -214,3 +251,5 @@ The app runs on http://localhost:5173/
 - Inputs such as `.*` or `^.*$` or `(a+)+` are able to MATCH with ALL ITEMS/USERS and returns all users and items.
 - If you return an incomplete regex such as `(a+` then it crashes the entire search page
 - By adding a layer of query sanitization to the search logic, inputs like the ones described above do not impact the results returned or crashing the search page
+
+### M4 Highlights
