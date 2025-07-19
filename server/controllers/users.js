@@ -150,7 +150,12 @@ const getUser = async (req, res) => {
 		const { id } = req.params;
 
 		const user = await User.findById(id)
-			.populate("inventory")
+			.populate({
+				path: "inventory",
+				populate: [
+					{ path: "category" },
+				]
+			})
 			.populate("userPreferences.category")
 			.select("-password");
 
