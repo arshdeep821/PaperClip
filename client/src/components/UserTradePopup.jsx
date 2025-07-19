@@ -16,12 +16,22 @@ const getTradeById = async (tradeId) => {
 	}
 };
 
-const UserTradePopup = ({ tradeId, onClose }) => {
+const UserTradePopup = ({ currentUser, tradeId, onClose }) => {
 	const [trade, setTrade] = useState(null);
+	const [yourItems, setYourItems] = useState([]);
+	const [theirItems, setTheirItems] = useState([]);
 
 	const loadTrade = () => {
 		getTradeById(tradeId).then((trade) => {
 			setTrade(trade);
+
+			if (trade.user1._id === currentUser) {
+				setYourItems(trade.items1);
+				setTheirItems(trade.items2);
+			} else {
+				setYourItems(trade.items2);
+				setTheirItems(trade.items1);
+			}
 		});
 	};
 
@@ -88,7 +98,7 @@ const UserTradePopup = ({ tradeId, onClose }) => {
 						<div className={styles.itemsSection}>
 							<h4>Your Items:</h4>
 							<div className={styles.itemsList}>
-								{trade.items2.map((item) => (
+								{yourItems.map((item) => (
 									<div key={item._id} className={styles.item}>
 										<img
 											src={`${BACKEND_URL}/static/${item.imagePath}`}
@@ -113,7 +123,7 @@ const UserTradePopup = ({ tradeId, onClose }) => {
 						<div className={styles.itemsSection}>
 							<h4>Their Items:</h4>
 							<div className={styles.itemsList}>
-								{trade.items1.map((item) => (
+								{theirItems.map((item) => (
 									<div key={item._id} className={styles.item}>
 										<img
 											src={`${BACKEND_URL}/static/${item.imagePath}`}

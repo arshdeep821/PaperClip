@@ -234,7 +234,10 @@ const InMessageTradePanel = ({ currentUser, otherUser }) => {
 					{middleSectionText}
 					<div className={styles.panelButtons}>
 						{middleSectionButton}
-						<Button variant="outlined" onClick={() => setIsPopupOpen(true)}>
+						<Button
+							variant="outlined"
+							onClick={() => setIsPopupOpen(true)}
+						>
 							View Trade
 						</Button>
 					</div>
@@ -245,6 +248,7 @@ const InMessageTradePanel = ({ currentUser, otherUser }) => {
 			</div>
 			{isPopupOpen && (
 				<UserTradePopup
+					currentUser={currentUser}
 					tradeId={currTrade._id}
 					onClose={() => setIsPopupOpen(false)}
 				/>
