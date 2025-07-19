@@ -39,6 +39,8 @@ function ItemHistoryPopup({ item, onClose }) {
 
     const getStatusColor = (status) => {
         switch (status) {
+			case 'successful':
+				return styles.statusSuccessful;
             case 'accepted':
                 return styles.statusAccepted;
             case 'pending':
@@ -52,7 +54,7 @@ function ItemHistoryPopup({ item, onClose }) {
 
     const renderTradeItem = (tradeItem) => {
         if (!tradeItem) return null;
-        
+
         return (
             <div className={styles.tradeItem}>
                 <div className={styles.itemImageContainer}>
@@ -103,7 +105,7 @@ function ItemHistoryPopup({ item, onClose }) {
                                             {formatDate(trade.createdAt)}
                                         </span>
                                     </div>
-                                    
+
                                     <div className={styles.tradeUsers}>
                                         <div className={styles.userSection}>
                                             <h4>{trade.user1.name} ({trade.user1.username})</h4>
@@ -115,9 +117,9 @@ function ItemHistoryPopup({ item, onClose }) {
                                                 ))}
                                             </div>
                                         </div>
-                                        
+
                                         <div className={styles.tradeArrow}>⇄</div>
-                                        
+
                                         <div className={styles.userSection}>
                                             <h4>{trade.user2.name} ({trade.user2.username})</h4>
                                             <div className={styles.itemsList}>

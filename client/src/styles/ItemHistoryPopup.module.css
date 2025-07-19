@@ -93,6 +93,11 @@
     text-transform: uppercase;
 }
 
+.statusSuccessful {
+	background: #155724;
+	color: White;
+}
+
 .statusAccepted {
     background-color: #d4edda;
     color: #155724;
@@ -208,12 +213,12 @@
         width: 95%;
         margin: 10px;
     }
-    
+
     .tradeUsers {
         flex-direction: column;
         gap: 12px;
     }
-    
+
     .tradeArrow {
         transform: rotate(90deg);
         margin: 8px auto;

@@ -276,7 +276,7 @@ const getHistory = async (req, res) => {
 
 	try {
 		const trades = await Trade.find({
-			status: "accepted",
+			status: "successful",
 			$or: [{ items1: itemId }, { items2: itemId }],
 		})
 			.populate("user1")
