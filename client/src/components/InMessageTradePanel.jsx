@@ -78,7 +78,9 @@ const InMessageTradePanel = ({ currentUser, otherUser }) => {
 	};
 
 	if (trades.length === 0) {
-		return <div className={styles.panelBox}>loading</div>;
+		return (
+			<></>
+		);
 	}
 
 	const currTrade = trades[currTradeIdx];
