@@ -198,11 +198,15 @@ Our bug list is located in the github issues for our team repo
 
 - Users can see an in-depth history of an item (what it has been traded for and by who, creating a line graph of the item's trade history) [DONE]
 
-- Users can earn achievements/badges within the application to display on their profile (to encourage continual trading) for completing activities like completing a line of trades that's 5 and 10 trades long. [DROPPED]
-
 - Users can participate in multi-party trades. For example: Jack has item A and wants item B, Tim has item B and wants item C, Bob has item C and wants item A. With a multi-party trade, the 3 of them would be able to form a ‘trade circle’. [DROPPED]
 
+- Users can view all your trades with a specific user through the chat with them. Can also confirm a successful swap of items with the user as apart of the trade negotiation. [DONE]
+
+- Users can modify their personal data such as geolocation/preferences and get updated reccomendations given their profile updates [DONE]
+
 ### Stretch Goals
+
+- Users can earn achievements/badges within the application to display on their profile (to encourage continual trading) for completing activities like completing a line of trades that's 5 and 10 trades long. [NOT - STARTED]
 
 - Utilizing a pre-built computer vision-esque model to obtain more information about user-added items (to take the provided image, along with its likely short description, to obtain more details for recommendations) [DROPPED]
 
