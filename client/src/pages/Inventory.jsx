@@ -24,6 +24,8 @@ const Inventory = () => {
     const [selectedItems, setSelectedItems] = useState([]);
     const [showTrades, setShowTrades] = useState(false);
     const [historyItem, setHistoryItem] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const dispatch = useDispatch();
 
@@ -34,18 +36,27 @@ const Inventory = () => {
 
 	useEffect(() => {
 		const fetchInventoryItems = async () => {
+			setIsLoading(true);
+			setError(null);
 			try {
 				const response = await fetch(`${BACKEND_URL}/users/${userId}`);
+				if (!response.ok) {
+					throw new Error('Failed to fetch inventory');
+				}
 				const data = await response.json();
-
-				dispatch(setInventory(data.inventory));
+				dispatch(setInventory(data.inventory || []));
 			} catch (err) {
 				console.error(`Error retrieving inventory items for user:`, err);
+				setError(err.message);
+			} finally {
+				setIsLoading(false);
 			}
 		};
 
-		fetchInventoryItems();
-	}, [userId]);
+		if (userId) {
+			fetchInventoryItems();
+		}
+	}, [userId, dispatch]);
 
     const handleEditSubmit = async (formData) => {
         const data = new FormData()
@@ -191,7 +202,11 @@ const Inventory = () => {
                         </div>
                     </div>
 
-                    {items.length === 0 ? (
+                    {isLoading ? (
+                        <p>Loading inventory...</p>
+                    ) : error ? (
+                        <p>Error loading inventory: {error}</p>
+                    ) : items.length === 0 ? (
                         <p>No items in inventory</p>
                     ) : (
                         <div className={styles.inventoryGrid}>

@@ -17,7 +17,6 @@ function InventoryItem({ item, onEdit, deleteMode, onSelect, onViewHistory }) {
 
     return (
         <div
-            key={item._id}
             className={styles.inventoryItem}
         >
 			{deleteMode && (
@@ -39,7 +38,7 @@ function InventoryItem({ item, onEdit, deleteMode, onSelect, onViewHistory }) {
             <div>
                 <h3>{item.name}</h3>
                 <p>{item.description}</p>
-                <p className={styles.itemCategory}>Category: {item.category.name}</p>
+                <p className={styles.itemCategory}>Category: {item.category?.name || 'No Category'}</p>
 				<p className={styles.itemCondition}>Condition: {item.condition}</p>
                 <button
                     className={`${styles.itemButton} ${styles.editButton}`}

@@ -4,6 +4,7 @@ const BACKEND_URL = "http://localhost:3001";
 
 const initialState = {
 	isLoggedIn: false,
+	isLoading: true,
 	id: null,
 	username: null,
 	name: null,
@@ -159,6 +160,7 @@ export const userSlice = createSlice({
 				_id,
 				username,
 				name,
+				email,
 				city,
 				country,
 				tradingRadius,
@@ -168,9 +170,11 @@ export const userSlice = createSlice({
 			} = action.payload;
 
 			state.isLoggedIn = true;
+			state.isLoading = false;
 			state.id = _id;
 			state.username = username;
 			state.name = name;
+			state.email = email;
 			state.city = city;
 			state.country = country;
 			state.tradingRadius = tradingRadius;
@@ -218,6 +222,9 @@ export const userSlice = createSlice({
 		setInventory: (state, action) => {
 			state.inventory = action.payload;
 		},
+		finishLoading: (state) => {
+			state.isLoading = false;
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -258,7 +265,7 @@ export const userSlice = createSlice({
 				state.error = action.error.message;
 			})
 			.addCase(loginUser.pending, (state) => {
-				state.loading = true;
+				state.isLoading = false;
 				state.error = null;
 			})
 			.addCase(loginUser.fulfilled, (state, action) => {
@@ -276,6 +283,7 @@ export const userSlice = createSlice({
 				} = action.payload;
 
 				state.isLoggedIn = true;
+				state.isLoading = false;
 				state.id = _id;
 				state.username = username;
 				state.name = name;
@@ -290,7 +298,7 @@ export const userSlice = createSlice({
 				state.error = null;
 			})
 			.addCase(loginUser.rejected, (state, action) => {
-				state.loading = false;
+				state.isLoading = false;
 				state.error = action.error.message;
 			})
 			.addCase(updateUser.pending, (state) => {
@@ -383,6 +391,7 @@ export const {
 	removeItem,
 	updateItem,
 	setInventory,
+	finishLoading,
 } = userSlice.actions;
 
 export default userSlice.reducer;
