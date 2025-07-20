@@ -182,8 +182,7 @@ Running the application: `docker compose up --build` or `docker-compose up --bui
 The app runs on http://localhost:5173/
 
 ### Some Important Things to Know when using this application
-- If you create a new account please go to the profile page and set a user preference before doing anything else as this is required for this Milestone
-- Otherwise you can login with the preset accounts (username: Admin, password: password) (username: Exec, password: password)
+-  You can login with the preset accounts (username: Admin, password: password) (username: Exec, password: password) or create your own account
 
 ### App Summary
 
@@ -257,3 +256,12 @@ Our bug list is located in the github issues for our team repo
 - By adding a layer of query sanitization to the search logic, inputs like the ones described above do not impact the results returned or crashing the search page
 
 ### M4 Highlights
+- Renegotiation flow
+- Being able to chat with the user after accepting the trade
+- Being able to chat with any user given the search page
+- Being able to confirm trades within the chat window. Allows users to confirm a successful trade and then swap items in their inventory
+- Being able to view all trades with another user and their status within the chat
+- Profile picture implementation
+- Viewing trade history of specific items
+- A bug fix that was implemented this milestone was related to user session management handling on both the server and client side, with those fixed, the application functions as expected and bug free when users are both logged in and not logged in. Another bug that was fixed was updating the recommendation model to still function and give a generic order when a user had no preferences for it to recommend on.
+- Many other small bug fixes, manual, testing, automated testing, etc.
