@@ -5,6 +5,7 @@ import styles from "../styles/Signup.module.css";
 import PaperClipLogo from "../assets/PaperClip.png";
 
 const BACKEND_URL = "http://localhost:3001";
+//frontend
 
 const Signup = () => {
 	const navigate = useNavigate();

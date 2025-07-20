@@ -19,6 +19,7 @@ const UserSchema = new Schema(
 		inventory: [{ type: Schema.Types.ObjectId, ref: "Item", default: [] }],
 		userPreferences: { type: [userPreferenceSchema], default: [] },
 		isPrivate: { type: Boolean, default: false },
+		profilePicture: { type: String, default: null },
 	},
 	{ timestamps: true, collection: "Users" }
 );

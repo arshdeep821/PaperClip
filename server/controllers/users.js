@@ -3,6 +3,8 @@ import Category from "../models/Category.js";
 import { StatusCodes } from "http-status-codes";
 import { hash, compare } from "bcrypt";
 import { getRecommendationsForUser } from "../util/recommender.js";
+import fs from "fs";
+import path from "path";
 
 const DEFAULT_USER_RADIUS = 10;
 
@@ -74,6 +76,7 @@ const createUser = async (req, res) => {
 			userPreferences: newUser.userPreferences,
 			inventory: newUser.inventory,
 			isPrivate: newUser.isPrivate,
+			profilePicture: newUser.profilePicture,
 			createdAt: newUser.createdAt,
 		};
 
@@ -133,6 +136,7 @@ const loginUser = async (req, res) => {
 			userPreferences: user.userPreferences,
 			inventory: user.inventory,
 			isPrivate: user.isPrivate,
+			profilePicture: user.profilePicture,
 			createdAt: user.createdAt,
 		};
 
@@ -173,7 +177,7 @@ const getUser = async (req, res) => {
 const updateUser = async (req, res) => {
 	try {
 		const { id } = req.params;
-		const { username, tradingRadius, name, email, city, country } =
+		const { username, tradingRadius, name, email, city, country, lat, lon } =
 			req.body;
 
 		const user = await User.findById(id);
@@ -207,6 +211,8 @@ const updateUser = async (req, res) => {
 		if (city) updateData.city = city;
 		if (country) updateData.country = country;
 		if (tradingRadius) updateData.tradingRadius = tradingRadius;
+		if (lat !== undefined) updateData.lat = lat;
+		if (lon !== undefined) updateData.lon = lon;
 
 		const updatedUser = await User.findByIdAndUpdate(id, updateData, {
 			new: true,
@@ -227,6 +233,7 @@ const updateUser = async (req, res) => {
 			tradingRadius: updatedUser.tradingRadius,
 			inventory: updatedUser.inventory,
 			userPreferences: updatedUser.userPreferences,
+			profilePicture: updatedUser.profilePicture,
 			createdAt: updatedUser.createdAt,
 			updatedAt: updatedUser.updatedAt,
 		};
@@ -336,6 +343,7 @@ const updateUserPrivacy = async (req, res) => {
 			inventory: user.inventory,
 			userPreferences: user.userPreferences,
 			isPrivate: user.isPrivate,
+			profilePicture: user.profilePicture,
 			createdAt: user.createdAt,
 		};
 
@@ -421,6 +429,28 @@ const deleteUser = async (req, res) => {
 	}
 };
 
+const checkUsernameAvailability = async (req, res) => {
+	try {
+		const { username } = req.params;
+
+		if (!username) {
+			return res.status(StatusCodes.BAD_REQUEST).json({
+				error: "Username is required.",
+			});
+		}
+
+		const existingUser = await User.findOne({ username });
+		const available = !existingUser;
+
+		res.status(StatusCodes.OK).json({ available });
+	} catch (err) {
+		console.error("Error checking username availability:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Server error. Could not check username availability.",
+		});
+	}
+};
+
 const restoreSession = async (req, res) => {
 	try {
 		if (!req.session.userId) {
@@ -439,6 +469,59 @@ const restoreSession = async (req, res) => {
 	}
 };
 
+const updateUserProfilePicture = async (req, res) => {
+	try {
+		const { id } = req.params;
+
+		if (!req.file) {
+			return res.status(StatusCodes.BAD_REQUEST).json({
+				error: "Profile picture file is required.",
+			});
+		}
+
+		const user = await User.findById(id);
+		if (!user) {
+			return res.status(StatusCodes.NOT_FOUND).json({ error: "User not found." });
+		}
+
+		const newImagePath = `profile-pictures/${req.file.filename}`;
+
+		if (user.profilePicture) {
+			const oldImagePath = path.join("./public", user.profilePicture);
+			if (fs.existsSync(oldImagePath)) {
+				fs.unlinkSync(oldImagePath);
+			}
+		}
+
+		user.profilePicture = newImagePath;
+		await user.save();
+
+		const userResponse = {
+			_id: user._id,
+			username: user.username,
+			name: user.name,
+			email: user.email,
+			city: user.city,
+			country: user.country,
+			lat: user.lat,
+			lon: user.lon,
+			tradingRadius: user.tradingRadius,
+			inventory: user.inventory,
+			userPreferences: user.userPreferences,
+			isPrivate: user.isPrivate,
+			profilePicture: user.profilePicture,
+			createdAt: user.createdAt,
+		};
+
+		res.status(StatusCodes.OK).json(userResponse);
+	} catch (err) {
+		console.error("Error updating user profile picture:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Server error. Could not update profile picture.",
+		});
+	}
+};
+
 export {
 	createUser,
 	loginUser,
@@ -450,4 +533,6 @@ export {
 	updateUserPrivacy,
 	updateUserPassword,
 	restoreSession,
+	updateUserProfilePicture,
+	checkUsernameAvailability,
 };
