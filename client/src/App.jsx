@@ -36,14 +36,6 @@ const RequireAuth = ({ children }) => {
 	return children;
 }
 
-const RedirectIfLoggedIn = ({ children }) => {
-	const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-	if (isLoggedIn) {
-		return <Navigate to="/home" replace />;
-	}
-	return children;
-}
-
 const App = () => {
 	const dispatch = useDispatch();
 	const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -86,19 +78,11 @@ const App = () => {
 
 				<Route
 					path="/login"
-					element={
-						<RedirectIfLoggedIn>
-							<Login />
-						</RedirectIfLoggedIn>
-					}
+					element={<Login />}
 				/>
 				<Route
 					path="/signup"
-					element={
-						<RedirectIfLoggedIn>
-							<Signup />
-						</RedirectIfLoggedIn>
-					}
+					element={<Signup />}
 				/>
 
 				<Route
