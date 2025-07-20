@@ -5,6 +5,7 @@ import { io } from "socket.io-client";
 import Sidebar from "../components/Sidebar";
 import styles from "../styles/Messages.module.css";
 import SendIcon from "@mui/icons-material/Send";
+import InMessageTradePanel from "../components/InMessageTradePanel";
 import defaultProfileImage from "../assets/PaperclipDefault.png";
 
 const socket = io("http://localhost:3001");
