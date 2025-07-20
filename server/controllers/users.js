@@ -421,6 +421,24 @@ const deleteUser = async (req, res) => {
 	}
 };
 
+const restoreSession = async (req, res) => {
+	try {
+		if (!req.session.userId) {
+			return res.status(401).json({ error: "Not logged in" });
+		}
+
+		const user = await User.findById(req.session.userId);
+
+		if (!user) {
+			return res.status(401).json({ error: "User not found" });
+		}
+
+		res.status(200).json(user);
+	} catch (err) {
+		res.status(500).json({ error: "Server error. Could not restore session." });
+	}
+};
+
 export {
 	createUser,
 	loginUser,
@@ -431,4 +449,5 @@ export {
 	deleteUser,
 	updateUserPrivacy,
 	updateUserPassword,
+	restoreSession,
 };

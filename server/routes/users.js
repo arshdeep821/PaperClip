@@ -11,9 +11,11 @@ import {
 	deleteUser,
 	updateUserPrivacy,
 	updateUserPassword,
+	restoreSession,
 } from "../controllers/users.js";
 
 router.route("/").post(createUser);
+router.route("/session").get(restoreSession);
 router.route("/login").post(loginUser);
 router.route("/:id").get(getUser).put(updateUser).delete(deleteUser);
 router.route("/:id/preferences").patch(updateUserPreferences);

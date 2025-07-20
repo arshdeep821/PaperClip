@@ -16,13 +16,30 @@ import ItemRouter from "./routes/items.js";
 import TradeRouter from "./routes/trades.js";
 import MessageRouter from "./routes/messages.js";
 
+const allowedOrigins = ["http://localhost:5173", "http://localhost:8001"];
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
 	cors: { origin: "http://localhost:5173", methods: ["GET", "POST"] }
 });
 
-app.use(cors());
+app.use(
+	cors({
+		origin: (origin, callback) => {
+			if (!origin) {
+				return callback(null, true);
+			}
+
+			if (allowedOrigins.includes(origin)) {
+				callback(null, true);
+			} else {
+				callback(new Error("Not allowed by CORS"));
+			}
+		},
+		credentials: true,
+	})
+);
 app.use(express.json());
 app.use(
 	session({

@@ -73,6 +73,7 @@ const Signup = () => {
 					lat,
 					lon,
 				}),
+				credentials: "omit",
 			});
 
 			if (!response.ok) {
