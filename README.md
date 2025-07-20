@@ -264,4 +264,4 @@ Our bug list is located in the github issues for our team repo
 - Profile picture implementation
 - Viewing trade history of specific items
 - A bug fix that was implemented this milestone was related to user session management handling on both the server and client side, with those fixed, the application functions as expected and bug free when users are both logged in and not logged in. Another bug that was fixed was updating the recommendation model to still function and give a generic order when a user had no preferences for it to recommend on.
-- Many other small bug fixes, manual, testing, automated testing, etc.
+- Many other small bug fixes, manual testing, automated testing, etc.
