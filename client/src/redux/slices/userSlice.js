@@ -13,6 +13,7 @@ const initialState = {
 	tradingRadius: null,
 	inventory: [],
 	userPreferences: [],
+	profilePicture: null,
 	createdAt: null,
 	status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
 	error: null,
@@ -114,6 +115,26 @@ export const updateUserPrivacy = createAsyncThunk(
 	}
 );
 
+export const updateUserProfilePicture = createAsyncThunk(
+	"user/updateUserProfilePicture",
+	async ({ userId, file }, { rejectWithValue }) => {
+		const formData = new FormData();
+		formData.append("profilePicture", file);
+
+		const response = await fetch(`${BACKEND_URL}/users/${userId}/profile-picture`, {
+			method: "PATCH",
+			body: formData,
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json();
+			return rejectWithValue(errorData.error || "Failed to update profile picture");
+		}
+
+		return await response.json();
+	}
+);
+
 export const uploadItem = createAsyncThunk("items/uploadItem", async (data) => {
 	const response = await fetch(`${BACKEND_URL}/items`, {
 		method: "POST",
@@ -166,6 +187,7 @@ export const userSlice = createSlice({
 				tradingRadius,
 				inventory,
 				userPreferences,
+				profilePicture,
 				createdAt,
 			} = action.payload;
 
@@ -180,6 +202,7 @@ export const userSlice = createSlice({
 			state.tradingRadius = tradingRadius;
 			state.inventory = inventory;
 			state.userPreferences = userPreferences;
+			state.profilePicture = profilePicture;
 			state.createdAt = createdAt;
 		},
 		logout: (state) => {
@@ -193,6 +216,7 @@ export const userSlice = createSlice({
 			state.tradingRadius = null;
 			state.inventory = null;
 			state.userPreferences = null;
+			state.profilePicture = null;
 			state.createdAt = null;
 			state.error = null;
 		},
@@ -279,6 +303,7 @@ export const userSlice = createSlice({
 					tradingRadius,
 					inventory,
 					userPreferences,
+					profilePicture,
 					createdAt,
 				} = action.payload;
 
@@ -294,6 +319,7 @@ export const userSlice = createSlice({
 				state.inventory = inventory;
 				state.createdAt = createdAt;
 				state.userPreferences = userPreferences;
+				state.profilePicture = profilePicture;
 				state.loading = false;
 				state.error = null;
 			})
@@ -316,6 +342,7 @@ export const userSlice = createSlice({
 				state.tradingRadius = action.payload.tradingRadius;
 				state.inventory = action.payload.inventory;
 				state.userPreferences = action.payload.userPreferences;
+				state.profilePicture = action.payload.profilePicture;
 				state.createdAt = action.payload.createdAt;
 				state.error = null;
 			})
@@ -339,6 +366,7 @@ export const userSlice = createSlice({
 				state.tradingRadius = action.payload.tradingRadius;
 				state.inventory = action.payload.inventory;
 				state.userPreferences = action.payload.userPreferences;
+				state.profilePicture = action.payload.profilePicture;
 				state.createdAt = action.payload.createdAt;
 				state.error = null;
 			})
@@ -361,6 +389,7 @@ export const userSlice = createSlice({
 				state.tradingRadius = null;
 				state.inventory = [];
 				state.userPreferences = [];
+				state.profilePicture = null;
 				state.createdAt = null;
 				state.error = null;
 			})
@@ -377,6 +406,18 @@ export const userSlice = createSlice({
 				state.error = null;
 			})
 			.addCase(updateUserPrivacy.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = action.payload || action.error.message;
+			})
+			.addCase(updateUserProfilePicture.pending, (state) => {
+				state.status = "updating_profile_picture";
+			})
+			.addCase(updateUserProfilePicture.fulfilled, (state, action) => {
+				state.status = "updated_profile_picture";
+				state.profilePicture = action.payload.profilePicture;
+				state.error = null;
+			})
+			.addCase(updateUserProfilePicture.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = action.payload || action.error.message;
 			});

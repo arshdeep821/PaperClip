@@ -1,17 +1,19 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateUser } from "../redux/slices/userSlice";
+import { updateUser, updateUserProfilePicture } from "../redux/slices/userSlice";
 import styles from "../styles/Profile.module.css";
 import Sidebar from "../components/Sidebar";
 import UserPreferences from "../components/UserPreferences";
-import corgiImage from "../assets/corgi.jpg";
+import defaultProfileImage from "../assets/PaperclipDefault.png";
 import hustlerIcon from "../assets/hustlericon.png";
 import paperClipIcon from "../assets/PaperClip.png";
 import houseIcon from "../assets/houseicon2.png";
+import { Country, City } from "country-state-city";
 
 function Profile() {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.user);
+	const fileInputRef = useRef(null);
 	const [isEditing, setIsEditing] = useState(false);
 	const [editData, setEditData] = useState({
 		username: user.username || "",
@@ -21,6 +23,98 @@ function Profile() {
 		country: user.country || "",
 		tradingRadius: user.tradingRadius || 10,
 	});
+	const [errors, setErrors] = useState({});
+	const [usernameAvailable, setUsernameAvailable] = useState(true);
+	const [isCheckingUsername, setIsCheckingUsername] = useState(false);
+	const [cities, setCities] = useState([]);
+	const countries = Country.getAllCountries();
+
+	useEffect(() => {
+		if (editData.country) {
+			const countryObject = countries.find(
+				(c) => c.name.toLowerCase() === editData.country.toLowerCase()
+			);
+			if (countryObject) {
+				const isoCode = countryObject.isoCode;
+				const cityList = City.getCitiesOfCountry(isoCode);
+				setCities(cityList || []);
+			}
+		} else {
+			setCities([]);
+		}
+	}, [editData.country, countries]);
+
+	const validateEmail = (email) => {
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		return emailRegex.test(email);
+	};
+
+		const checkUsernameAvailability = async (username) => {
+		if (username === user.username) {
+			setUsernameAvailable(true);
+			return;
+		}
+
+		setIsCheckingUsername(true);
+		try {
+			const response = await fetch(`http://localhost:3001/users/check-username/${username}`);
+			const data = await response.json();
+			setUsernameAvailable(data.available);
+		} catch {
+			setUsernameAvailable(false);
+		} finally {
+			setIsCheckingUsername(false);
+		}
+	};
+
+	const validateForm = () => {
+		const newErrors = {};
+
+		if (!editData.name.trim()) {
+			newErrors.name = "Name is required";
+		}
+
+		if (!editData.email.trim()) {
+			newErrors.email = "Email is required";
+		} else if (!validateEmail(editData.email)) {
+			newErrors.email = "Please enter a valid email address";
+		}
+
+		if (!editData.country) {
+			newErrors.country = "Country is required";
+		} else {
+			const countryExists = countries.find(
+				(c) => c.name.toLowerCase() === editData.country.toLowerCase()
+			);
+			if (!countryExists) {
+				newErrors.country = "Please select a valid country from the list";
+			}
+		}
+
+		if (!editData.city) {
+			newErrors.city = "City is required";
+		} else {
+			const cityExists = cities.find(
+				(c) => c.name.toLowerCase() === editData.city.toLowerCase()
+			);
+			if (!cityExists) {
+				newErrors.city = "Please select a valid city from the list";
+			}
+		}
+
+		if (editData.tradingRadius < 0) {
+			newErrors.tradingRadius = "Trading radius cannot be negative";
+		} else if (editData.tradingRadius > 1000) {
+			newErrors.tradingRadius = "Trading radius cannot exceed 1000km";
+		}
+
+		if (!usernameAvailable && editData.username !== user.username) {
+			newErrors.username = "Username is not available";
+		}
+
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
+	};
 
 	const handleEdit = () => {
 		setIsEditing(true);
@@ -32,16 +126,37 @@ function Profile() {
 			country: user.country || "",
 			tradingRadius: user.tradingRadius || 10,
 		});
+		setErrors({});
+		setUsernameAvailable(true);
 	};
 
 	const handleSave = async () => {
+		if (!validateForm()) {
+			return;
+		}
+
 		try {
+			const selectedCity = cities.find(
+				(c) => c.name.toLowerCase() === editData.city.toLowerCase()
+			);
+
+			const lat = selectedCity?.latitude || null;
+			const lon = selectedCity?.longitude || null;
+
+			const userDataWithCoords = {
+				...editData,
+				lat,
+				lon,
+			};
+
 			await dispatch(
-				updateUser({ userId: user.id, userData: editData })
+				updateUser({ userId: user.id, userData: userDataWithCoords })
 			).unwrap();
 			setIsEditing(false);
+			setErrors({});
 		} catch (error) {
 			console.error("Failed to update profile:", error);
+			alert("Failed to update profile. Please try again.");
 		}
 	};
 
@@ -54,6 +169,44 @@ function Profile() {
 			...prev,
 			[field]: value,
 		}));
+
+		if (field === "country") {
+			setEditData((prev) => ({ ...prev, city: "" }));
+		}
+
+		if (field === "username" && value !== user.username) {
+			checkUsernameAvailability(value);
+		}
+
+		if (errors[field]) {
+			setErrors(prev => ({ ...prev, [field]: "" }));
+		}
+	};
+
+	const handleChangePicture = () => {
+		fileInputRef.current?.click();
+	};
+
+	const handleFileChange = async (event) => {
+		const file = event.target.files[0];
+		if (!file) return;
+
+		const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+		if (!allowedTypes.includes(file.type)) {
+			alert('Please select a valid image file (JPEG, PNG, or GIF)');
+			return;
+		}
+
+		if (file.size > 5 * 1024 * 1024) {
+			alert('File size must be less than 5MB');
+			return;
+		}
+
+		try {
+			await dispatch(updateUserProfilePicture({ userId: user.id, file })).unwrap();
+		} catch (error) {
+			alert(error.message || 'Failed to update profile picture');
+		}
 	};
 
 	return (
@@ -64,9 +217,22 @@ function Profile() {
 			</div>
 			<div className={styles.profilePictureSection}>
 				<img
-					src={corgiImage}
+					src={user.profilePicture ? `http://localhost:3001/static/${user.profilePicture}` : defaultProfileImage}
 					alt="Profile Picture"
 					className={styles.profilePicture}
+				/>
+				<button
+					className={styles.changePictureButton}
+					onClick={handleChangePicture}
+				>
+					Change Image
+				</button>
+				<input
+					ref={fileInputRef}
+					type="file"
+					accept="image/*"
+					onChange={handleFileChange}
+					style={{ display: 'none' }}
 				/>
 			</div>
 			<div className={styles.profileContainer}>
@@ -108,6 +274,7 @@ function Profile() {
 								Username:
 							</label>
 							{isEditing ? (
+								<div>
 								<input
 									type="text"
 									id="username"
@@ -118,8 +285,23 @@ function Profile() {
 											e.target.value
 										)
 									}
-									className={styles.input}
-								/>
+										className={`${styles.input} ${errors.username ? styles.inputError : ""}`}
+										disabled
+									/>
+									<div className={styles.helpText}>
+										Username cannot be changed
+									</div>
+									{isCheckingUsername && (
+										<div className={styles.checkingText}>
+											Checking availability...
+										</div>
+									)}
+									{errors.username && (
+										<div className={styles.errorText}>
+											{errors.username}
+										</div>
+									)}
+								</div>
 							) : (
 								<div className={styles.staticText}>
 									{user.username}
@@ -131,6 +313,7 @@ function Profile() {
 								Name:
 							</label>
 							{isEditing ? (
+								<div>
 								<input
 									type="text"
 									id="name"
@@ -141,8 +324,14 @@ function Profile() {
 											e.target.value
 										)
 									}
-									className={styles.input}
-								/>
+										className={`${styles.input} ${errors.name ? styles.inputError : ""}`}
+									/>
+									{errors.name && (
+										<div className={styles.errorText}>
+											{errors.name}
+										</div>
+									)}
+								</div>
 							) : (
 								<div className={styles.staticText}>
 									{user.name}
@@ -154,6 +343,7 @@ function Profile() {
 								Email:
 							</label>
 							{isEditing ? (
+								<div>
 								<input
 									type="email"
 									id="email"
@@ -164,34 +354,17 @@ function Profile() {
 											e.target.value
 										)
 									}
-									className={styles.input}
-								/>
+										className={`${styles.input} ${errors.email ? styles.inputError : ""}`}
+									/>
+									{errors.email && (
+										<div className={styles.errorText}>
+											{errors.email}
+										</div>
+									)}
+								</div>
 							) : (
 								<div className={styles.staticText}>
 									{user.email}
-								</div>
-							)}
-						</div>
-						<div className={styles.inputGroup}>
-							<label className={styles.label} htmlFor="city">
-								City:
-							</label>
-							{isEditing ? (
-								<input
-									type="text"
-									id="city"
-									value={editData.city}
-									onChange={(e) =>
-										handleInputChange(
-											"city",
-											e.target.value
-										)
-									}
-									className={styles.input}
-								/>
-							) : (
-								<div className={styles.staticText}>
-									{user.city}
 								</div>
 							)}
 						</div>
@@ -200,21 +373,76 @@ function Profile() {
 								Country:
 							</label>
 							{isEditing ? (
+								<div>
 								<input
+										id="country"
 									type="text"
-									id="country"
-									value={editData.country}
+										value={editData.country}
 									onChange={(e) =>
 										handleInputChange(
-											"country",
+												"country",
 											e.target.value
 										)
 									}
-									className={styles.input}
-								/>
+										list="country-options"
+										className={`${styles.input} ${errors.country ? styles.inputError : ""}`}
+									/>
+									<datalist id="country-options">
+										{countries.map((country) => (
+											<option key={country.isoCode} value={country.name}>
+												{country.name}
+											</option>
+										))}
+									</datalist>
+									{errors.country && (
+										<div className={styles.errorText}>
+											{errors.country}
+										</div>
+									)}
+								</div>
 							) : (
 								<div className={styles.staticText}>
 									{user.country}
+								</div>
+							)}
+						</div>
+						<div className={styles.inputGroup}>
+							<label className={styles.label} htmlFor="city">
+								City:
+							</label>
+							{isEditing ? (
+								<div>
+								<input
+										id="city"
+									type="text"
+										value={editData.city}
+									onChange={(e) =>
+										handleInputChange(
+												"city",
+											e.target.value
+										)
+									}
+										list="city-options"
+										className={`${styles.input} ${errors.city ? styles.inputError : ""}`}
+										disabled={!editData.country}
+									/>
+									<datalist id="city-options">
+										{cities.map((city) => (
+											<option
+												key={`${city.name}-${city.latitude}-${city.longitude}`}
+												value={city.name}
+											/>
+										))}
+									</datalist>
+									{errors.city && (
+										<div className={styles.errorText}>
+											{errors.city}
+										</div>
+									)}
+								</div>
+							) : (
+								<div className={styles.staticText}>
+									{user.city}
 								</div>
 							)}
 						</div>
@@ -223,6 +451,7 @@ function Profile() {
 								Trading Radius:
 							</label>
 							{isEditing ? (
+								<div>
 								<input
 									type="number"
 									id="radius"
@@ -230,11 +459,19 @@ function Profile() {
 									onChange={(e) =>
 										handleInputChange(
 											"tradingRadius",
-											parseInt(e.target.value)
+												parseInt(e.target.value) || 0
 										)
 									}
-									className={styles.input}
-								/>
+										min="0"
+										max="1000"
+										className={`${styles.input} ${errors.tradingRadius ? styles.inputError : ""}`}
+									/>
+									{errors.tradingRadius && (
+										<div className={styles.errorText}>
+											{errors.tradingRadius}
+										</div>
+									)}
+								</div>
 							) : (
 								<div className={styles.staticText}>
 									{user.tradingRadius}km
