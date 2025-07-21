@@ -66,10 +66,10 @@ const getConversations = async (req, res) => {
     // Fetch user info for each conversation
     const conversations = await Promise.all(
         Array.from(conversationsMap.entries()).map(async ([otherUserId, lastMessage]) => {
-            const otherUser = await User.findById(otherUserId).select("username");
+            const otherUser = await User.findById(otherUserId).select("username profilePicture");
             if (!otherUser) return null;
             return {
-                otherUser: { _id: otherUser._id, username: otherUser.username },
+                otherUser: { _id: otherUser._id, username: otherUser.username, profilePicture: otherUser.profilePicture },
                 lastMessage
             };
         })
