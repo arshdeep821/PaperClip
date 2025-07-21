@@ -183,6 +183,7 @@ The app runs on http://localhost:5173/
 
 ### Some Important Things to Know when using this application
 -  You can login with the preset accounts (username: Admin, password: password) (username: Exec, password: password) or create your own account
+- When you accept a trade, make sure to message the user you accepted the trade with so that your chat with that user gets persisted
 
 ### App Summary
 
