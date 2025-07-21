@@ -262,6 +262,7 @@ Our bug list is located in the github issues for our team repo
 - Being able to confirm trades within the chat window. Allows users to confirm a successful trade and then swap items in their inventory
 - Being able to view all trades with another user and their status within the chat
 - Profile picture implementation
+- Implemented a settings page for privacy, delete account, and change password
 - Viewing trade history of specific items
 - A bug fix that was implemented this milestone was related to user session management handling on both the server and client side, with those fixed, the application functions as expected and bug free when users are both logged in and not logged in. Another bug that was fixed was updating the recommendation model to still function and give a generic order when a user had no preferences for it to recommend on.
 - Many other small bug fixes, manual testing, automated testing, etc.
