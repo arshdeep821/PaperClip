@@ -9,6 +9,7 @@ import { fetchSearch } from "../redux/slices/searchSlice";
 function Search() {
     const dispatch = useDispatch()
     const [searchTerm, setSearchTerm] = useState('');
+    const [filter, setFilter] = useState('all'); // 'all', 'products', 'users'
 
     const productResults = useSelector((state) => state.search.productResults)
     const userResults = useSelector((state) => state.search.userResults)
@@ -19,6 +20,10 @@ function Search() {
             dispatch(fetchSearch({ userId, query: searchTerm }))
         }
     }, [searchTerm, dispatch])
+
+    // Filter results based on selected filter
+    const shouldShowProducts = filter === 'all' || filter === 'products';
+    const shouldShowUsers = filter === 'all' || filter === 'users';
 
     return (
         <div className={styles.searchPage}>
@@ -35,13 +40,38 @@ function Search() {
                             className={styles.searchInput}
                         />
                     </div>
+
+                    {/* Filter Buttons */}
+                    {searchTerm.trim() &&
+                        <div className={styles.filterButtons}>
+                            <button
+                                className={`${styles.filterButton} ${filter === 'all' ? styles.active : ''}`}
+                                onClick={() => setFilter('all')}
+                            >
+                                All ({productResults.length + userResults.length})
+                            </button>
+                            <button
+                                className={`${styles.filterButton} ${filter === 'products' ? styles.active : ''}`}
+                                onClick={() => setFilter('products')}
+                            >
+                                Products ({productResults.length})
+                            </button>
+                            <button
+                                className={`${styles.filterButton} ${filter === 'users' ? styles.active : ''}`}
+                                onClick={() => setFilter('users')}
+                            >
+                                Users ({userResults.length})
+                            </button>
+                        </div>
+                    }
+
                 </div>
 
                 <div className={styles.resultsWrapper}>
                     {searchTerm.trim() ? (
                         <>
                             {/* Product Results */}
-                            {productResults.length > 0 && (
+                            {shouldShowProducts && productResults.length > 0 && (
                                 <>
                                     <h2 className={styles.resultsTitle}>
                                         Product Results ({productResults.length})
@@ -55,7 +85,7 @@ function Search() {
                             )}
 
                             {/* User Results */}
-                            {userResults.length > 0 && (
+                            {shouldShowUsers && userResults.length > 0 && (
                                 <>
                                     <h2 className={styles.resultsTitle}>
                                         User Results ({userResults.length})
@@ -69,11 +99,14 @@ function Search() {
                             )}
 
                             {/* No Results Message */}
-                            {productResults.length === 0 && userResults.length === 0 && (
-                                <p className={styles.noResults}>
-                                    No products or users found matching "{searchTerm}"
-                                </p>
-                            )}
+                            {(
+                                (filter === 'all' && productResults.length === 0 && userResults.length === 0) ||
+                                (filter === 'products' && productResults.length === 0) ||
+                                (filter === 'users' && userResults.length === 0)) && (
+                                    <p className={styles.noResults}>
+                                        No {filter === 'all' ? 'products or users' : filter} found matching "{searchTerm}"
+                                    </p>
+                                )}
                         </>
                     ) : (
                         <p className={styles.promptMessage}>
