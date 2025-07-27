@@ -8,6 +8,7 @@ import Sidebar from "../components/Sidebar";
 import TopOptionButtons from "../components/TopOptionButtons";
 import OffersActions from "../components/OffersActions";
 import RenegPanel from "../components/RenegPanel";
+import ItemOfferDetails from "../components/ItemOfferDetails";
 
 function ViewOffers() {
 	const dispatch = useDispatch()
@@ -19,6 +20,7 @@ function ViewOffers() {
 	const NUM_OFFERS = offers.length || 0;
 	const [offerIdx, setOfferIdx] = useState(0);
 	const [renegVisible, setRenegVisible] = useState(false);
+	const [detailedItem, setDetailedItem] = useState(null);
 
 	useEffect(() => {
 		dispatch(fetchOffers(userId))
@@ -68,7 +70,7 @@ function ViewOffers() {
 				{
 					(!offers[offerIdx] || offers.length === 0) ?
 						<h1>No Current Offers</h1>
-					:
+						:
 						<OfferBox
 							otherUser={{
 								user: offers[offerIdx].user2,
@@ -78,8 +80,17 @@ function ViewOffers() {
 								user: offers[offerIdx].user1,
 								items: offers[offerIdx].items1
 							}}
+							onItemClick={setDetailedItem}
 						/>
 				}
+
+				{detailedItem && (
+					<ItemOfferDetails
+						item={detailedItem}
+						onClose={() => setDetailedItem(null)}
+					/>
+				)}
+
 			</div>
 
 			<div className={styles.bottom}>
