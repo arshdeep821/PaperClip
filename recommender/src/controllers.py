@@ -12,7 +12,9 @@ def prepare_input(category, description):
 
 	text_embedding = embed(text).reshape(1, -1)
 
-	features = np.hstack([text_embedding])
+	category_ohe = model.preprocessor.transform([[category]])
+
+	features = np.hstack([text_embedding, category_ohe])
 
 	return features
 
