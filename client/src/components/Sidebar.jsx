@@ -7,19 +7,12 @@ import AccountBoxRoundedIcon from "@mui/icons-material/AccountBoxRounded";
 import ExploreIcon from "@mui/icons-material/Explore";
 import PageviewIcon from "@mui/icons-material/Pageview";
 import SettingsIcon from "@mui/icons-material/Settings";
-import HomeFilledIcon from "@mui/icons-material/HomeFilled";
 import BackpackIcon from '@mui/icons-material/Backpack';
+import SwapHorizontalCircleIcon from "@mui/icons-material/SwapHorizontalCircle";
 
 function Sidebar() {
 	return (
 		<div className={styles.leftNav}>
-			<div className={styles.iconButton}>
-				<Tooltip title="Home" placement="right">
-					<Link to="/home" className={styles.link}>
-						<HomeFilledIcon fontSize="large" />
-					</Link>
-				</Tooltip>
-			</div>
 			<div className={styles.iconButton}>
 				<Tooltip title="Profile" placement="right">
 					<Link to="/profile" className={styles.link}>
@@ -28,9 +21,16 @@ function Sidebar() {
 				</Tooltip>
 			</div>
 			<div className={styles.iconButton}>
-				<Tooltip title="Products & Offers" placement="right">
+				<Tooltip title="Products" placement="right">
 					<Link to="/products" className={styles.link}>
 						<ExploreIcon fontSize="large" />
+					</Link>
+				</Tooltip>
+			</div>
+			<div className={styles.iconButton}>
+				<Tooltip title="Offers" placement="right">
+					<Link to="/offers" className={styles.link}>
+						<SwapHorizontalCircleIcon fontSize="large" />
 					</Link>
 				</Tooltip>
 			</div>
