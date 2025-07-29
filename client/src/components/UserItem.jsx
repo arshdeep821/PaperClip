@@ -12,7 +12,7 @@ const UserItem = ({ user }) => {
 	}
 
 	return (
-		<div className={styles.userCard} onClick={() => handleClick(user)}>
+		<div className={styles.userCard} onClick={() => handleClick(user)} style={{ cursor: "pointer" }}>
 			<div className={styles.userInfo}>
 				<div className={styles.name}>{user.name}</div>
 				<div className={styles.username}>@{user.username}</div>
