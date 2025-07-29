@@ -12,7 +12,6 @@ import Signup from "./pages/Signup";
 import Inventory from "./pages/Inventory";
 import ViewProducts from "./pages/ViewProducts";
 import Profile from "./pages/Profile";
-import Home from "./pages/Home";
 import ViewOffers from "./pages/ViewOffers";
 import Search from "./pages/Search";
 import Users from "./pages/Users";
@@ -69,7 +68,7 @@ const App = () => {
 					path="/"
 					element={
 						isLoggedIn ? (
-							<Navigate to="/home" replace />
+							<Navigate to="/products" replace />
 						) : (
 							<Navigate to="/login" replace />
 						)
@@ -85,14 +84,6 @@ const App = () => {
 					element={<Signup />}
 				/>
 
-				<Route
-					path="/home"
-					element={
-						<RequireAuth>
-							<Home />
-						</RequireAuth>
-					}
-				/>
 				<Route
 					path="/inventory"
 					element={
