@@ -88,9 +88,6 @@ def refresh_model(features_map, features, products):
 	result_df = pd.DataFrame(features)
 
 	n_neighbors = len(products)
-	print(len(features_map))
-	print(len(features))
-	print(len(products))
 	knn = NearestNeighbors(n_neighbors=n_neighbors, metric="cosine")
 	knn.fit(result_df)
 

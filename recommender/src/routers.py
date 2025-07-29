@@ -43,7 +43,6 @@ def recommend(req: RecommendationRequest):
 def refresh_model_adding(req: ProductRequest):
 	try:
 		load_model()
-		print(req.product)
 		refresh_model_addition(req.product)
 		return {"status": "model refreshed"}
 	except Exception as e:
