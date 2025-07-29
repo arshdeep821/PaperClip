@@ -3,24 +3,54 @@ import Item from "../models/Item.js";
 
 const MODEL_API_URL = "http://recommender:8001";
 
-export const refreshModel = () => {
-	fetch(`${MODEL_API_URL}/model/refresh`, {
-		method: "POST",
-	})
-		.then(async (response) => {
-			if (!response.ok) {
-				const errorData = await response.json();
-				console.error(
-					"Model refresh failed:",
-					errorData.detail || `Status ${response.status}`
-				);
-			} else {
-				console.log("Model refreshed");
-			}
-		})
-		.catch((error) => {
-			console.error("Error refreshing model:", error);
+const sendRefreshRequest = async (url, body) => {
+	try {
+		const response = await fetch(url, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(body),
 		});
+
+		if (!response.ok) {
+			const errorData = await response.json();
+			console.error(
+				`Model refresh failed (${url}):`,
+				errorData.detail || `Status ${response.status}`
+			);
+		} else {
+			console.log(`Model refreshed (${url})`);
+		}
+	} catch (error) {
+		console.error(`Error refreshing model (${url}):`, error);
+	}
+};
+
+export const refreshModelAddition = (product) => {
+	sendRefreshRequest(`${MODEL_API_URL}/model/refresh/addition`, {
+		product: {
+			id: product._id.toString(),
+			name: product.name,
+			description: product.description,
+			category: product.category.name,
+			condition: product.condition,
+		},
+	});
+};
+
+export const refreshModelUpdate = (product) => {
+	sendRefreshRequest(`${MODEL_API_URL}/model/refresh/update`, {
+		product: {
+			id: product._id.toString(),
+			name: product.name,
+			description: product.description,
+			category: product.category.name,
+			condition: product.condition,
+		},
+	});
+};
+
+export const refreshModelRemoval = (id) => {
+	sendRefreshRequest(`${MODEL_API_URL}/model/refresh/removal`, { id });
 };
 
 export const getRecommendationsForUser = async (user) => {

@@ -8,7 +8,7 @@ import path from "path"
 import mongoose from "mongoose";
 import { escapeRegex } from "../util/sanitization.js";
 
-import { refreshModel } from "../util/recommender.js";
+import { refreshModelAddition, refreshModelRemoval, refreshModelUpdate } from "../util/recommender.js";
 
 const createItem = async (req, res) => {
     try {
@@ -59,14 +59,13 @@ const createItem = async (req, res) => {
         // const imageFile = fs.readFileSync(`./public/${imagePath}`)
         // const base64Image = `data:image/jpeg;base64,${imageFile.toString('base64')}`;
 
-		refreshModel();
+        const newItemWithCategory = await Item.findById(newItem._id)
+			.populate("category")
+			.lean();
 
-        const newItemWithCategory = await Item.findById(newItem._id).populate("category");
+		refreshModelAddition(newItemWithCategory);
 
-        // create new object that will be returned
-        const newItemObj = { ...newItemWithCategory.toObject() }
-
-        res.status(StatusCodes.CREATED).json(newItemObj);
+        res.status(StatusCodes.CREATED).json(newItemWithCategory);
     } catch (err) {
         console.error("Error creating item:", err);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -103,7 +102,7 @@ const deleteItem = async (req, res) => {
         // delete item
         await Item.findByIdAndDelete(id);
 
-		refreshModel();
+		refreshModelRemoval(id);
 
         res.status(StatusCodes.OK).json({ message: "Item deleted successfully." });
     } catch (err) {
@@ -159,7 +158,10 @@ const updateItem = async (req, res) => {
 
         await item.save();
 
-		refreshModel();
+		const itemObj = await Item.findById(id)
+			.populate("category")
+			.lean();
+		refreshModelUpdate(itemObj);
 
         // const imageFile = fs.readFileSync(item.imagePath);
         // const base64Image = `data:image/jpeg;base64,${imageFile.toString("base64")}`;
@@ -221,7 +223,7 @@ const searchProducts = async (req, res) => {
         const andConditions = terms.map((term) => {
             // ESCAPE THE USER INPUT TO PREVENT REGEX INJECTION
             const escapedTerm = escapeRegex(term);
-            
+
             return {
                 $or: [
                     { name: { $regex: escapedTerm, $options: "i" } },
@@ -274,7 +276,7 @@ const searchProducts = async (req, res) => {
         const userConditions = terms.map((term) => {
             // Also escape terms for user search
             const escapedTerm = escapeRegex(term);
-            
+
             return {
                 $or: [
                     { username: { $regex: escapedTerm, $options: "i" } },
