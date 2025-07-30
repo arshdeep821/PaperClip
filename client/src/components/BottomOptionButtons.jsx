@@ -54,27 +54,27 @@ function BottomOptionButtons({ handleLeftButton, handleRightButton }) {
 
 	return (
 		<div className={styles.bottomButtons}>
-			<div className={styles.optionButton} onClick={() => {
-				handleLeftButton();
-				handleNewTrade();
-			}}>
-				<Tooltip title="Previous product">
+			<Tooltip title="Previous product">
+				<div className={styles.optionButton} onClick={() => {
+					handleLeftButton();
+					handleNewTrade();
+				}}>
 					<ArrowBackIosIcon fontSize="large" />
-				</Tooltip>
-			</div>
-			<div className={styles.optionButton} onClick={handleSubmitTrade}>
-				<Tooltip title="Confirm trade">
+				</div>
+			</Tooltip>
+			<Tooltip title="Confirm trade">
+				<div className={styles.optionButton} onClick={handleSubmitTrade}>
 					<CheckIcon fontSize="large" />
-				</Tooltip>
-			</div>
-			<div className={styles.optionButton} onClick={() => {
-				handleRightButton();
-				handleNewTrade();
-			}}>
-				<Tooltip title="Next product">
+				</div>
+			</Tooltip>
+			<Tooltip title="Next product">
+				<div className={styles.optionButton} onClick={() => {
+					handleRightButton();
+					handleNewTrade();
+				}}>
 					<ArrowForwardIosIcon fontSize="large" />
-				</Tooltip>
-			</div>
+				</div>
+			</Tooltip>
 		</div>
 	);
 }
