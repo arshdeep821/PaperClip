@@ -5,11 +5,11 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TradeFrame from "./TradeFrame";
 import { setInventory } from "../redux/slices/userSlice";
-import { resetTrade } from "../redux/slices/tradeSlice";
+import { resetTrade, setProduct } from "../redux/slices/tradeSlice";
 
 const BACKEND_URL = "http://localhost:3001";
 
-function Bag({ bagOpen, setBagOpen }) {
+function Bag({ currentProduct, bagOpen, setBagOpen }) {
 	const dispatch = useDispatch();
 
 	const userId = useSelector((state) => state.user.id);
@@ -36,7 +36,8 @@ function Bag({ bagOpen, setBagOpen }) {
 				className={styles.bagIcon}
 				onClick={() => {
 					setBagOpen(!bagOpen);
-					//dispatch(resetTrade()); // remove if closing bag shouldn't reset the selected items
+					dispatch(resetTrade()); // remove if closing bag shouldn't reset the selected items
+					dispatch(setProduct(currentProduct));
 				}}
 			>
 				<BackpackIcon />

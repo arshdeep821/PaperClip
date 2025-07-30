@@ -22,6 +22,9 @@ function BottomOptionButtons({ handleLeftButton, handleRightButton, bagOpen, set
 				setBagOpen(true);
 			}
 
+			console.log(product);
+			console.log(table2);
+			console.log(user);
 			// TODO: add a toast to tell users tell users to select items
 			return;
 		}
