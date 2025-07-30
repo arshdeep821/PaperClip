@@ -103,60 +103,60 @@ function Sidebar() {
 	return (
 		<div className={styles.leftNav}>
 			<div className={styles.iconButton}>
-				<Tooltip title="Home" placement="right" />
-
-				<Link to="/home" className={styles.link}>
-					<HomeFilledIcon fontSize="large" />
-				</Link>
+				<Tooltip title="Home" placement="right">
+					<Link to="/home" className={styles.link}>
+						<HomeFilledIcon fontSize="large" />
+					</Link>
+				</Tooltip>
 			</div>
 			<div className={styles.iconButton}>
-				<Tooltip title="Profile" placement="right" />
-
-				<Link to="/profile" className={styles.link}>
-					<AccountBoxRoundedIcon fontSize="large" />
-				</Link>
+				<Tooltip title="Profile" placement="right">
+					<Link to="/profile" className={styles.link}>
+						<AccountBoxRoundedIcon fontSize="large" />
+					</Link>
+				</Tooltip>
 			</div>
 			<div className={styles.iconButton}>
-				<Tooltip title="Products & Offers" placement="right" />
-
-				<Link to="/products" className={styles.link}>
-					<ExploreIcon fontSize="large" />
-				</Link>
+				<Tooltip title="Products & Offers" placement="right">
+					<Link to="/products" className={styles.link}>
+						<ExploreIcon fontSize="large" />
+					</Link>
+				</Tooltip>
 			</div>
 			<div className={styles.iconButton}>
-				<Tooltip title="Chats" placement="right" />
-
-				<Link to="/chats" className={styles.link}>
-					<ChatIcon fontSize="large" />
-				</Link>
+				<Tooltip title="Chats" placement="right">
+					<Link to="/chats" className={styles.link}>
+						<ChatIcon fontSize="large" />
+					</Link>
+				</Tooltip>
 			</div>
 			<div className={styles.iconButton}>
-				<Tooltip title="Inventory" placement="right" />
-
-				<Link to="/inventory" className={styles.link}>
-					<BackpackIcon fontSize="large" />
-				</Link>
+				<Tooltip title="Inventory" placement="right">
+					<Link to="/inventory" className={styles.link}>
+						<BackpackIcon fontSize="large" />
+					</Link>
+				</Tooltip>
 			</div>
 			<div className={styles.iconButton}>
-				<Tooltip title="Search" placement="right" />
-
-				<Link to="/search" className={styles.link}>
-					<PageviewIcon fontSize="large" />
-				</Link>
+				<Tooltip title="Search" placement="right">
+					<Link to="/search" className={styles.link}>
+						<PageviewIcon fontSize="large" />
+					</Link>
+				</Tooltip>
 			</div>
 			<div className={styles.iconButton}>
-				<Tooltip title="Settings" placement="right" />
-
-				<Link to="/settings" className={styles.link}>
-					<SettingsIcon fontSize="large" />
-				</Link>
+				<Tooltip title="Settings" placement="right">
+					<Link to="/settings" className={styles.link}>
+						<SettingsIcon fontSize="large" />
+					</Link>
+				</Tooltip>
 			</div>
 			<div className={styles.iconButton}>
-				<Tooltip title="Help" placement="right" />
-
-				<div onClick={handleHelp}>
-					<HelpIcon fontSize="large" />
-				</div>
+				<Tooltip title="Help" placement="right">
+					<div onClick={handleHelp}>
+						<HelpIcon fontSize="large" />
+					</div>
+				</Tooltip>
 			</div>
 
 			<HelpModal
