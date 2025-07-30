@@ -11,7 +11,7 @@ const SearchItem = ({ item }) => {
     }
 
     return (
-        <div className={styles.card} onClick={() => handleClick(item)}>
+        <div className={styles.card} onClick={() => handleClick(item)} style={{ cursor: "pointer" }}>
             {item.imagePath && (
                 <>
                     <div className={styles.imageWrapper}>
