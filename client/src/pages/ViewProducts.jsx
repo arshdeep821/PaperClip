@@ -5,7 +5,6 @@ import styles from "../styles/ViewProducts.module.css";
 import ProductItem from "../components/ProductItem";
 import Sidebar from "../components/Sidebar";
 
-import TopOptionButtons from "../components/TopOptionButtons";
 import BottomOptionButtons from "../components/BottomOptionButtons";
 import Bag from "../components/Bag";
 import { getRecommendedProducts } from "../redux/slices/productsSlice";
@@ -83,11 +82,9 @@ const ViewProducts = () => {
 
 	return (
 		<div className={styles.productsPage}>
-			<div style={{ backgroundColor: "rgb(220, 220, 220)" }}>
-				<TopOptionButtons />
-			</div>
-
 			<Sidebar />
+
+			<h1 className={styles.header}>Top Picks - Just For You</h1>
 
 			<div className={styles.productItem}>
 				<ProductItem item={products[itemIdx]} />

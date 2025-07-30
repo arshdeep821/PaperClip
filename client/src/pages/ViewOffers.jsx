@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { fetchOffers, renegOffer } from "../redux/slices/offersSlice";
 import OfferBox from "../components/OfferBox";
 import Sidebar from "../components/Sidebar";
-import TopOptionButtons from "../components/TopOptionButtons";
 import OffersActions from "../components/OffersActions";
 import RenegPanel from "../components/RenegPanel";
 import ItemOfferDetails from "../components/ItemOfferDetails";
@@ -62,9 +61,7 @@ function ViewOffers() {
 		<div className={styles.offersPage}>
 			<Sidebar />
 
-			<div className={styles.top}>
-				<TopOptionButtons />
-			</div>
+			<h1 className={styles.header}>Offers You've Received</h1>
 
 			<div className={styles.mainContent}>
 				{

@@ -32,7 +32,7 @@ function Login() {
 				})
 			).unwrap();
 
-			navigate("/home");
+			navigate("/products");
 		} catch (error) {
 			alert(error.message || "An error occurred while trying to login");
 		}
