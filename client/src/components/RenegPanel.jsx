@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import styles from "../styles/RenegPanel.module.css";
 import { useEffect, useState } from "react";
 import TradeFrame from "./TradeFrame";
 
@@ -32,7 +31,7 @@ function RenegPanel({ theirId, currOffer }) {
 	}, [theirId]);
 
 	return (
-		<div className={styles.renegPanel}>
+		<div>
 			<h3>their items</h3>
 			<TradeFrame items={theirItems} user={USER1} currOffer={currOffer} />
 
