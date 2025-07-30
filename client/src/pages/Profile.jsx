@@ -291,10 +291,7 @@ function Profile() {
 				})}
 			</ul>
 		);
-	};
-
-	console.log(achievements);
-	
+	};	
 
 	return (
 		<main className={styles.profilePage}>
