@@ -2,25 +2,56 @@ import fetch from "node-fetch";
 import Item from "../models/Item.js";
 
 const MODEL_API_URL = "http://recommender:8001";
+const distanceCache = new Map();
 
-export const refreshModel = () => {
-	fetch(`${MODEL_API_URL}/model/refresh`, {
-		method: "POST",
-	})
-		.then(async (response) => {
-			if (!response.ok) {
-				const errorData = await response.json();
-				console.error(
-					"Model refresh failed:",
-					errorData.detail || `Status ${response.status}`
-				);
-			} else {
-				console.log("Model refreshed");
-			}
-		})
-		.catch((error) => {
-			console.error("Error refreshing model:", error);
+const sendRefreshRequest = async (url, body) => {
+	try {
+		const response = await fetch(url, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(body),
 		});
+
+		if (!response.ok) {
+			const errorData = await response.json();
+			console.error(
+				`Model refresh failed (${url}):`,
+				errorData.detail || `Status ${response.status}`
+			);
+		} else {
+			console.log(`Model refreshed (${url})`);
+		}
+	} catch (error) {
+		console.error(`Error refreshing model (${url}):`, error);
+	}
+};
+
+export const refreshModelAddition = (product) => {
+	sendRefreshRequest(`${MODEL_API_URL}/model/refresh/addition`, {
+		product: {
+			id: product._id.toString(),
+			name: product.name,
+			description: product.description,
+			category: product.category.name,
+			condition: product.condition,
+		},
+	});
+};
+
+export const refreshModelUpdate = (product) => {
+	sendRefreshRequest(`${MODEL_API_URL}/model/refresh/update`, {
+		product: {
+			id: product._id.toString(),
+			name: product.name,
+			description: product.description,
+			category: product.category.name,
+			condition: product.condition,
+		},
+	});
+};
+
+export const refreshModelRemoval = (id) => {
+	sendRefreshRequest(`${MODEL_API_URL}/model/refresh/removal`, { id });
 };
 
 export const getRecommendationsForUser = async (user) => {
@@ -96,7 +127,11 @@ const removeProductsOutsideRadius = async (
 			continue;
 		}
 
-		if (
+		const key = createDistanceCacheKey(lat, lon, owner.lat, owner.lon);
+		let dist = distanceCache.get(key);
+
+		if (dist === undefined) {
+			if (
 			owner.lat < roughBox.minLat ||
 			owner.lat > roughBox.maxLat ||
 			owner.lon < roughBox.minLon ||
@@ -104,8 +139,8 @@ const removeProductsOutsideRadius = async (
 		) {
 			continue;
 		}
-
-		const dist = exactDistanceCheck(lat, lon, owner.lat, owner.lon);
+			dist = exactDistanceCheck(lat, lon, owner.lat, owner.lon);
+		}
 
 		if (dist <= tradingRadius) {
 			result.push(product);
@@ -146,8 +181,12 @@ const exactDistanceCheck = (lat1, lon1, lat2, lon2) => {
 			Math.sin(lonDiff / 2) ** 2;
 
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	const exact_distance = earthRadius * c;
 
-	return earthRadius * c;
+	const key = createDistanceCacheKey(lat1, lon1, lat2, lon2);
+	distanceCache.set(key, exact_distance);
+
+	return exact_distance;
 };
 
 const removeUsersOwnItems = (products, inventory) => {
@@ -158,4 +197,11 @@ const removeUsersOwnItems = (products, inventory) => {
 	);
 
 	return filteredProducts;
+};
+
+const createDistanceCacheKey = (lat1, lon1, lat2, lon2) => {
+	const pair1 = `${lat1},${lon1}`;
+	const pair2 = `${lat2},${lon2}`;
+
+	return [pair1, pair2].sort().join("-");
 };
