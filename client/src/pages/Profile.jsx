@@ -10,6 +10,8 @@ import paperClipIcon from "../assets/PaperClip.png";
 import houseIcon from "../assets/houseicon2.png";
 import { Country, City } from "country-state-city";
 
+const BACKEND_URL = "http://localhost:3001";
+
 function Profile() {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.user);
@@ -27,7 +29,43 @@ function Profile() {
 	const [usernameAvailable, setUsernameAvailable] = useState(true);
 	const [isCheckingUsername, setIsCheckingUsername] = useState(false);
 	const [cities, setCities] = useState([]);
+	const [achievements, setAchievements] = useState([]);
+	const [achievementsLoading, setAchievementsLoading] = useState(false);
 	const countries = Country.getAllCountries();
+
+	// Icon mapping for achievements
+	const iconMap = {
+		paperClipIcon: paperClipIcon,
+		hustlerIcon: hustlerIcon,
+		houseIcon: houseIcon
+	};
+
+	// Fetch achievements when component mounts or user changes
+	useEffect(() => {
+		const fetchAchievements = async () => {
+			if (user.isLoggedIn && user.id) {
+				setAchievementsLoading(true);
+				try {
+					const response = await fetch(`${BACKEND_URL}/users/${user.id}/achievements`);
+					if (response.ok) {
+						const data = await response.json();
+						setAchievements(data.achievements || []);
+					} else {
+						// console.error('Failed to fetch achievements');
+						setAchievements([]);
+					}
+				} catch (error) {
+					// console.error('Error fetching achievements:', error);
+					setAchievements([]);
+				} finally {
+					setAchievementsLoading(false);
+				}
+			}
+		};
+
+		fetchAchievements();
+	// }, [user.isLoggedIn, user.id, location.pathname]);
+	}, [user.isLoggedIn, user.id]);
 
 	useEffect(() => {
 		if (editData.country) {
@@ -208,6 +246,55 @@ function Profile() {
 			alert(error.message || 'Failed to update profile picture');
 		}
 	};
+
+	const renderAchievements = () => {
+		if (achievementsLoading) {
+			return (
+				<div className={styles.noAchievements}>
+					<p>Loading achievements...</p>
+				</div>
+			);
+		}
+
+		if (!achievements || achievements.length === 0) {
+			return (
+				<div className={styles.noAchievements}>
+					<p>No achievements yet. Start trading to earn achievements!</p>
+				</div>
+			);
+		}
+
+		return (
+			<ul className={styles.achievementsList}>
+				{achievements.map((achievement, index) => {
+					const iconSrc = iconMap[achievement.icon];
+					
+					return (
+						<li key={index} className={styles.achievementItem}>
+							<figure className={styles.achievementFigure}>
+								<img
+									className={styles.achievementIcon}
+									src={iconSrc}
+									alt={`${achievement.title} Achievement`}
+								/>
+								<figcaption>
+									<div className={styles.achievementTitle}>
+										{achievement.title}
+									</div>
+									<div className={styles.achievementDescription}>
+										{achievement.description}
+									</div>
+								</figcaption>
+							</figure>
+						</li>
+					);
+				})}
+			</ul>
+		);
+	};
+
+	console.log(achievements);
+	
 
 	return (
 		<main className={styles.profilePage}>
@@ -492,78 +579,7 @@ function Profile() {
 
 					<fieldset className={styles.fieldset}>
 						<legend className={styles.legend}>Achievements</legend>
-						<ul className={styles.achievementsList}>
-							<li className={styles.achievementItem}>
-								<figure className={styles.achievementFigure}>
-									<img
-										className={styles.achievementIcon}
-										src={hustlerIcon}
-										alt="Hustler Achievement"
-									/>
-									<figcaption>
-										<div
-											className={styles.achievementTitle}
-										>
-											The Hustler
-										</div>
-										<div
-											className={
-												styles.achievementDescription
-											}
-										>
-											Logged in and made at least 1 trade
-											every day for 7 consecutive days
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li className={styles.achievementItem}>
-								<figure className={styles.achievementFigure}>
-									<img
-										className={styles.achievementIcon}
-										src={paperClipIcon}
-										alt="From Nothing Achievement"
-									/>
-									<figcaption>
-										<div
-											className={styles.achievementTitle}
-										>
-											From Nothing
-										</div>
-										<div
-											className={
-												styles.achievementDescription
-											}
-										>
-											Yay! you completed your first trade
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li className={styles.achievementItem}>
-								<figure className={styles.achievementFigure}>
-									<img
-										className={styles.achievementIcon}
-										src={houseIcon}
-										alt="Closed the Deal Achievement"
-									/>
-									<figcaption>
-										<div
-											className={styles.achievementTitle}
-										>
-											Closed the Deal
-										</div>
-										<div
-											className={
-												styles.achievementDescription
-											}
-										>
-											Traded up to a house!
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-						</ul>
+						{renderAchievements()}
 					</fieldset>
 				</section>
 			</div>

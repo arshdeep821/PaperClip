@@ -3,6 +3,7 @@ import Category from "../models/Category.js";
 import { StatusCodes } from "http-status-codes";
 import { hash, compare } from "bcrypt";
 import { getRecommendationsForUser } from "../util/recommender.js";
+import { calculateUserAchievements } from "../util/achievements.js";
 import fs from "fs";
 import path from "path";
 
@@ -522,6 +523,24 @@ const updateUserProfilePicture = async (req, res) => {
 	}
 };
 
+const getAchievements = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (!id) {
+            return res.status(400).json({ error: "User ID is required" });
+        }
+
+        // Calculate achievements for the user
+        const achievements = await calculateUserAchievements(id);
+        
+        res.status(200).json({ achievements });
+    } catch (error) {
+        console.error("Error fetching achievements:", error);
+        res.status(500).json({ error: "Failed to fetch achievements" });
+    }
+};
+
 export {
 	createUser,
 	loginUser,
@@ -535,4 +554,5 @@ export {
 	restoreSession,
 	updateUserProfilePicture,
 	checkUsernameAvailability,
+	getAchievements
 };
