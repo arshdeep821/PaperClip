@@ -1,17 +1,17 @@
 import styles from "../styles/Bag.module.css";
 import BackpackIcon from '@mui/icons-material/Backpack';
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TradeFrame from "./TradeFrame";
 import { setInventory } from "../redux/slices/userSlice";
+import { resetTrade } from "../redux/slices/tradeSlice";
 
 const BACKEND_URL = "http://localhost:3001";
 
-function Bag() {
+function Bag({ bagOpen, setBagOpen }) {
 	const dispatch = useDispatch();
 
-	const [open, setOpen] = useState(false);
 	const userId = useSelector((state) => state.user.id);
 	const items = useSelector((state) => state.user.inventory || []);
 
@@ -28,18 +28,21 @@ function Bag() {
 		};
 
 		fetchInventoryItems();
-	}, [userId]);
+	}, [dispatch, userId]);
 
 	return (
 		<div className={styles.bag}>
 			<div
 				className={styles.bagIcon}
-				onClick={() => setOpen(!open)}
+				onClick={() => {
+					setBagOpen(!bagOpen);
+					//dispatch(resetTrade()); // remove if closing bag shouldn't reset the selected items
+				}}
 			>
 				<BackpackIcon />
 			</div>
 
-			{open && (
+			{bagOpen && (
 				<div className={styles.inventoryFrame}>
 					<TradeFrame items={items} user={"user2"} />
 					<span className={styles.instruction}>Select items to offer</span>
