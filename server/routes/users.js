@@ -16,6 +16,7 @@ import {
 	updateUserProfilePicture,
 	checkUsernameAvailability,
 	restoreSession,
+	getAchievements,
 } from "../controllers/users.js";
 
 const profilePictureStorage = multer.diskStorage({
@@ -53,6 +54,7 @@ router.route("/session").get(restoreSession);
 router.route("/login").post(loginUser);
 router.route("/:id").get(getUser).put(updateUser).delete(deleteUser);
 router.route("/:id/preferences").patch(updateUserPreferences);
+router.route("/:id/achievements").get(getAchievements);
 router.route("/:id/privacy").patch(updateUserPrivacy);
 router.route("/:id/recommend").get(getRecommendationByUserID);
 router.route("/:id/password").patch(updateUserPassword);
