@@ -8,7 +8,7 @@ import { resetTrade } from "../redux/slices/tradeSlice";
 
 const BACKEND_URL = "http://localhost:3001";
 
-function BottomOptionButtons({ handleLeftButton, handleRightButton }) {
+function BottomOptionButtons({ handleLeftButton, handleRightButton, bagOpen, setBagOpen }) {
 	const dispatch = useDispatch();
 
 	const product = useSelector((state) => state.trade?.product);
@@ -17,8 +17,11 @@ function BottomOptionButtons({ handleLeftButton, handleRightButton }) {
 
 	const handleSubmitTrade = async () => {
 		if (!product || !table2 || table2.length === 0 || !user) {
-			console.log("not a valid trade");
-			alert("Please select a product to trade");
+			if (!bagOpen) {
+				setBagOpen(true);
+			}
+
+			// TODO: add a toast to tell users tell users to select items
 			return;
 		}
 		try {

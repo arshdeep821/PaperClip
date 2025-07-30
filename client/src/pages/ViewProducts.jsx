@@ -21,11 +21,12 @@ const ViewProducts = () => {
 	const NUM_PRODUCTS = products.length || 0;
 
 	const [itemIdx, setItemIdx] = useState(0);
+	const [bagOpen, setBagOpen] = useState(false);
 
 	// clears any previously selected items on loading the products page
 	useEffect(() => {
 		dispatch(resetTrade());
-	});
+	}, []);
 
 	useEffect(() => {
 		dispatch(getRecommendedProducts(userId));
@@ -93,10 +94,14 @@ const ViewProducts = () => {
 			<BottomOptionButtons
 				handleLeftButton={handleLeftButton}
 				handleRightButton={handleRightButton}
-				product={products[itemIdx]}
+				bagOpen={bagOpen}
+				setBagOpen={setBagOpen}
 			/>
 
-			<Bag currentProduct={products[itemIdx]} />
+			<Bag
+				bagOpen={bagOpen}
+				setBagOpen={setBagOpen}
+			/>
 		</div>
 	);
 };
