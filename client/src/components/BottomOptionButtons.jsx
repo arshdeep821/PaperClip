@@ -5,6 +5,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CheckIcon from "@mui/icons-material/Check";
 import { useDispatch, useSelector } from "react-redux";
 import { resetTrade } from "../redux/slices/tradeSlice";
+import { Tooltip } from "@mui/material";
 
 const BACKEND_URL = "http://localhost:3001";
 
@@ -57,16 +58,22 @@ function BottomOptionButtons({ handleLeftButton, handleRightButton }) {
 				handleLeftButton();
 				handleNewTrade();
 			}}>
-				<ArrowBackIosIcon fontSize="large" />
+				<Tooltip title="Previous product">
+					<ArrowBackIosIcon fontSize="large" />
+				</Tooltip>
 			</div>
 			<div className={styles.optionButton} onClick={handleSubmitTrade}>
-				<CheckIcon fontSize="large" />
+				<Tooltip title="Confirm trade">
+					<CheckIcon fontSize="large" />
+				</Tooltip>
 			</div>
 			<div className={styles.optionButton} onClick={() => {
 				handleRightButton();
 				handleNewTrade();
 			}}>
-				<ArrowForwardIosIcon fontSize="large" />
+				<Tooltip title="Next product">
+					<ArrowForwardIosIcon fontSize="large" />
+				</Tooltip>
 			</div>
 		</div>
 	);
