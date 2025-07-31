@@ -524,24 +524,21 @@ const updateUserProfilePicture = async (req, res) => {
 };
 
 const getAchievements = async (req, res) => {
-	try {
-		const { id } = req.params;
-		const user = await User.findById(id);
+    try {
+        const { id } = req.params;
 
-		if (!user) {
-			return res.status(StatusCodes.NOT_FOUND).json({
-				error: "User not found.",
-			});
-		}
+        if (!id) {
+            return res.status(400).json({ error: "User ID is required" });
+        }
 
-		const achievements = await calculateUserAchievements(user);
-		res.status(StatusCodes.OK).json(achievements);
-	} catch (err) {
-		console.error("Error getting achievements:", err);
-		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-			error: "Server error. Could not get achievements.",
-		});
-	}
+        // Calculate achievements for the user
+        const achievements = await calculateUserAchievements(id);
+
+        res.status(200).json({ achievements });
+    } catch (error) {
+        console.error("Error fetching achievements:", error);
+        res.status(500).json({ error: "Failed to fetch achievements" });
+    }
 };
 
 const logoutUser = async (req, res) => {
