@@ -9,7 +9,7 @@ import BottomOptionButtons from "../components/BottomOptionButtons";
 import Bag from "../components/Bag";
 import { getRecommendedProducts } from "../redux/slices/productsSlice";
 import { useLocation } from "react-router-dom";
-import { resetTrade, setProduct } from "../redux/slices/tradeSlice";
+import { resetTrade } from "../redux/slices/tradeSlice";
 
 const ViewProducts = () => {
 	let products = useSelector((state) => state.products.products);
@@ -21,22 +21,16 @@ const ViewProducts = () => {
 	const NUM_PRODUCTS = products.length || 0;
 
 	const [itemIdx, setItemIdx] = useState(0);
+	const [bagOpen, setBagOpen] = useState(false);
 
 	// clears any previously selected items on loading the products page
 	useEffect(() => {
 		dispatch(resetTrade());
-	});
+	}, [dispatch]);
 
 	useEffect(() => {
 		dispatch(getRecommendedProducts(userId));
 	}, [dispatch, userId]);
-
-	// set the current product for trading once products are available
-	useEffect(() => {
-		if (status === "succeeded" && products.length > 0) {
-			dispatch(setProduct(products[itemIdx]));
-		}
-	}, [dispatch, status, products, itemIdx]);
 
 	useEffect(() => {
 		const handleKeyDown = (e) => {
@@ -93,10 +87,15 @@ const ViewProducts = () => {
 			<BottomOptionButtons
 				handleLeftButton={handleLeftButton}
 				handleRightButton={handleRightButton}
-				product={products[itemIdx]}
+				bagOpen={bagOpen}
+				setBagOpen={setBagOpen}
 			/>
 
-			<Bag currentProduct={products[itemIdx]} />
+			<Bag
+				currentProduct={products[itemIdx]}
+				bagOpen={bagOpen}
+				setBagOpen={setBagOpen}
+			/>
 		</div>
 	);
 };
