@@ -7,11 +7,12 @@ import AccountBoxRoundedIcon from "@mui/icons-material/AccountBoxRounded";
 import ExploreIcon from "@mui/icons-material/Explore";
 import PageviewIcon from "@mui/icons-material/Pageview";
 import SettingsIcon from "@mui/icons-material/Settings";
-import HomeFilledIcon from "@mui/icons-material/HomeFilled";
 import BackpackIcon from '@mui/icons-material/Backpack';
 import HelpIcon from '@mui/icons-material/Help';
 import HelpModal from "./HelpModal";
 import { useState } from "react";
+import SwapHorizontalCircleIcon from "@mui/icons-material/SwapHorizontalCircle";
+
 
 function Sidebar() {
 	const location = useLocation();

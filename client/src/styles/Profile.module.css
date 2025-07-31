@@ -229,3 +229,15 @@
     display: flex;
     align-items: center;
 }
+
+.noAchievements {
+	text-align: center;
+	padding: 2rem;
+	color: #666;
+	font-style: italic;
+}
+
+.noAchievements p {
+	margin: 0;
+	font-size: 1.1rem;
+}
