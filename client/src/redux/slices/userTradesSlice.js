@@ -35,4 +35,4 @@ export const userTradesSlice = createSlice({
 	}
 });
 
-export default userTradesSlice.reducer; 
+export default userTradesSlice.reducer;

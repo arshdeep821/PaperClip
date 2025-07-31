@@ -524,21 +524,43 @@ const updateUserProfilePicture = async (req, res) => {
 };
 
 const getAchievements = async (req, res) => {
-    try {
-        const { id } = req.params;
-        
-        if (!id) {
-            return res.status(400).json({ error: "User ID is required" });
-        }
+	try {
+		const { id } = req.params;
+		const user = await User.findById(id);
 
-        // Calculate achievements for the user
-        const achievements = await calculateUserAchievements(id);
-        
-        res.status(200).json({ achievements });
-    } catch (error) {
-        console.error("Error fetching achievements:", error);
-        res.status(500).json({ error: "Failed to fetch achievements" });
-    }
+		if (!user) {
+			return res.status(StatusCodes.NOT_FOUND).json({
+				error: "User not found.",
+			});
+		}
+
+		const achievements = await calculateUserAchievements(user);
+		res.status(StatusCodes.OK).json(achievements);
+	} catch (err) {
+		console.error("Error getting achievements:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Server error. Could not get achievements.",
+		});
+	}
+};
+
+const logoutUser = async (req, res) => {
+	try {
+		req.session.destroy((err) => {
+			if (err) {
+				return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+					error: "Could not logout.",
+				});
+			}
+			res.clearCookie("connect.sid");
+			res.status(StatusCodes.OK).json({ message: "Logged out successfully." });
+		});
+	} catch (err) {
+		console.error("Error logging out:", err);
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			error: "Server error. Could not logout.",
+		});
+	}
 };
 
 export {
@@ -551,8 +573,9 @@ export {
 	deleteUser,
 	updateUserPrivacy,
 	updateUserPassword,
-	restoreSession,
 	updateUserProfilePicture,
 	checkUsernameAvailability,
-	getAchievements
+	restoreSession,
+	getAchievements,
+	logoutUser,
 };

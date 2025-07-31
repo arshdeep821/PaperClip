@@ -172,6 +172,21 @@ export const deleteUser = createAsyncThunk(
 	}
 );
 
+export const logoutUser = createAsyncThunk(
+	"user/logoutUser",
+	async (_, { rejectWithValue }) => {
+		const response = await fetch(`${BACKEND_URL}/users/logout`, {
+			method: "POST",
+			credentials: "include",
+		});
+		if (!response.ok) {
+			const errorData = await response.json();
+			return rejectWithValue(errorData.error || "Failed to logout");
+		}
+		return await response.json();
+	}
+);
+
 export const userSlice = createSlice({
 	name: "user",
 	initialState,
@@ -394,6 +409,29 @@ export const userSlice = createSlice({
 				state.error = null;
 			})
 			.addCase(deleteUser.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = action.payload || action.error.message;
+			})
+			.addCase(logoutUser.pending, (state) => {
+				state.status = "logging_out";
+			})
+			.addCase(logoutUser.fulfilled, (state) => {
+				state.status = "logged_out";
+				state.isLoggedIn = false;
+				state.id = null;
+				state.username = null;
+				state.name = null;
+				state.email = null;
+				state.city = null;
+				state.country = null;
+				state.tradingRadius = null;
+				state.inventory = [];
+				state.userPreferences = [];
+				state.profilePicture = null;
+				state.createdAt = null;
+				state.error = null;
+			})
+			.addCase(logoutUser.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = action.payload || action.error.message;
 			})
