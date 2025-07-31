@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import SearchItem from "../components/SearchItem";
 import styles from "../styles/Users.module.css";
 import MessageIcon from '@mui/icons-material/Message';
+import { Tooltip } from "@mui/material";
 
 function Users() {
     const { state } = useLocation();
@@ -36,13 +37,14 @@ function Users() {
             <div className={styles.mainContent}>
                 <div className={styles.header}>
                     <h1>{state.user.username}'s Inventory</h1>
-                    <button
-                        className={styles.messageButton}
-                        onClick={handleMessageClick}
-                        title="Message this user"
-                    >
-                        <MessageIcon />
-                    </button>
+                    <Tooltip title="Message this user" arrow>
+                        <button
+                            className={styles.messageButton}
+                            onClick={handleMessageClick}
+                        >
+                            <MessageIcon />
+                        </button>
+                    </Tooltip>
                 </div>
                 <div className={styles.inventorySection}>
                     {state.user.inventory.length === 0 ? (

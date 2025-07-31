@@ -12,6 +12,30 @@ const getMessage = async (req, res) => {
                 { from: user2, to: user1 }
             ]
         }).sort({ timestamp: 1 });
+
+        // If no messages exist, create a default message
+        if (messages.length === 0) {
+            // Get user information for the default message
+            const [user1Data, user2Data] = await Promise.all([
+                User.findById(user1).select("username"),
+                User.findById(user2).select("username")
+            ]);
+
+            if (user1Data && user2Data) {
+                const defaultMsg = new Message({
+                    from: user1,
+                    to: user2,
+                    message: `${user1Data.username} is starting a conversation with ${user2Data.username}`,
+                    timestamp: new Date()
+                });
+                await defaultMsg.save();
+                
+                // Return the default message
+                res.json([defaultMsg]);
+                return;
+            }
+        }
+
         res.json(messages);
     } catch (error) {
         console.error("Error fetching messages:", error);
