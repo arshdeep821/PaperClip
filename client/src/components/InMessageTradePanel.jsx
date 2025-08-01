@@ -32,7 +32,7 @@ const InMessageTradePanel = ({ currentUser, otherUser }) => {
 
 	const loadTrades = () => {
 		getTradesFor2Users(currentUser, otherUser).then((trades) => {
-			setTrades(trades);
+			setTrades(trades.filter((trade) => (trade.status === "accepted" || trade.status === "successful")));
 			setCurrTradeIdx(0);
 		});
 	};
@@ -254,31 +254,29 @@ const InMessageTradePanel = ({ currentUser, otherUser }) => {
 					onClose={() => setIsPopupOpen(false)}
 				/>
 			)}
-			<div
-				className={styles.dotPagination}
-			>
-				{trades.map((_, idx) => (
-					<span
-						key={idx}
-						style={{
-							width: "10px",
-							height: "10px",
-							margin: "0 5px",
-							borderRadius: "50%",
-							backgroundColor:
-								trades[idx].status === "accepted" && currTradeIdx === idx
-									? "seagreen"
-								: trades[idx].status === "accepted" && currTradeIdx !== idx
-									? "lightgreen"
-								: trades[idx].status !== "accepted" && currTradeIdx === idx
-									? "slategrey"
-								: "lightgrey",
-							cursor: "pointer",
-							transition: "background-color 0.3s ease",
-						}}
-						onClick={() => setCurrTradeIdx(idx)} // Change page on dot click
-					/>
-				))}
+			<div className={styles.dotPagination}>
+				{trades.map((trade, idx) => (
+						<span
+							key={idx}
+							style={{
+								width: "10px",
+								height: "10px",
+								margin: "0 5px",
+								borderRadius: "50%",
+								backgroundColor:
+									trade.status === "accepted" && currTradeIdx === idx
+										? "seagreen"
+									: trade.status === "accepted" && currTradeIdx !== idx
+										? "lightgreen"
+									: trade.status !== "accepted" && currTradeIdx === idx
+										? "slategrey"
+									: "lightgrey",
+								cursor: "pointer",
+								transition: "background-color 0.3s ease",
+							}}
+							onClick={() => setCurrTradeIdx(idx)} // Change page on dot click
+						/>
+					))}
 			</div>
 		</>
 	);
