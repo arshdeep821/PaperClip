@@ -15,7 +15,7 @@ function HelpModal({ open, handleClose }) {
 	const PRODUCTS_HELP = [
 		"This is where you browse items we think you'd like based on your preferences.",
 		"You can change your preferences on the profile page!",
-		"You can go through your recommended products by using the arrow buttons on screen or your arrow keys on your keyboard!",
+		"You can go through your recommended products by using the arrow buttons on screen!",
 		"You can hover over the items to see more details about them.",
 		"To send an offer for an item, you can click on the bag icon in the bottom right corner to and select your items to send in an offer for the current product.",
 		"Once you've selected items of yours, click on the checkmark to lock in and send the trade!",
