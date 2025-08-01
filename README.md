@@ -371,8 +371,10 @@ Our bug list is located in the github issues for our team repo
 - User achievements visible through user search
 - Switching from JS alerts to toasts
 - Default message when you start a conversation with a user for the first time
-- Logout
+- Logout feature
 - Update reccomender to cache as much as possible (more efficient)
 - Split Products/Offers page into two separate pages
 - Add filters to search page
 - Add details to offers page (can click each item to see details/history)
+- Remove home page
+- Updated behaviour when there are no products present in your trading radius
