@@ -254,6 +254,32 @@ const InMessageTradePanel = ({ currentUser, otherUser }) => {
 					onClose={() => setIsPopupOpen(false)}
 				/>
 			)}
+			<div
+				className={styles.dotPagination}
+			>
+				{trades.map((_, idx) => (
+					<span
+						key={idx}
+						style={{
+							width: "10px",
+							height: "10px",
+							margin: "0 5px",
+							borderRadius: "50%",
+							backgroundColor:
+								trades[idx].status === "accepted" && currTradeIdx === idx
+									? "seagreen"
+								: trades[idx].status === "accepted" && currTradeIdx !== idx
+									? "lightgreen"
+								: trades[idx].status !== "accepted" && currTradeIdx === idx
+									? "slategrey"
+								: "lightgrey",
+							cursor: "pointer",
+							transition: "background-color 0.3s ease",
+						}}
+						onClick={() => setCurrTradeIdx(idx)} // Change page on dot click
+					/>
+				))}
+			</div>
 		</>
 	);
 };
