@@ -9,6 +9,7 @@ import hustlerIcon from "../assets/hustlericon.png";
 import paperClipIcon from "../assets/PaperClip.png";
 import houseIcon from "../assets/houseicon2.png";
 import { Country, City } from "country-state-city";
+import { toast } from "react-toastify";
 
 const BACKEND_URL = "http://localhost:3001";
 
@@ -194,7 +195,7 @@ function Profile() {
 			setErrors({});
 		} catch (error) {
 			console.error("Failed to update profile:", error);
-			alert("Failed to update profile. Please try again.");
+			toast.error("Failed to update profile. Please try again.");
 		}
 	};
 
@@ -231,19 +232,19 @@ function Profile() {
 
 		const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 		if (!allowedTypes.includes(file.type)) {
-			alert('Please select a valid image file (JPEG, PNG, or GIF)');
+			toast.error('Please select a valid image file (JPEG, PNG, or GIF)');
 			return;
 		}
 
 		if (file.size > 5 * 1024 * 1024) {
-			alert('File size must be less than 5MB');
+			toast.error('File size must be less than 5MB');
 			return;
 		}
 
 		try {
 			await dispatch(updateUserProfilePicture({ userId: user.id, file })).unwrap();
 		} catch (error) {
-			alert(error.message || 'Failed to update profile picture');
+			toast.error(error.message || 'Failed to update profile picture');
 		}
 	};
 
@@ -268,7 +269,7 @@ function Profile() {
 			<ul className={styles.achievementsList}>
 				{achievements.map((achievement, index) => {
 					const iconSrc = iconMap[achievement.icon];
-					
+
 					return (
 						<li key={index} className={styles.achievementItem}>
 							<figure className={styles.achievementFigure}>
@@ -291,7 +292,7 @@ function Profile() {
 				})}
 			</ul>
 		);
-	};	
+	};
 
 	return (
 		<main className={styles.profilePage}>
