@@ -202,12 +202,14 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer, togg
 
 	return (
 		<div className={styles.bottomButtons}>
-			<div className={styles.optionButton} onClick={() => {
-				handleLeftButton();
-				handleNewTrade();
-			}}>
-				<ArrowBackIosIcon fontSize="large" />
-			</div>
+			<Tooltip title="Previous offer" arrow>
+				<div className={styles.optionButton} onClick={() => {
+					handleLeftButton();
+					handleNewTrade();
+				}}>
+					<ArrowBackIosIcon fontSize="large" />
+				</div>
+			</Tooltip>
 			<div className={styles.actionButtons}>
 				<Tooltip title="Reject" arrow>
 					<div className={styles.rejectButton} onClick={handleReject}>
@@ -225,12 +227,14 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer, togg
 					</div>
 				</Tooltip>
 			</div>
-			<div className={styles.optionButton} onClick={() => {
-				handleRightButton();
-				handleNewTrade();
-			}}>
-				<ArrowForwardIosIcon fontSize="large" />
-			</div>
+			<Tooltip title="Next offer" arrow>
+				<div className={styles.optionButton} onClick={() => {
+					handleRightButton();
+					handleNewTrade();
+				}}>
+					<ArrowForwardIosIcon fontSize="large" />
+				</div>
+			</Tooltip>
 		</div>
 	);
 }

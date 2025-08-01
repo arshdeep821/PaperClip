@@ -5,11 +5,12 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CheckIcon from "@mui/icons-material/Check";
 import { useDispatch, useSelector } from "react-redux";
 import { resetTrade } from "../redux/slices/tradeSlice";
+import { Tooltip } from "@mui/material";
 import { toast } from "react-toastify";
 
 const BACKEND_URL = "http://localhost:3001";
 
-function BottomOptionButtons({ handleLeftButton, handleRightButton }) {
+function BottomOptionButtons({ handleLeftButton, handleRightButton, bagOpen, setBagOpen }) {
 	const dispatch = useDispatch();
 
 	const product = useSelector((state) => state.trade?.product);
@@ -18,6 +19,10 @@ function BottomOptionButtons({ handleLeftButton, handleRightButton }) {
 
 	const handleSubmitTrade = async () => {
 		if (!product || !table2 || table2.length === 0 || !user) {
+			if (!bagOpen) {
+				setBagOpen(true);
+			}
+
 			console.log("not a valid trade");
 			toast.error("Please select a product to trade");
 			return;
@@ -54,21 +59,27 @@ function BottomOptionButtons({ handleLeftButton, handleRightButton }) {
 
 	return (
 		<div className={styles.bottomButtons}>
-			<div className={styles.optionButton} onClick={() => {
-				handleLeftButton();
-				handleNewTrade();
-			}}>
-				<ArrowBackIosIcon fontSize="large" />
-			</div>
-			<div className={styles.optionButton} onClick={handleSubmitTrade}>
-				<CheckIcon fontSize="large" />
-			</div>
-			<div className={styles.optionButton} onClick={() => {
-				handleRightButton();
-				handleNewTrade();
-			}}>
-				<ArrowForwardIosIcon fontSize="large" />
-			</div>
+			<Tooltip title="Previous product" arrow>
+				<div className={styles.optionButton} onClick={() => {
+					handleLeftButton();
+					handleNewTrade();
+				}}>
+					<ArrowBackIosIcon fontSize="large" />
+				</div>
+			</Tooltip>
+			<Tooltip title="Confirm trade" arrow>
+				<div className={styles.optionButton} onClick={handleSubmitTrade}>
+					<CheckIcon fontSize="large" />
+				</div>
+			</Tooltip>
+			<Tooltip title="Next product" arrow>
+				<div className={styles.optionButton} onClick={() => {
+					handleRightButton();
+					handleNewTrade();
+				}}>
+					<ArrowForwardIosIcon fontSize="large" />
+				</div>
+			</Tooltip>
 		</div>
 	);
 }
