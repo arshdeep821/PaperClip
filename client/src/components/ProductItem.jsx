@@ -4,8 +4,8 @@ const BACKEND_URL = "http://localhost:3001";
 
 const ProductItem = ({ item }) => {
 	return (
-		<div key={item._id} className={styles.productItem}>
-			{item.imagePath && (
+		<div className={styles.productItem}>
+			{item ? (
 				<div className={styles.imageWrapper}>
 					<img
 						src={`${BACKEND_URL}/static/${item.imagePath}`}
@@ -24,6 +24,17 @@ const ProductItem = ({ item }) => {
 						<div className={styles.overlayText}>
 							@{item.owner.username}
 						</div>
+					</div>
+				</div>
+			) : (
+				<div className={styles.noProductsBox}>
+					<div className={styles.noProductsText}>
+						No Products Availabile within your Trading Radius.
+					</div>
+					<br />
+					<div className={styles.noProductsText}>
+						To find products, either increase your trading radius or
+						update your location!
 					</div>
 				</div>
 			)}

@@ -72,10 +72,6 @@ const ViewProducts = () => {
 		setItemIdx((currIdx) => (currIdx < NUM_PRODUCTS - 1 ? currIdx + 1 : 0));
 	};
 
-	if (!products || products.length === 0 || status === "loading") {
-		return <h1>Loading ...</h1>;
-	}
-
 	if (status == "failed") {
 		return <h1>Error loading products {error}</h1>;
 	}
@@ -87,7 +83,11 @@ const ViewProducts = () => {
 			<h1 className={styles.header}>Top Picks - Just For You</h1>
 
 			<div className={styles.productItem}>
-				<ProductItem item={products[itemIdx]} />
+				{products.length === 0 ? (
+					<ProductItem item={null} />
+				) : (
+					<ProductItem item={products[itemIdx]} />
+				)}
 			</div>
 
 			<BottomOptionButtons
