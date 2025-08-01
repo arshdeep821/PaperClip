@@ -4,9 +4,11 @@ import Sidebar from "../components/Sidebar";
 import SearchItem from "../components/SearchItem";
 import styles from "../styles/Users.module.css";
 import MessageIcon from '@mui/icons-material/Message';
+
 import hustlerIcon from "../assets/hustlericon.png";
 import paperClipIcon from "../assets/PaperClip.png";
 import houseIcon from "../assets/houseicon2.png";
+import { Tooltip } from "@mui/material";
 
 const BACKEND_URL = "http://localhost:3001";
 
@@ -108,14 +110,15 @@ function Users() {
             <Sidebar />
             <div className={styles.mainContent}>
                 <div className={styles.header}>
-                    <h1>{state.user.username}'s Profile</h1>
-                    <button
-                        className={styles.messageButton}
-                        onClick={handleMessageClick}
-                        title="Message this user"
-                    >
-                        <MessageIcon />
-                    </button>
+                    <h1>{state.user.username}'s Inventory</h1>
+                    <Tooltip title="Message this user" arrow>
+                        <button
+                            className={styles.messageButton}
+                            onClick={handleMessageClick}
+                        >
+                            <MessageIcon />
+                        </button>
+                    </Tooltip>
                 </div>
 				<h2>{state.user.username}'s Inventory</h2>
                 <div className={styles.inventorySection}>

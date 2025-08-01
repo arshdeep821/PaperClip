@@ -4,6 +4,7 @@ import UserTradePopup from "./UserTradePopup"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import Button from "@mui/material/Button";
+import { toast } from "react-toastify";
 
 const BACKEND_URL = "http://localhost:3001";
 
@@ -138,7 +139,7 @@ const InMessageTradePanel = ({ currentUser, otherUser }) => {
 		} else {
 			await cancelConflictingTrades();
 			loadTrades();
-			alert("The Trade was a success!")
+			toast.success("The Trade was a success!")
 		}
 	};
 

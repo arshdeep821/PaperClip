@@ -6,6 +6,7 @@ import PaperClipLogo from "../assets/PaperClip.png";
 
 import { loginUser } from "../redux/slices/userSlice";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 function Login() {
 	const dispatch = useDispatch();
@@ -34,7 +35,7 @@ function Login() {
 
 			navigate("/products");
 		} catch (error) {
-			alert(error.message || "An error occurred while trying to login");
+			toast.error(error.message || "An error occurred while trying to login");
 		}
 	};
 

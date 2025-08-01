@@ -5,6 +5,7 @@ import { deleteUser, updateUserPrivacy, logoutUser } from "../redux/slices/userS
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ChangePasswordModal from "../components/ChangePasswordModal";
+import { toast } from "react-toastify";
 
 function Settings() {
     const user = useSelector((state) => state.user);
@@ -20,7 +21,7 @@ function Settings() {
             await dispatch(deleteUser(user.id)).unwrap();
             navigate("/login");
         } catch {
-            alert("Failed to delete account.");
+            toast.error("Failed to delete account.");
         }
     };
 
@@ -31,7 +32,7 @@ function Settings() {
             setPrivacySetting(setting);
             setShowPrivacyDropdown(false);
         } catch {
-            alert("Failed to update privacy setting.");
+            toast.error("Failed to update privacy setting.");
         }
     };
 
@@ -51,9 +52,9 @@ function Settings() {
                 throw new Error(errorData.error || "Failed to change password");
             }
 
-            alert("Password changed successfully!");
+           toast.success("Password changed successfully!");
         } catch (error) {
-            alert(error.message || "Failed to change password. Please try again.");
+            toast.error(error.message || "Failed to change password. Please try again.");
             throw error;
         }
     };

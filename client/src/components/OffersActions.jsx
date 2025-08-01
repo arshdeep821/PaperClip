@@ -11,6 +11,7 @@ import { acceptOffer, rejectOffer, renegOffer } from "../redux/slices/offersSlic
 import { addItem, removeItem } from "../redux/slices/userSlice";
 import { resetTrade } from "../redux/slices/tradeSlice";
 import Tooltip from "@mui/material/Tooltip";
+import { toast } from "react-toastify";
 
 const BACKEND_URL = "http://localhost:3001";
 
@@ -36,17 +37,17 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer, togg
 
 		if (sameItems(table1, currOffer.items2) && sameItems(table2, currOffer.items1)) {
 			console.log("the renegotiated offer is the same as the starting one")
-			alert("You are renegotiating a trade with the same starting items!");
+			toast.error("You are renegotiating a trade with the same starting items!");
 			return false;
 		}
 
 		if (!table1 || table1.length === 0) {
 			console.log("not a valid trade: missing/empty table1");
-			alert("Please select the items you would like to trade for.");
+			toast.error("Please select the items you would like to trade for.");
 			return false;
 		} else if (!table2 || table2.length === 0) {
 			console.log("not a valid trade: missing/empty table2");
-			alert("Please select the items you would like to offer for the new trade.");
+			toast.error("Please select the items you would like to offer for the new trade.");
 			return false;
 		}
 
@@ -70,7 +71,7 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer, togg
 				console.error("Server error:", result.error);
 			}
 
-			alert("Renegotiated trade submitted successfully");
+			toast.success("Renegotiated trade submitted successfully");
 			dispatch(renegOffer(currOffer._id));
 			return true;
 
@@ -86,7 +87,7 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer, togg
 		}
 
 		if (currentOffer.status !== "pending") {
-			alert("The trade is not valid anymore!");
+			toast.error("The trade is not valid anymore!");
 			return; // TODO: handle case when trade isn't pending
 		}
 
@@ -151,12 +152,12 @@ function OffersActions({ handleLeftButton, handleRightButton, currentOffer, togg
 		}
 
 		if (currentOffer.status !== "pending") {
-			alert("The trade is not valid anymore!");
+			toast.error("The trade is not valid anymore!");
 			return; // TODO: handle case when trade isn't pending
 		}
 
 		if (!currentOffer?.user1?._id || !currentOffer?.user2?._id) {
-			alert("Invalid trade offer — missing user data");
+			toast.error("Invalid trade offer — missing user data");
 			return;
 		}
 
