@@ -266,3 +266,100 @@ Our bug list is located in the github issues for our team repo
 - Viewing trade history of specific items
 - A bug fix that was implemented this milestone was related to user session management handling on both the server and client side, with those fixed, the application functions as expected and bug free when users are both logged in and not logged in. Another bug that was fixed was updating the recommendation model to still function and give a generic order when a user had no preferences for it to recommend on.
 - Many other small bug fixes, manual testing, automated testing, etc.
+
+## Milestone 5:
+
+### Demo
+
+#### Intelligent ML-Powered Recommendations
+- The application utilizes a KNN-based recommendation model to display products to users. It considers various product features and compares them to user preferences to generate recommendations. The model also updates itself when items are created, updated, or deleted, ensuring that the recommendations remain up to date.
+
+#### Live Socket-based User Messaging
+- Seamless WebSocket-powered chat system enables instant communication between traders. Users can negotiate deals, discuss item conditions, and coordinate meetups in real-time. Messaging becomes available immediately after trade acceptance or when users initiate conversations through search.
+
+![Messages](./client/src//assets/Messages.png)
+
+#### AND-based Search Functionality for Users and/or Products
+- Comprehensive search functionality allows users to find both items and other traders using AND-based filtering. Search across categories, conditions, locations, and user profiles with automatic query sanitization for security.
+
+![Search](./client/src/assets/Search.png)
+
+#### Gamified Trading Experience
+- Item History Tracking: Trace the complete journey of items, including previous owners and trade history. Special indicators for celebrity-owned items add prestige to trading.
+
+![History](./client/src/assets/History.png)
+
+- Achievement System: Earn badges and rewards for trading milestones, successful deals, and community engagement.
+
+![Achievements](./client/src/assets/Achievements.png)
+
+#### Smart Trade Management
+- Renegotiation Tools: Modify existing offers with real-time counter-proposals and item substitutions.
+
+![Reneg](./client/src/assets/Reneg.png)
+
+- Inventory Management: Organize items with categories, conditions, and detailed descriptions. Upload multiple images per item.
+
+![Inventory](./client/src/assets/Inventory.png)
+
+#### Location-Based Trading
+- Find traders within your preferred radius using geolocation services. Set custom trading distances and discover local trading opportunities.
+
+![Location](./client/src/assets/Location.png)
+
+### Application Requirements 
+
+### Minimal Goals
+
+- Users can create accounts, log in/out, and manage their inventory of items (CRUD) [DONE]
+
+- Users can scroll through a smooth UI to browse other users’ items, which utilizes a custom ML recommendation model [DONE]
+
+- Users can send, accept, reject, and negotiate (with any/all of the items in either parties inventory) trade offers with other users [DONE]
+
+- Users can chat/message other users once they’ve accepted a trade, in order to arrange a meetup [DONE]
+
+### Standard Goals
+
+- Users can view their own and other users’ profile, that includes their inventory, with the option to make a trade directly through the profile page (rather than the main scrolling page with recommendations) [DONE]
+
+- Users can see an in-depth history of an item (what it has been traded for and by who, creating a line graph of the item's trade history) [DONE]
+
+- Users can participate in multi-party trades. For example: Jack has item A and wants item B, Tim has item B and wants item C, Bob has item C and wants item A. With a multi-party trade, the 3 of them would be able to form a ‘trade circle’. [DROPPED - Discussed with TA (Daichi)]
+
+- Users can view all your trades with a specific user through the chat with them. Can also confirm a successful swap of items with the user as apart of the trade negotiation. [DONE]
+
+- Users can modify their personal data such as geolocation/preferences and get updated reccomendations given their profile updates [DONE]
+
+### Stretch Goals
+
+- Users can earn achievements/badges within the application to display on their profile (to encourage continual trading) for completing activities like completing a line of trades that's 5 and 10 trades long. [DONE]
+
+- Utilizing a pre-built computer vision-esque model to obtain more information about user-added items (to take the provided image, along with its likely short description, to obtain more details for recommendations) [DROPPED]
+
+- Users can search specifically for items (like they would on Google for example), requiring a search engine implementation that outputs items that match or closely match the users search query [DROPPED]
+
+### Non-Trivial Elements 
+
+- Machine Learning Reccomendation System: KNN model using Sci-kit Learn with text embedding via Spacy, automatically retrains when products change. Present as it's own service that is orchestrated with docker-compose
+
+- Real-time Messaging System: Chat functionality between users after trade acceptance with real-time updates. You can easily view all trades with a specific user within your chat history and confirm when a swap has been successfully completed.
+
+- Trade Negotiation System: Full trade lifecycle: create, accept, reject, negotiate with state management
+
+- User Preference System: User-defined preferences that feed into ML recommendations
+
+- Advanced Search: Multi-field AND-SEARCH that where you can search items/users and instantly trade with them. Sanitization across all queries
+
+- Session Management: Secure login/logout with session persistence and user state management
+
+- Trade History: Tracking of item trade history records
+
+### Bug List
+
+- All bugs are referenced in our [github issues](https://github.students.cs.ubc.ca/CPSC455-2025S/team28/issues)
+- All P1/P0 bugs are complete
+- All P2/P3 bugs are resolved or marked as “won’t fix” with a reason
+- Any other bugs are resolved or documented with notes for why they won’t be fixed for this release
+
+### M5 highlights
