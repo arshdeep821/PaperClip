@@ -363,3 +363,16 @@ Our bug list is located in the github issues for our team repo
 - Any other bugs are resolved or documented with notes for why they won’t be fixed for this release
 
 ### M5 highlights
+
+- UX fixes
+- Bug fixes
+- Help button pop ups
+- User achievements
+- User achievements visible through user search
+- Switching from JS alerts to toasts
+- Default message when you start a conversation with a user for the first time
+- Logout
+- Update reccomender to cache as much as possible (more efficient)
+- Split Products/Offers page into two separate pages
+- Add filters to search page
+- Add details to offers page (can click each item to see details/history)
