@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "../styles/ChangePasswordModal.module.css";
+import { toast } from "react-toastify";
 
 function ChangePasswordModal({ isOpen, onClose, onSubmit }) {
     const [formData, setFormData] = useState({
@@ -18,12 +19,12 @@ function ChangePasswordModal({ isOpen, onClose, onSubmit }) {
         e.preventDefault();
 
         if (formData.newPassword !== formData.confirmPassword) {
-            alert("New passwords do not match!");
+            toast.warn("New passwords do not match!");
             return;
         }
 
         if (formData.newPassword.length < 1) {
-            alert("New password cannot be empty!");
+            toast.error("New password cannot be empty!");
             return;
         }
 
@@ -37,7 +38,7 @@ function ChangePasswordModal({ isOpen, onClose, onSubmit }) {
             });
             onClose();
         } catch (error) {
-            alert("Failed to change password. Please try again.");
+            toast.error("Failed to change password. Please try again.");
         } finally {
             setLoading(false);
         }

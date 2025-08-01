@@ -6,6 +6,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import { useDispatch, useSelector } from "react-redux";
 import { resetTrade } from "../redux/slices/tradeSlice";
 import { Tooltip } from "@mui/material";
+import { toast } from "react-toastify";
 
 const BACKEND_URL = "http://localhost:3001";
 
@@ -22,8 +23,8 @@ function BottomOptionButtons({ handleLeftButton, handleRightButton, bagOpen, set
 				setBagOpen(true);
 			}
 
-			// TODO: add a toast to tell users tell users to select items
-			alert("Please select the items you would like to trade for this product");
+			console.log("not a valid trade");
+			toast.error("Please select a product to trade");
 			return;
 		}
 		try {
@@ -46,7 +47,7 @@ function BottomOptionButtons({ handleLeftButton, handleRightButton, bagOpen, set
 				console.error("Server error:", result.error);
 			}
 
-			alert("Trade submitted successfully");
+			toast.success("Trade submitted successfully");
 		} catch (err) {
 			console.error("Trade error:", err);
 		}

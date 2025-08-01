@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Country, City } from "country-state-city";
 import styles from "../styles/Signup.module.css";
 import PaperClipLogo from "../assets/PaperClip.png";
+import { toast } from "react-toastify";
 
 const BACKEND_URL = "http://localhost:3001";
 //frontend
@@ -49,7 +50,7 @@ const Signup = () => {
 		e.preventDefault();
 
 		if (formData.password1 !== formData.password2) {
-			alert("Passwords do not match!");
+			toast.warn("Passwords do not match!");
 			return;
 		}
 
@@ -79,7 +80,7 @@ const Signup = () => {
 
 			if (!response.ok) {
 				const errorData = await response.json();
-				alert(
+				toast.error(
 					`Error: ${
 						errorData.error ||
 						"An error occurred trying to make your account"
@@ -91,10 +92,10 @@ const Signup = () => {
 			const userData = await response.json();
 
 			navigate("/login");
-			alert("Account Successfully Created");
+			toast.success("Account Successfully Created");
 		} catch (error) {
 			console.error("Error:", error);
-			alert("Network error. Please try again.");
+			toast.error("Network error. Please try again.");
 		}
 	};
 

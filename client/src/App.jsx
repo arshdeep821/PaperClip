@@ -18,6 +18,7 @@ import Users from "./pages/Users";
 import NotFoundPage from "./pages/NotFoundPage";
 import Messages from "./pages/Messages";
 import Settings from "./pages/Settings";
+import { ToastContainer } from "react-toastify";
 
 const originalFetch = window.fetch;
 window.fetch = function (input, init = {}) {
@@ -62,96 +63,107 @@ const App = () => {
 	}
 
 	return (
-		<Router>
-			<Routes>
-				<Route
-					path="/"
-					element={
-						isLoggedIn ? (
-							<Navigate to="/products" replace />
-						) : (
-							<Navigate to="/login" replace />
-						)
-					}
-				/>
+		<>
+			<Router>
+				<Routes>
+					<Route
+						path="/"
+						element={
+							isLoggedIn ? (
+								<Navigate to="/products" replace />
+							) : (
+								<Navigate to="/login" replace />
+							)
+						}
+					/>
 
-				<Route
-					path="/login"
-					element={<Login />}
-				/>
-				<Route
-					path="/signup"
-					element={<Signup />}
-				/>
+					<Route
+						path="/login"
+						element={<Login />}
+					/>
+					<Route
+						path="/signup"
+						element={<Signup />}
+					/>
 
-				<Route
-					path="/inventory"
-					element={
-						<RequireAuth>
-							<Inventory />
-						</RequireAuth>
-					}
-				/>
-				<Route
-					path="/products"
-					element={
-						<RequireAuth>
-							<ViewProducts />
-						</RequireAuth>
-					}
-				/>
-				<Route
-					path="/offers"
-					element={
-						<RequireAuth>
-							<ViewOffers />
-						</RequireAuth>
-					}
-				/>
-				<Route
-					path="/profile"
-					element={
-						<RequireAuth>
-							<Profile />
-						</RequireAuth>
-					}
-				/>
-				<Route
-					path="/search"
-					element={
-						<RequireAuth>
-							<Search />
-						</RequireAuth>
-					}
-				/>
-				<Route
-					path="/users/:username"
-					element={
-						<RequireAuth>
-							<Users />
-						</RequireAuth>
-					}
-				/>
-				<Route
-					path="/chats"
-					element={
-						<RequireAuth>
-							<Messages />
-						</RequireAuth>
-					}
-				/>
-				<Route
-					path="/settings"
-					element={
-						<RequireAuth>
-							<Settings />
-						</RequireAuth>
-					}
-				/>
+					<Route
+						path="/inventory"
+						element={
+							<RequireAuth>
+								<Inventory />
+							</RequireAuth>
+						}
+					/>
+					<Route
+						path="/products"
+						element={
+							<RequireAuth>
+								<ViewProducts />
+							</RequireAuth>
+						}
+					/>
+					<Route
+						path="/offers"
+						element={
+							<RequireAuth>
+								<ViewOffers />
+							</RequireAuth>
+						}
+					/>
+					<Route
+						path="/profile"
+						element={
+							<RequireAuth>
+								<Profile />
+							</RequireAuth>
+						}
+					/>
+					<Route
+						path="/search"
+						element={
+							<RequireAuth>
+								<Search />
+							</RequireAuth>
+						}
+					/>
+					<Route
+						path="/users/:username"
+						element={
+							<RequireAuth>
+								<Users />
+							</RequireAuth>
+						}
+					/>
+					<Route
+						path="/chats"
+						element={
+							<RequireAuth>
+								<Messages />
+							</RequireAuth>
+						}
+					/>
+					<Route
+						path="/settings"
+						element={
+							<RequireAuth>
+								<Settings />
+							</RequireAuth>
+						}
+					/>
 
-				<Route path="/*" element={<NotFoundPage />} />
-			</Routes>
-		</Router>
+					<Route path="/*" element={<NotFoundPage />} />
+				</Routes>
+			</Router>
+			<ToastContainer
+				position="top-right"
+				autoClose={3000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				pauseOnHover
+				theme="colored"
+			/>
+		</>
 	);
 }
 

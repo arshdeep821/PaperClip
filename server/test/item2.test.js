@@ -201,13 +201,6 @@ describe('Item API Endpoints', function() {
 		expect(userItems).to.have.length(0);
 	});
 
-	// it('should fail to get products with missing user ID', async function() {
-	// 	const res = await request(baseURL)
-	// 		.get('/items/');
-
-	// 	expect(res.status).to.equal(404);
-	// });
-
 	it('should update item successfully', async function() {
 		const updateData = {
 			name: 'Updated Test Item',

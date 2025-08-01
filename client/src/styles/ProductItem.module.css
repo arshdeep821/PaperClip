@@ -47,3 +47,19 @@
 	font-size: 1.5rem;
 	text-align: center;
 }
+
+.noProductsBox {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+}
+
+.noProductsText {
+	color: black;
+	font-size: 1.5rem;
+	text-align: center;
+}
