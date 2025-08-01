@@ -38,22 +38,22 @@ const ViewProducts = () => {
 		}
 	}, [dispatch, status, products, itemIdx]);
 
-	useEffect(() => {
-		const handleKeyDown = (e) => {
-			if (e.key === "ArrowRight") {
-				setItemIdx((currIdx) =>
-					currIdx < NUM_PRODUCTS - 1 ? currIdx + 1 : 0
-				);
-			} else if (e.key === "ArrowLeft") {
-				setItemIdx((currIdx) =>
-					currIdx > 0 ? currIdx - 1 : NUM_PRODUCTS - 1
-				);
-			}
-		};
+	// useEffect(() => {
+	// 	const handleKeyDown = (e) => {
+	// 		if (e.key === "ArrowRight") {
+	// 			setItemIdx((currIdx) =>
+	// 				currIdx < NUM_PRODUCTS - 1 ? currIdx + 1 : 0
+	// 			);
+	// 		} else if (e.key === "ArrowLeft") {
+	// 			setItemIdx((currIdx) =>
+	// 				currIdx > 0 ? currIdx - 1 : NUM_PRODUCTS - 1
+	// 			);
+	// 		}
+	// 	};
 
-		window.addEventListener("keydown", handleKeyDown);
-		return () => window.removeEventListener("keydown", handleKeyDown);
-	}, []);
+	// 	window.addEventListener("keydown", handleKeyDown);
+	// 	return () => window.removeEventListener("keydown", handleKeyDown);
+	// }, []);
 
 	const { state } = useLocation();
 
