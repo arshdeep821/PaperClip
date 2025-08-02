@@ -10,7 +10,7 @@ Team Members:
 - [Milestone 2](#milestone-2)
 - [Milestone 3](#milestone-3)
 - [Milestone 4](#milestone-4)
-- [Milestone 5](https://github.students.cs.ubc.ca/CPSC455-2025S/team28/edit/FinalRelease/README.md#milestone-5)
+- [Milestone 5](#milestone-5)
 
 ## Project Description
 Our app is called PaperClip, it is a trading web-app inspired by the story of someone who traded a paperclip into a house. Our app is for people who have items sitting at home that they don't want, and want to see if it'll have value to someone else in exchange for other items rather than money.
