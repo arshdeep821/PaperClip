@@ -5,6 +5,13 @@ Team Members:
 - Matthew Fan
 - Preston Lai
 
+## Table of Contents
+- [Milestone 1](#milestone-1)
+- [Milestone 2](#milestone-2)
+- [Milestone 3](#milestone-3)
+- [Milestone 4](#milestone-4)
+- [Milestone 5](https://github.students.cs.ubc.ca/CPSC455-2025S/team28/edit/FinalRelease/README.md#milestone-5)
+
 ## Project Description
 Our app is called PaperClip, it is a trading web-app inspired by the story of someone who traded a paperclip into a house. Our app is for people who have items sitting at home that they don't want, and want to see if it'll have value to someone else in exchange for other items rather than money.
 
@@ -105,7 +112,7 @@ npm run dev
 Running application: `docker-compose up --build`
 Running application with only server and client logs: `docker-compose up --build -d && docker-compose logs -f server client`
 
-## Milestone 3:
+## Milestone 3
 
 Running the application: `docker compose up --build` or `docker-compose up --build`
 
@@ -175,7 +182,7 @@ server/mochawesome-report/mochawesome.html
 
 Open this file in your web browser to see a summary of all passing and failing tests, with details for each test case.
 
-## Milestone 4:
+## Milestone 4
 
 Running the application: `docker compose up --build` or `docker-compose up --build`
 
@@ -267,7 +274,7 @@ Our bug list is located in the github issues for our team repo
 - A bug fix that was implemented this milestone was related to user session management handling on both the server and client side, with those fixed, the application functions as expected and bug free when users are both logged in and not logged in. Another bug that was fixed was updating the recommendation model to still function and give a generic order when a user had no preferences for it to recommend on.
 - Many other small bug fixes, manual testing, automated testing, etc.
 
-## Milestone 5:
+## Milestone 5
 
 Running the application: `docker compose up --build` or `docker-compose up --build`
 
