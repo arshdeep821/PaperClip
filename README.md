@@ -269,6 +269,13 @@ Our bug list is located in the github issues for our team repo
 
 ## Milestone 5:
 
+Running the application: `docker compose up --build` or `docker-compose up --build`
+
+The app runs on http://localhost:5173/
+
+### Some Important Things to Know when using this application
+-  You can login with the preset accounts (username: Admin, password: password) (username: Exec, password: password) or create your own account
+
 ### Demo
 
 #### Intelligent ML-Powered Recommendations
